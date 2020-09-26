@@ -1,0 +1,289 @@
+<html>
+    <head>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+            body {
+                font-family: 'Quicksand', sans-serif;
+            }
+
+            table {
+              border-collapse: collapse;
+              width: 600px;
+            }
+            
+            td, th {
+              border: 1px solid #dddddd;
+              text-align: left;
+              padding: 8px;
+            }
+            
+            tr:nth-child(even) {
+              background-color: #dddddd;
+            }
+            </style>
+    </head>
+    <body>
+        <p>
+            <h1>Sorbet Calculator</h1>
+            <label for="fname">Total Weight Grams:</label><br>
+            <input type="text" id="id_gr" value=""><br><br>
+            <label for="lname">Dry Extract Percentage:</label><br>
+            <input type="text" id="id_dr" value=""><br><br>
+        </p>
+        <table>
+            <tr>
+              <th>Item</th>
+              <th>Percentage</th>
+              <th>Weighted Value</th>
+              <th>Grams</th>
+            </tr>
+            <tr>
+              <td>Puree</td>
+              <td><input type="text" id="id_pu" value=""></td>
+              <td>100%</td>
+              <td id="id_pu_val"></td>
+            </tr>
+            <tr>
+              <td>Glucose Powder</td>
+              <td><input type="text" id="id_gl" value=""></td>
+              <td>95%</td>
+              <td id="id_gl_val"></td>
+            </tr>
+            <tr>
+              <td>Trimoline</td>
+              <td><input type="text" id="id_tr" value=""></td>
+              <td>95%</td>
+              <td id="id_tr_val"></td>
+            </tr>
+            <tr>
+              <td>Dextrose</td>
+              <td><input type="text" id="id_de" value=""></td>
+              <td>95%</td>
+              <td id="id_de_val"></td>
+            </tr>
+            <tr>
+              <td>Super Neutrose</td>
+              <td><input type="text" id="id_ne" value=""></td>
+              <td>100%</td>
+              <td id="id_ne_val"></td>
+            </tr>
+            <tr>
+              <td>Stab 2000</td>
+              <td><input type="text" id="id_st" value=""></td>
+              <td>100%</td>
+              <td id="id_st_val"></td>
+            </tr>
+            <tr>
+              <td>Sugar</td>
+              <td></td>
+              <td>100%</td>
+              <td id="id_sg_val"></td>
+            </tr>
+            <tr>
+              <td>Water</td>
+              <td></td>
+              <td>100%</td>
+              <td id="id_wa_val"></td>
+            </tr>
+        </table>
+        <p>
+            <button type="button" id="calculate">Calculate</button>
+            <br /><br />
+            <h3>Notes:</h3>
+            <ul>
+                <li>Glucose Powder + Trimoline + Dextrose ≤ 6%</li>
+                <li>Super Neutrose + Stab 2000 ≤ 1%</li>
+            </ul>
+        </p>
+    </body>
+    <script>
+        document.getElementById("calculate").onclick = function() {
+            // We need error handling
+            if (isFormOK()) {
+                // General distribution
+                var iTotalWeight = isIdNum("id_gr");
+                var pDryExtract = isIdPercentage("id_dr");
+
+                // Calculate water
+                var iWater = iTotalWeight - (iTotalWeight*pDryExtract);
+                document.getElementById("id_wa_val").innerHTML = iWater.toFixed(3);
+
+                // Calculate puree
+                var pPuree = isIdPercentage("id_pu");
+                var iPuree = (iTotalWeight*pDryExtract)*pPuree;
+                document.getElementById("id_pu_val").innerHTML = iPuree.toFixed(3);
+
+                // Calculate Glucose Powder
+                var pGlucose = isIdPercentage("id_gl");
+                if (pGlucose) {
+                    var iGlucose = ((iTotalWeight*pDryExtract)*pGlucose)*0.95;
+                    document.getElementById("id_gl_val").innerHTML = iGlucose.toFixed(3);
+                } else {
+                    var iGlucose = 0;
+                    document.getElementById("id_gl_val").innerHTML = "0";
+                }
+
+                // Calculate Trimoline
+                var pTrimoline = isIdPercentage("id_tr");
+                if (pTrimoline) {
+                    var iTrimoline = ((iTotalWeight*pDryExtract)*pTrimoline)*0.95;
+                    document.getElementById("id_tr_val").innerHTML = iTrimoline.toFixed(3);
+                } else {
+                    var iTrimoline = 0;
+                    document.getElementById("id_tr_val").innerHTML = "0";
+                }
+
+                // Calculate Dextrose Powder
+                var pDextrose = isIdPercentage("id_de");
+                if (pDextrose) {
+                    var iDextrose = ((iTotalWeight*pDryExtract)*pDextrose)*0.95;
+                    document.getElementById("id_de_val").innerHTML = iDextrose.toFixed(3);
+                } else {
+                    var iDextrose = 0;
+                    document.getElementById("id_de_val").innerHTML = "0";
+                }
+
+                // Calculate Super Neutrose
+                var pNeutrose = isIdPercentage("id_ne");
+                if (pNeutrose) {
+                    var iNeutrose = (iTotalWeight*pDryExtract)*pNeutrose;
+                    document.getElementById("id_ne_val").innerHTML = iNeutrose.toFixed(3);
+                } else {
+                    var iNeutrose = 0;
+                    document.getElementById("id_ne_val").innerHTML = "0";
+                }
+
+                // Calculate Stab2000
+                var pStab = isIdPercentage("id_st");
+                if (pStab) {
+                    var iStab = (iTotalWeight*pDryExtract)*pStab;
+                    document.getElementById("id_st_val").innerHTML = iStab.toFixed(3);
+                } else {
+                    var iStab = 0;
+                    document.getElementById("id_st_val").innerHTML = "0";
+                }
+
+                // Calculate sugar
+                var iSubWeight = (iTotalWeight*pDryExtract);
+                var iSugar = iSubWeight - iPuree - iGlucose - iTrimoline - iDextrose - iNeutrose - iStab;
+                document.getElementById("id_sg_val").innerHTML = iSugar.toFixed(3);
+            };
+        };
+
+        // We check all form values before submitting for calculation
+        function isFormOK() {
+            if (!isIdNum("id_gr")) {
+                alert("Please provide the total weight in grams..");
+                return false;
+            }
+
+            if (!isIdPercentage("id_dr")) {
+                alert("Please provide the total dry extract percentage..");
+                return false;
+            }
+
+            if (!isIdPercentage("id_pu")) {
+                alert("Please provide a percentage value for puree..");
+                return false;
+            } else {
+                var totalCount = isIdPercentage("id_pu");
+                if (totalCount < 0.2) {
+                    alert("Puree should have a minimum value of 20%..");
+                    return false;
+                }
+                if (totalCount > 0.65) {
+                    alert("Puree should have a maximum value of 65%..");
+                    return false;
+                }
+            }
+
+            if (!isIdPercentage("id_gl") && !isIdPercentage("id_tr") && !isIdPercentage("id_de")) {
+                //alert("Please provide a percentage for at least one of: Glucose, Trimoline, Dextrose");
+                //return false;
+
+                // They can all be zero!
+            } else {
+                var totalCount = 0;
+                if (isIdPercentage("id_gl")) {
+                    totalCount += isIdPercentage("id_gl");
+                }
+
+                if (isIdPercentage("id_tr")) {
+                    totalCount += isIdPercentage("id_tr");
+                }
+
+                if (isIdPercentage("id_de")) {
+                    totalCount += isIdPercentage("id_de");
+                }
+
+                if (totalCount > 0.060000000000000005) {
+                    alert("The sum of Glucose, Trimoline and Dextrose should not be greater than 6%..");
+                    return false;
+                }
+            }
+
+            if (!isIdPercentage("id_ne") && !isIdPercentage("id_st")) {
+                //alert("Please provide a percentage for at least one of: Neutrose, Stab");
+                //return false;
+
+                // They can all be zero!
+            } else {
+                var totalCount = 0;
+                if (isIdPercentage("id_ne")) {
+                    totalCount += isIdPercentage("id_ne");
+                }
+
+                if (isIdPercentage("id_st")) {
+                    totalCount += isIdPercentage("id_st");
+                }
+
+                if (totalCount > 0.010000000000000005) {
+                    alert("The sum of Neutrose and Stab should not be greater than 1%..");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Check if ID value is null or empty
+        function isIdEmpty(idName) {
+            var sIDContent = document.getElementById(idName).value;
+            if (!sIDContent) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+        // Check if ID value is a number
+        function isIdNum(idName) {
+            var sIDContent = document.getElementById(idName).value;
+            if (!sIDContent) {
+                return false;
+            } else {
+                var result = parseInt(sIDContent);
+                if (isNaN(result)) {
+                    return false;
+                } else {
+                    return result;
+                }
+            }
+        };
+
+        // Check if value is percentage
+        function isIdPercentage(idName) {
+            var sIDContent = document.getElementById(idName).value;
+            if (!sIDContent) {
+                return false;
+            } else {
+                var result = parseFloat(sIDContent) / 100.00;
+                if (isNaN(result)) {
+                    return false;
+                } else {
+                    return result;
+                }
+            }
+        };
+
+    </script>
+</html>
