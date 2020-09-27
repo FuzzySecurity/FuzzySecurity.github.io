@@ -44,54 +44,63 @@
             <tr>
               <th>Item</th>
               <th>Percentage</th>
+              <th>Amount grams</th>
               <th>Dry Extract %</th>
               <th>Grams</th>
             </tr>
             <tr>
               <td>Puree</td>
               <td><input type="text" id="id_pu" value=""></td>
+              <td id="id_pu_am"></td>
               <td><input type="text" id="id_pu_dr" value="15"></td>
               <td id="id_pu_val"></td>
             </tr>
             <tr>
               <td>Glucose Powder</td>
               <td><input type="text" id="id_gl" value=""></td>
+              <td id="id_gl_am"></td>
               <td><input type="text" id="id_gl_dr" value="95"></td>
               <td id="id_gl_val"></td>
             </tr>
             <tr>
               <td>Trimoline</td>
               <td><input type="text" id="id_tr" value=""></td>
+              <td id="id_tr_am"></td>
               <td><input type="text" id="id_tr_dr" value="78"></td>
               <td id="id_tr_val"></td>
             </tr>
             <tr>
               <td>Dextrose</td>
               <td><input type="text" id="id_de" value=""></td>
+              <td id="id_de_am"></td>
               <td><input type="text" id="id_de_dr" value="92"></td>
               <td id="id_de_val"></td>
             </tr>
             <tr>
               <td>Super Neutrose</td>
               <td><input type="text" id="id_ne" value=""></td>
+              <td id="id_ne_am"></td>
               <td>100%</td>
               <td id="id_ne_val"></td>
             </tr>
             <tr>
               <td>Stab 2000</td>
               <td><input type="text" id="id_st" value=""></td>
+              <td id="id_st_am"></td>
               <td>100%</td>
               <td id="id_st_val"></td>
             </tr>
             <tr>
               <td>Sugar</td>
-              <td></td>
+              <td>N/A</td>
+              <td>N/A</td>
               <td>N/A</td>
               <td id="id_sg_val"></td>
             </tr>
             <tr>
               <td>Water</td>
-              <td></td>
+              <td>N/A</td>
+              <td>N/A</td>
               <td>N/A</td>
               <td id="id_wa_val"></td>
             </tr>
@@ -122,6 +131,8 @@
                 // Calculate puree
                 var pPuree = isIdPercentage("id_pu");
                 var pPureeDR = isIdPercentage("id_pu_dr");
+                var amPuree = ((iTotalWeight*pDryExtract)*pPuree);
+                document.getElementById("id_pu_am").innerHTML = amPuree.toFixed(3);
                 var iPuree = ((iTotalWeight*pDryExtract)*pPuree)*pPureeDR;
                 document.getElementById("id_pu_val").innerHTML = iPuree.toFixed(3);
 
@@ -129,10 +140,13 @@
                 var pGlucose = isIdPercentage("id_gl");
                 if (pGlucose) {
                     var pGlucoseDR = isIdPercentage("id_gl_dr");
+                    var amGlucose = ((iTotalWeight*pDryExtract)*pGlucose);
+                    document.getElementById("id_gl_am").innerHTML = amGlucose.toFixed(3);
                     var iGlucose = ((iTotalWeight*pDryExtract)*pGlucose)*pGlucoseDR;
                     document.getElementById("id_gl_val").innerHTML = iGlucose.toFixed(3);
                 } else {
                     var iGlucose = 0;
+                    document.getElementById("id_gl_am").innerHTML = "0";
                     document.getElementById("id_gl_val").innerHTML = "0";
                 }
 
@@ -140,10 +154,13 @@
                 var pTrimoline = isIdPercentage("id_tr");
                 if (pTrimoline) {
                     var pTrimolineDR = isIdPercentage("id_tr_dr");
+                    var amTrimoline = ((iTotalWeight*pDryExtract)*pTrimoline);
+                    document.getElementById("id_tr_am").innerHTML = amTrimoline.toFixed(3);
                     var iTrimoline = ((iTotalWeight*pDryExtract)*pTrimoline)*pTrimolineDR;
                     document.getElementById("id_tr_val").innerHTML = iTrimoline.toFixed(3);
                 } else {
                     var iTrimoline = 0;
+                    document.getElementById("id_tr_am").innerHTML = "0";
                     document.getElementById("id_tr_val").innerHTML = "0";
                 }
 
@@ -151,26 +168,34 @@
                 var pDextrose = isIdPercentage("id_de");
                 if (pDextrose) {
                     var pDextroseDR = isIdPercentage("id_de_dr");
+                    var amDextrose = ((iTotalWeight*pDryExtract)*pDextrose);
+                    document.getElementById("id_de_am").innerHTML = amDextrose.toFixed(3);
                     var iDextrose = ((iTotalWeight*pDryExtract)*pDextrose)*pDextroseDR;
                     document.getElementById("id_de_val").innerHTML = iDextrose.toFixed(3);
                 } else {
                     var iDextrose = 0;
+                    document.getElementById("id_de_am").innerHTML = "0";
                     document.getElementById("id_de_val").innerHTML = "0";
                 }
 
                 // Calculate Super Neutrose
                 var pNeutrose = isIdPercentage("id_ne");
                 if (pNeutrose) {
+                    var amNeutrose = (iTotalWeight*pDryExtract)*pNeutrose;
+                    document.getElementById("id_ne_am").innerHTML = amNeutrose.toFixed(3);
                     var iNeutrose = (iTotalWeight*pDryExtract)*pNeutrose;
                     document.getElementById("id_ne_val").innerHTML = iNeutrose.toFixed(3);
                 } else {
                     var iNeutrose = 0;
+                    document.getElementById("id_ne_am").innerHTML = "0";
                     document.getElementById("id_ne_val").innerHTML = "0";
                 }
 
                 // Calculate Stab2000
                 var pStab = isIdPercentage("id_st");
                 if (pStab) {
+                    var amStab = (iTotalWeight*pDryExtract)*pStab;
+                    document.getElementById("id_st_am").innerHTML = amStab.toFixed(3);
                     var iStab = (iTotalWeight*pDryExtract)*pStab;
                     document.getElementById("id_st_val").innerHTML = iStab.toFixed(3);
                 } else {
