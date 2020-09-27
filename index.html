@@ -44,7 +44,7 @@
             <tr>
               <th>Item</th>
               <th>Percentage</th>
-              <th>Weighted Value</th>
+              <th>Dry Extract %</th>
               <th>Grams</th>
             </tr>
             <tr>
@@ -56,19 +56,19 @@
             <tr>
               <td>Glucose Powder</td>
               <td><input type="text" id="id_gl" value=""></td>
-              <td>95%</td>
+              <td><input type="text" id="id_gl_dr" value="95"></td>
               <td id="id_gl_val"></td>
             </tr>
             <tr>
               <td>Trimoline</td>
               <td><input type="text" id="id_tr" value=""></td>
-              <td>95%</td>
+              <td><input type="text" id="id_tr_dr" value="78"></td>
               <td id="id_tr_val"></td>
             </tr>
             <tr>
               <td>Dextrose</td>
               <td><input type="text" id="id_de" value=""></td>
-              <td>95%</td>
+              <td><input type="text" id="id_de_dr" value="92"></td>
               <td id="id_de_val"></td>
             </tr>
             <tr>
@@ -86,13 +86,13 @@
             <tr>
               <td>Sugar</td>
               <td></td>
-              <td>100%</td>
+              <td>N/A</td>
               <td id="id_sg_val"></td>
             </tr>
             <tr>
               <td>Water</td>
               <td></td>
-              <td>100%</td>
+              <td>N/A</td>
               <td id="id_wa_val"></td>
             </tr>
         </table>
@@ -127,7 +127,8 @@
                 // Calculate Glucose Powder
                 var pGlucose = isIdPercentage("id_gl");
                 if (pGlucose) {
-                    var iGlucose = ((iTotalWeight*pDryExtract)*pGlucose)*0.95;
+                    var pGlucoseDR = isIdPercentage("id_gl_dr");
+                    var iGlucose = ((iTotalWeight*pDryExtract)*pGlucose)*pGlucoseDR;
                     document.getElementById("id_gl_val").innerHTML = iGlucose.toFixed(3);
                 } else {
                     var iGlucose = 0;
@@ -137,7 +138,8 @@
                 // Calculate Trimoline
                 var pTrimoline = isIdPercentage("id_tr");
                 if (pTrimoline) {
-                    var iTrimoline = ((iTotalWeight*pDryExtract)*pTrimoline)*0.95;
+                    var pTrimolineDR = isIdPercentage("id_tr_dr");
+                    var iTrimoline = ((iTotalWeight*pDryExtract)*pTrimoline)*pTrimolineDR;
                     document.getElementById("id_tr_val").innerHTML = iTrimoline.toFixed(3);
                 } else {
                     var iTrimoline = 0;
@@ -147,7 +149,8 @@
                 // Calculate Dextrose Powder
                 var pDextrose = isIdPercentage("id_de");
                 if (pDextrose) {
-                    var iDextrose = ((iTotalWeight*pDryExtract)*pDextrose)*0.95;
+                    var pDextroseDR = isIdPercentage("id_de_dr");
+                    var iDextrose = ((iTotalWeight*pDryExtract)*pDextrose)*pDextroseDR;
                     document.getElementById("id_de_val").innerHTML = iDextrose.toFixed(3);
                 } else {
                     var iDextrose = 0;
@@ -231,6 +234,21 @@
                     alert("The sum of Glucose, Trimoline and Dextrose should not be greater than 6%..");
                     return false;
                 }
+            }
+
+            if (!isIdPercentage("id_gl_dr")) {
+                alert("Glucose Powder dry extract percentage is not valid..");
+                return false;
+            }
+
+            if (!isIdPercentage("id_tr_dr")) {
+                alert("Trimoline dry extract percentage is not valid..");
+                return false;
+            }
+
+            if (!isIdPercentage("id_de_dr")) {
+                alert("Dextrose dry extract percentage is not valid..");
+                return false;
             }
 
             if (!isIdPercentage("id_ne") && !isIdPercentage("id_st")) {
