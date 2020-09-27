@@ -50,7 +50,7 @@
             <tr>
               <td>Puree</td>
               <td><input type="text" id="id_pu" value=""></td>
-              <td>100%</td>
+              <td><input type="text" id="id_pu_dr" value="100"></td>
               <td id="id_pu_val"></td>
             </tr>
             <tr>
@@ -121,7 +121,8 @@
 
                 // Calculate puree
                 var pPuree = isIdPercentage("id_pu");
-                var iPuree = (iTotalWeight*pDryExtract)*pPuree;
+                var pPureeDR = isIdPercentage("id_pu_dr");
+                var iPuree = ((iTotalWeight*pDryExtract)*pPuree)*pPureeDR;
                 document.getElementById("id_pu_val").innerHTML = iPuree.toFixed(3);
 
                 // Calculate Glucose Powder
@@ -209,6 +210,11 @@
                     alert("Puree should have a maximum value of 65%..");
                     return false;
                 }
+            }
+
+            if (!isIdPercentage("id_pu_dr")) {
+                alert("Puree dry extract percentage is not valid..");
+                return false;
             }
 
             if (!isIdPercentage("id_gl") && !isIdPercentage("id_tr") && !isIdPercentage("id_de")) {
