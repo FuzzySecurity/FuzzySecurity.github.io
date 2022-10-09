@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Linux ExploitDev: Part 4</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPython.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Use-After-Free [Pwnable.kr -> uaf]</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 4: Use-After-Free [Pwnable.kr -> uaf]<span class="line"></span></h2>
+        <p>In this next part we will have a look at the UAF challenge on <a href="http://pwnable.kr/play.php">pawnable.kr</a>. This is a 64-bit Linux UAF vulnerability. Putting UAF in the toddler section seems like a bit of a slap in the face (why your skillllzzz no g00d b33f?) but things are not as dire as they seem. Let’s get straight into it.</p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <h2 class="title">Recon the challenge<span class="line"></span></h2>
+      <p>Again, we are provided with some source for the binary, shown below.</p><br />
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+#include &lt;fcntl.h>
+#include &lt;iostream> 
+#include &lt;cstring>
+#include &lt;cstdlib>
+#include &lt;unistd.h>
+using namespace std;
+
+class Human{
+private:
+	virtual void give_shell(){
+		system("/bin/sh");
+	}
+protected:
+	int age;
+	string name;
+public:
+	virtual void introduce(){
+		cout &lt;&lt; "My name is " &lt;&lt; name &lt;&lt; endl;
+		cout &lt;&lt; "I am " &lt;&lt; age &lt;&lt; " years old" &lt;&lt; endl;
+	}
+};
+
+class Man: public Human{
+public:
+	Man(string name, int age){
+		this->name = name;
+		this->age = age;
+        }
+        virtual void introduce(){
+		Human::introduce();
+                cout &lt;&lt; "I am a nice guy!" &lt;&lt; endl;
+        }
+};
+
+class Woman: public Human{
+public:
+        Woman(string name, int age){
+                this->name = name;
+                this->age = age;
+        }
+        virtual void introduce(){
+                Human::introduce();
+                cout &lt;&lt; "I am a cute girl!" &lt;&lt; endl;
+        }
+};
+
+int main(int argc, char* argv[]){
+	Human* m = new Man("Jack", 25);
+	Human* w = new Woman("Jill", 21);
+
+	size_t len;
+	char* data;
+	unsigned int op;
+	while(1){
+		cout &lt;&lt; "1. use\n2. after\n3. free\n";
+		cin >> op;
+
+		switch(op){
+			case 1:
+				m->introduce();
+				w->introduce();
+				break;
+			case 2:
+				len = atoi(argv[1]);
+				data = new char[len];
+				read(open(argv[2], O_RDONLY), data, len);
+				cout &lt;&lt; "your data is allocated" &lt;&lt; endl;
+				break;
+			case 3:
+				delete m;
+				delete w;
+				break;
+			default:
+				break;
+		}
+	}
+
+	return 0;	
+}</pre>
+</div>
+    
+<p>&nbsp;</p>
+<p>Take some time to review the code closely. First of all, when the program initializes, it creates a "man" & "woman" object. See an extract of the main function prolog below.</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_UAF1.png">
+<p>&nbsp;</p>
+
+<p>Notice that a size of 0x18 (24 bytes) is allocated for both objects (the minimum size for malloc?). We have str "Jack" + int 0x19 (25) and str "Jill" + int 0x15 (21).<br /><br />
+
+After the prolog, we reach our menu with branching options. From the source code it is obvious that there is an issue here, if we select "free" and then "use", the program will attempt to call the introduce method on the deleted "man" & "woman" objects resulting in a segfault.</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_UAF2.png">
+<p>&nbsp;</p>
+
+<p>That leaves the "after" option which takes two arguments (to be supplied at runtime). The second argument is a file path and the first argument is an integer which is used to read X bytes from the file into memory.</p>
+    
+<p>&nbsp;</p>
+<img src="images/Pwnable_UAF3.png">
+<p>&nbsp;</p>
+
+<p>Ok, fairly straight forward, if we select the "free" menu option and then allocate our own custom objects (with the same size) we should be able to get some kind of code exec primitive when referencing that data with the "use" menu option.<br /><br />
+
+The final remaining questions is what are we targeting to complete the challenge? The human class has a private method called "give_shell" which will spawn a bash shell for us, this seems like a pretty convenient target.</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_UAF4.png">
+
+<h2 class="title">Pwn all the things!<span class="line"></span></h2>
+<p>For this to work we need to have a better understanding of the "use" option. The graph disassembly for that option can be seen below.</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_UAF5.png">
+<p>&nbsp;</p>
+
+<p>It seems like there are two near identical calls here, presumably one for the "man" object and one for the "woman" object (or vice versa). Either way, let’s break on "use" in GDB and see what we have.</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_UAF6.png">
+<p>&nbsp;</p>
+
+<p>Curiously, we can see pointers to the "Human::give_shell" method. Notice, that we are adding 8 (IntPtr size) to RAX before the QWORD pointer is loaded into RDX and later executed at main+286. After adding 8, the QWORD pointer changes to "Man::introduce".</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_UAF7.png">
+<p>&nbsp;</p>
+
+<p>Let’s try giving the program a buffer of 24 character and see what happens. We can construct the input file as follows.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>
+python -c 'print ("\x41"*8 + "\x42"*8 + "\x43"*8)' > OutFile</pre>
+<br />
+</div>
+<p>&nbsp;</p>
+<p>After a bit of playing around I found that we have to select the "after" menu option twice to get our code exec primitive. I assume this is because we are deleting two objects of 24 bytes so we have to make two allocations of 24 bytes. Or rather when we hit the "use" menu option, the first call actually references the second allocation whereas the second call references the first allocation.</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_UAF8.png">
+<p>&nbsp;</p>
+
+<p>It is pretty much game over at this point, we can call an arbitrary address and from earlier we found two QWORDS which point at the "Human::give_shell" method. If we take either of those and subtract 8 (we need to remember to compensate for "add rax, 8") we should be redirected into a bash shell!</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>
+0x401570 - 8 = 0x401568 => \x68\x15\x40\x00\x00\x00\x00\x00
+0x401550 - 8 = 0x401548 => \x48\x15\x40\x00\x00\x00\x00\x00</pre>
+<br />
+</div>
+<p>&nbsp;</p>
+<h2 class="title">Game Over<span class="line"></span></h2>
+<p>Let’s ssh into the box and get the flag!</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_UAF9.png">
+<p>&nbsp;</p>
+
+</div>
+    </div>
+</div>
+
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

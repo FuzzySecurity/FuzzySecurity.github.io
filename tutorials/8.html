@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tutorials: Nessus and OpenVAS</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Nessus and OpenVAS</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Scanner Weaponry: Installing Nessus and OpenVAS<span class="line"></span></h2>
+        <p>The key to successfully finding and exploiting vulnerabilities in remote systems is all about the amount of information you have in hand. It might sound cliché but the key to getting that information is all about hard work; researching software, hardware and configuration vulnerabilities. You need to dig deep and Try Harder! That being said we can't know all there is to know about everything all the time hehe. To help us out there are a couple of comprehensive vulnerability scanners, two of which we will be installing on Backtrack 5 R2 (Nessus and OpenVAS). However like I said the key is hard work, if you rely solely on vulnerability scanners to do your work for you your certain to miss many interesting and critical security holes.</p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <h2 class="title">(1) Nessus<span class="line"></span></h2>
+      <p>We will start with Nessus which, to my knowledge, is the best vulnerability scanner out there. Nessus isn't included in Backtrack 5 R2 by default so first we need to grab it from the repo's.</p>
+      
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>apt-get install nessus</span>
+
+<span style="color:#2B8156;">[...snip...]</span>
+The following NEW packages will be installed:<br />  nessus
+<span style="color:#2B8156;">[...snip...]</span></pre>
+<br />
+</div>
+    
+    <p>&nbsp;</p>
+    <p>Ok great, now we need a key to activate Nessus. There are two main options here, since we will be using Nessus for private non-commercial use we can get a free “HomeFeed” key. All you need to do is fill out the registry form <a href="http://www.nessus.org/register/">here</a>.</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/SecScann_Big1.png" rel="prettyPhoto[scanner]">
+          <img src="images/SecScann_Small1.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Nessus Registration</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>After filling out the form you will immediately receive you registration key per email. All you need to do is enter it as shown below.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre><span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>/opt/nessus/bin/nessus-fetch --register XXXX-XXXX-XXXX-XXXX-XXXX</span>
+
+Your activation code has been registered properly - thank you.<br />Now fetching the newest plugin set from plugins.nessus.org...<br />Your Nessus installation is now up-to-date.<br />If auto_update is set to 'yes' in nessusd.conf, Nessus will<br />update the plugins by itself.</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>As you can see above there is a config file that contains allot of options which you should have a look at (though the default settings do the job well enough). Next we need to add a user account for our Nessus install, set that user to be the Nessus admin. When prompted to define rules just hit enter to leave them blank.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>/opt/nessus/sbin/nessus-adduser</span>
+
+Login : b33f
+Login password : 
+Login password (again) : 
+Do you want this user to be a Nessus 'admin' user ? (can upload plugins, etc...) (y/n) [n]: y
+
+User rules
+----------
+nessusd has a rules system which allows you to restrict the hosts
+that b33f has the right to test. For instance, you may want
+him to be able to scan his own host only.
+
+Please see the nessus-adduser manual for the rules syntax
+
+Enter the rules for this user, and enter a BLANK LINE once you are done : 
+(the user can have an empty rules set)
+
+Login            : b33f
+Password         : ***********
+This user will have 'admin' privileges within the Nessus server
+Rules            :
+Is that ok ? (y/n) [y] y
+User added</pre>
+        </div>
+        <div class="left_three">
+          <p>All that remains is starting the Nessus server.</p>
+        </div>
+        <div class="terminal_wrap" style="background:#CCC">
+          <pre>
+<span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>/etc/init.d/nessusd start</span>
+
+Starting Nessus</pre>
+<br /></div>
+
+<p>&nbsp;</p>
+<p><p>Turning off Nessus works in the same way. You can now open your browser (i'm using chrome but feel free to use firefox), navigate to &quot;https://127.0.0.1:8834/&quot; and log in with your user credentials.</p></p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/SecScann_Big2.png" rel="prettyPhoto[scanner]">
+          <img src="images/SecScann_Small2.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Nessus Login</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/SecScann_Big3.png" rel="prettyPhoto[scanner]">
+          <img src="images/SecScann_Small3.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Nessus Menu</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+
+<h2 class="title">(2) OpenVAS<span class="line"></span></h2>
+<p>OpenVAS is another excellent vulnerability scanner. Setting up OpenVAS is a bit of a pain in the ass but it is well worth the effort. Navigate to the directory shown below, there is a script there (&quot;openvas-check-setup&quot;) which is particularly useful for troubleshooting you installation if something goes wrong. First we will need to generate a SSL certificate for OpenVAS (even if we won't use it).</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>cd /pentest/misc/openvas/</span>
+
+<span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvas-mkcert</span>
+The following files were created:
+
+. Certification authority:
+   Certificate = /usr/local/var/lib/openvas/CA/cacert.pem
+   Private key = /usr/local/var/lib/openvas/private/CA/cakey.pem
+
+. OpenVAS Server : 
+    Certificate = /usr/local/var/lib/openvas/CA/servercert.pem
+    Private key = /usr/local/var/lib/openvas/private/CA/serverkey.pem
+
+Press [ENTER] to exit</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Next we are going to have OpenVAS grab the latest NVT's these are like vulnerability signature files that OpenVAS uses.</p>
+  
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvas-nvt-sync</span>
+
+<span style="color:#2B8156;">[...snip...]</span>
+[i] Download complete
+[i] Checking dir: ok
+[i] Checking MD5 checksum: ok</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Now generate the client certificate and rebuild the database.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvas-mkcert-client -n om -i</span>
+
+<span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvasmd --rebuild</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Start the scanner to load all the newly downloaded NVT's into the database (may take some time), rebuild the database and back it up.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvassd</span>
+
+<span style="color:#2B8156;">[...snip...]</span>
+All plugins loaded
+
+<span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvasmd --rebuild</span>
+
+<span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvasmd --backup</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Configure an administrative user to interact with the OpenVAS scanner.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvasad -c 'add_user' -n openvasadmin -r Admin</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Configure an administrative user to interact with the OpenVAS scanner.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvasad -c 'add_user' -n openvasadmin -r Admin</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Configure the ports that OpenVAS will use and start the web-GUI frontend for the scanner.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvasmd -p 9390 -a 127.0.0.1</span>
+
+<span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvasad -a 127.0.0.1 -p 9393</span>
+
+<span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>gsad --http-only --listen=127.0.0.1 -p 9392</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Finally add a regular user account. This is important, after entering the desired login you will be prompted for “Authentication (pass/cert)” leave this blank and just hit enter, you will then be asked to set a “Login password”. When asked to define rules for the user leave it blank by hitting CTRL-D.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:/pentest/misc/openvas# <span style='color:#2B8156;'>openvas-adduser</span>
+
+Using /var/tmp as a temporary file holder.
+
+Add a new openvassd user
+---------------------------------
+
+Login : b33f
+Authentication (pass/cert) [pass] : 
+Login password : 
+Login password (again) : 
+
+User rules
+---------------
+openvassd has a rules system which allows you to restrict the hosts that b33f has the right to test.
+For instance, you may want him to be able to scan his own host only.
+
+Please see the openvas-adduser(8) man page for the rules syntax.
+
+Enter the rules for this user, and hit ctrl-D once you are done:
+(the user can have an empty rules set)
+
+Login             : b33f
+Password          : ***********
+
+Rules             : 
+
+Is that ok? (y/n) [y] y
+user added.</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>All done, you can now open your browser and point it at &quot;http://127.0.0.1:9392/&quot; and you will be presented with the Greenbone Security Assistant frontend for OpenVAS.</p><br />
+  <p>There is one more  thing I should mention. If you reboot and want to start OpenVAS again it is a bit tedious since it requires quite a few commands. For your (and my) convenience I poured these commands into a small shellscript which you can download below. The script will update NVT's, rebuild the database and start the web frontend.</p><br />
+  <p>Download: <a href="files/openvas.rar">OpenVAS.sh</a><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/SecScann_Big4.png" rel="prettyPhoto[scanner]">
+          <img src="images/SecScann_Small4.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>OpenVAS Login</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/SecScann_Big5.png" rel="prettyPhoto[scanner]">
+          <img src="images/SecScann_Small5.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>OpenVAS Menu</p>
+      </div>
+
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

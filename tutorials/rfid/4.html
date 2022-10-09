@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | EasyCard</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Part 3: EasyCard - Reverse Engineering an RFID payment system</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 3: EasyCard - Reverse Engineering an RFID payment system<span class="line"></span></h2>
+        <p><font color=#ffffff><strong>English:</strong></font><br /><br />
+
+Hello and welcome. This introduction has been translated in to traditional Chinese so that any readers from Taiwan can understand what this post is about and what it is not about. I have been sitting on this research for a while now, because it deals with a sensitive subject, but I have finally decided to publish my findings.<br /><br />
+
+If you are in Taiwan for any amount of time you will come in contact with EasyCard (or as it is commonly pronounced Yoyo Card - yōuyóu kǎ). EasyCard's have a wide scope of use, both for transportation (metro, buses, trains, domestic flights) and payment (convenience stores, parking fees, hospitals, libraries). For a full list of EasyCard applications I invite you to check out their official website <a href="http://www.easycard.com.tw/english/use/index.asp">here</a>.<br /><br />
+
+Back in August of 2013 I saw a presentation given by Harald Welte at the 27th Computer Chaos Club (CCC - 2010) in Germany. I have included links to the video and powerpoint slides below. While Harald was doing some freelance work in Taiwan he decided to have a look at the EasyCard system. Much to his surprise he discovered that these cards were based on Mifare Classic 1k, more so he discovered that they were poorly implemented storing the available monetary balance client-side without any proper sanity checks against a back-end database. After some research he was able to manipulate the card contents to increase/decrease the available balance and bypass the maximum daily spending limit.<br /><br />
+
+After watching his presentation I was naturally curious so I decided to have a look online to find out if there had been any publicly reported cases of fraud using EasyCard's. Much to no one's surprise there have been cases like this, the most recent case dating back to 2011 where a 24 year old engineer (Wu Tung-shen) artificially recharged 3 new EasyCard's to contain 9000NTD (214 euro) each. Wu was arrested about one month after first using one of the fraudulent cards, I have included a link to the chinapost article below.<br /><br />
+
+Strangely the EasyCard corporation maintained that their cards had not been "cracked" and that Wu's arrest was proof that they had adequate security measures in place to protect against fraud. Respectfully, as security-minded people, we should reject this statement outright. The fact that Wu was able to manipulate the card contents automatically implies that the card security was compromised.<br /><br />
+
+After reading up on the subject matter I said to myself: "Well Ruben, that was a long time ago. Progress is not measured by mistakes, it is measured by what we learn from them". However, much to my dismay, five minutes after first putting an EasyCard on my RFID reader I realised that no improvements had been made. EasyCard's are still based on Mifare Classic and still don't implement any real-time integrity checks.<br /><br />
+
+I will follow in the footsteps of the research done by Harald Welte, dismantling the EasyCard and taking an in-depth look at the data that it contains. I will show that, once the card structure is understood, manipulating the contents is trivial.<br /><br />
+
+You may ask yourself why I am writing this post. To me, it is incredulous that the protection of a payment system is held in such low regard. Consider that this was the very first RFID application I ever looked at and within the space of a few days I was able to completely reverse engineer the card contents. The EasyCard corporation has know that the EasyCard has security issues since 2010 yet no efforts have been made to correct these mistakes. In the spirit of full-disclosure, I hope (naively?) that I can in some small way contribute to the increased security of the EasyCard system by exposing it's flaws.<br /><br />
+
+<font color=#ffffff><strong>Chinese:</strong></font><br /><br />
+
+大家好，本文章介紹已由原文翻譯成繁體中文，好讓臺灣讀者理解我寫這篇文章的用意以及研究的內容。因為這篇文章觸及的議題較敏感，所以完成後遲遲未發表，但經過多方考慮後，還是希望跟大家分享我的研究。<br /><br />
+
+只要在台灣待得夠久，你就一定會接觸到悠遊卡，悠遊卡的使用範圍相當廣，舉凡搭乘各式交通工具(捷運、公車、火車、國內航班等)，以及支付各式機構的費用(便利商店、停車場、醫院、圖書館等)，都可以透過悠遊卡付款。詳盡的<a href="http://www.easycard.com.tw/english/use/index.asp">適用範圍</a>可以參照悠遊卡公司的官方網站。<br /><br />
+
+去年8月，我看了Harald Welte 在第27屆的 Computer Chaos Club (CCC)中發表的研究(2010年在德國舉行，底下附上影片連結以及ppt)。因為工作的關係，Harald曾以自由工作者的身分在台灣住過一陣子，他也因此接觸到了悠遊卡，並決定花時間研究看看。首先，他很驚訝悠遊卡使用的是Mifare Classic 1K，更驚人的是，卡片的設計非常差、餘額居然儲存在客戶端，交易時也不會和後端的資料庫進行合理性檢查。經過一番研究後，他不僅能夠自行更改悠遊卡上的金額，也能夠取消當日消費金額的上限。<br /><br />
+
+看完Harald在CCC會議的發表後，好奇心使然，我便上網查詢了悠遊卡詐欺的相關新聞報導，也確實找到了幾則。最近的一起詐欺是在2011年遭起訴的24歲工程師吳東霖，他一共竄改了三張悠遊卡，將每張卡的儲值金額加到台幣9000元，也以竄改過的卡消費，但他是在第一次消費的一個半月後，才被警方拘提到案。(底下附上相關報導連結)<br /><br />
+
+奇怪的是，悠遊卡公司聲明卡片並沒有被「破解」，而吳姓工程師被逮捕，更證明了悠遊卡的安全防護措施相當完善，大眾不需要擔心詐欺情事。但是，任何有資安常識的人都應該知道，我們不應該接受這種說法，事實就是吳姓工程師竄改了卡片內容、卡片的安全性堪慮。<br /><br />
+
+在研讀許多相關報導和文章後，我告訴我自己：「Ruben，這報導已經是好幾年前的事了，若有前車之鑑，便不會重蹈覆轍。」然而，實際以RFID測試悠遊卡五分鐘後，我大失所望，我發現什麼都沒有改變 — 悠遊卡還是使用Mifare Classic，也沒有使用即時的資安完整性檢查。<br /><br />
+
+在這篇文章中，我將會按照Harald提到的步驟，拆解悠遊卡並深入研究其中的數據。接下來，我將揭露：只要摸透卡片的資料結構，便能不費吹灰之力竄改卡片的內容。<br /><br />
+
+
+你可能會質疑我寫這篇文章的動機，對我來說，一個用來支付費用的系統，不應該有這麼大的資安漏洞。 這是我第一次接觸RFID的相關研究，但是不到幾天的時間，我已經可以任意操弄卡片上的數據。悠遊卡公司早在2010年就已經發現這個系統漏洞，但卻沒有任何適切的因應舉措。基於充分披露的精神，我希望本篇文章多少可以影響悠遊卡公司，讓其再度重視卡片系統的資安問題。<br /><br />
+
+<div class="description"><font color=#e64141 style="font-size:15px"><strong>The contents of this post are for educational purposes only, I absolutely do not condone the misuse of any form of technology. Finally I want to make it absolutely clear that no fraud was committed during the course of my research.<br /><br />
+
+本篇文章純粹為教育目的，我絕對不接受任何形式的技術濫用。最後，我嚴正聲明，在研究過程中，我完全沒有使用到竄改的金額，並無涉及任何詐欺行為，研究結束後亦不會使用竄改過的卡片。</strong></font></p></div>
+
+<div class="five columns bottom"><h2 class="title bottom-2">Reporting Timeline<span class="line"></span></h2></div>
+<div class="eighteen columns bottom">
+<p>I wanted to establish an open communications line with the EasyCard corporation. This was done for two reasons: (1) To make sure they knew I was going to write an article and (2) provide them with the opportunity to give their official position on the security of EasyCard's.<p>&nbsp;</p>
+
+<div class="description" style="font-size:13px;text-align:left">
+<font color=#ffffff><strong>English:</strong></font><br /><br />
+<font color=#e64141>12/03/2014</font> - I sent my initial email through the online contact form on the EasyCard website. I received no response.<br />
+<font color=#e64141>21/03/2014</font> - Having found an official support email address (service@easycard.com.tw) I resent my original inquiry.<br />
+<font color=#e64141>25/03/2014</font> - I received a (friendly) response asking for more details about what I intended to write.<br />
+<font color=#e64141>25/03/2014</font> - I replied explaining my standpoint and provided a bullet-point overview of the topics I would be covering.<br />
+<font color=#e64141>06/04/2014</font> - Having not received any further response I sent a mail as a reminder of my upcoming post.<br />
+<font color=#e64141>07/04/2014</font> - Received a reply containing the official position of the EasyCard company.<br />
+<font color=#e64141>07/04/2014</font> - I asked if I could include the official position of the EasyCard corporation in my post.<br />
+<font color=#e64141>07/04/2014</font> - Permission granted to include the email content.<br />
+<font color=#e64141>16/04/2014</font> - Article publication date.<br /><br />
+
+<font color=#ffffff><strong>Chinese:</strong></font><br /><br />
+<font color=#e64141>12/03/2014</font> - 我透過官網提供的電子信箱聯絡悠遊卡公司，未收到任何答覆。<br />
+<font color=#e64141>21/03/2014</font> - 找到另一個官方網站上的技術資源電子信箱(service@easycard.com.tw)，我再寄了一次信。<br />
+<font color=#e64141>25/03/2014</font> - 收到了友善的回覆，悠遊卡公司想更進一步得知我的文章內容。<br />
+<font color=#e64141>25/03/2014</font> - 回覆悠遊卡公司，說明我的立場，大致提供文章概要和我會談到的問題。<br />
+<font color=#e64141>06/04/2014</font> - 悠遊卡公司尚未回覆前一封信件，所以我發了一封信提醒他們，文章將會在近幾天發表。<br />
+<font color=#e64141>07/04/2014</font> - 收到回覆，悠遊卡公司的官方聲明。<br />
+<font color=#e64141>07/04/2014</font> - 我詢問是否可以將悠遊卡公司的聲明放在我的文章內。<br />
+<font color=#e64141>07/04/2014</font> - 收到回覆，悠遊卡公司授權同意。<br />
+<font color=#e64141>16/04/2014</font> - 發表文章。<br /></p>
+</div><p>&nbsp;</p>
+
+<div class="seven columns bottom">
+<font color=#ffffff><strong>Official position, received on 07/04/2014:</strong></font><br /><br />
+<blockquote style="text-align:justify">The EasyCard chooses Mifare system because it is widely used in many smart cards around the world, and many major companies continued to adopt the system for their cards. While the encryption system on the cards had been cracked, any use of the hacked cards to make transactions will be detected, which allows us to stop any acts of thefts immediately and prevent hackers from taking advantages of the cards. Since the hacking incident in 2011, we’ve moved to Mifare Plus to improve the security mechanism, and our efforts to enhance the security of the EasyCard will continue.</blockquote></div>
+
+<p><div class="seven columns bottom">
+<font color=#ffffff><strong>悠遊卡公司官方聲明 (已從原文英文譯入繁中 07/04/2014):</strong></font><br /><br />
+<blockquote style="text-align:justify">悠遊卡公司之所以選擇Mifare系統，是以該系統在世界各地廣泛被應用在智慧型晶片卡上，許多大公司的卡片也都採用該系統。若卡片上的加密系統遭破解，只要使用竄改過的卡片來交易都會被偵測，如此一來，我們便能立即阻止任何竊盜或是駭客濫用卡片的行為。有鑑於2011年的卡片竄改事件，我們已經將系統升級為Mifare Plus，提高系統的安全機制。我們也會繼續致力於加強悠遊卡的安全性。</blockquote>
+</div></p></div>
+
+<div class="five columns bottom"><h2 class="title bottom-2">Links<span class="line"></span></h2></div>
+<div class="eighteen columns bottom">
+<p>I have included links to Harald's presentation at CCC as well as news reports for the 2011 hacking case and other general information.</div><br /><br />
+
+<div class="seven columns bottom">
+<font color=#ffffff><strong>Presentation by Harald Welte:</strong></font><br /><br />
+Video recording of the presentation at CCC (2010) - <a href="https://www.youtube.com/watch?v=wSYcTl0B7MY">here</a><br />
+Powerpoint slides for the presentation (PDF format) - <a href="http://events.ccc.de/congress/2010/Fahrplan/attachments/1772_easycard.pdf">here</a><br /><br />
+<font color=#ffffff><strong>Wikipedia:</strong></font><br /><br />
+English EasyCard Wikipedia Page - <a href="http://en.wikipedia.org/wiki/EasyCard">here</a><br />
+Chinese EasyCard Wikipedia Page - <a href="http://zh.wikipedia.org/wiki/%E6%82%A0%E9%81%8A%E5%8D%A1">here</a></p></div>
+
+<div class="eight columns bottom">
+<font color=#ffffff><strong>News report for the 2011 case:</strong></font><br /><br />
+Engineer hacks "unbreakable" MRT EasyCard security system [ChinaPost] - <a href="http://www.chinapost.com.tw/taiwan/national/national-news/2011/09/28/318043/Engineer-hacks.htm">here</a><br />
+悠遊卡遭破解 加值免付錢 (The Liberty Times) - <a href="http://www.libertytimes.com.tw/2011/new/sep/27/today-t1.htm">here</a><br />
+悠遊卡密碼遭破解！涉案工程師僅賺39元 (CTS) - <a href="http://news.cts.com.tw/nownews/society/201109/201109270832101.html">here</a><br />
+悠遊卡遭駭客破解 工程師落網 (Yahoo News) - <a href="https://tw.news.yahoo.com/%E6%82%A0%E9%81%8A%E5%8D%A1%E9%81%AD%E9%A7%AD%E5%AE%A2%E7%A0%B4%E8%A7%A3-%E5%B7%A5%E7%A8%8B%E5%B8%AB%E8%90%BD%E7%B6%B2-071132044.html">here</a><br /><br />
+
+<font color=#ffffff><strong>Hacks In Taiwan (HITCON) 2010:</strong></font><br /><br />
+MIFARE Classic is Completely Broken (Professor Chen-Mou Cheng NTU) - <a href="http://hitcon.org/download/2010/11_MIFARE%20Classic%20IS%20Completely%20Broken.pdf">here</a></p></div>
+
+<div class="five columns bottom"><h2 class="title bottom-2">Final Introductory Notes<span class="line"></span></h2></div>
+<div class="eighteen columns bottom">
+<p>I would like to point out that the official reply from the EasyCard company states that they have moved to <a href="http://en.wikipedia.org/wiki/MIFARE#MIFARE_Plus">Mifare Plus</a>, however I have only ever seen Mifare Classic cards. In fact I bought a new EasyCard in April of 2014 and I can confirm it is still a Mifare Classic 1k card. If you need more background on Mifare classic I recommend that you read my datasheet <a href="2.html">here</a>. To be on the safe side I will replace any instances of my card NUID (Non Unique Identifier) with DE AD BE EF and I'll patch the LRC checksum to be 22 (which corresponds to the NUID).</p></div>
+
+      <div class="fourteen columns bottom">
+      <h2 class="title">All You Data Are Belong To Us!<span class="line"></span></h2>
+<p>The first thing we need to do is crack the card encryption. The proprietary CRYPTO-1 stream cipher, that Mifare Classic uses, has had known security issues since 2007 and was completely reverse engineered by European researchers in 2008. Two open source tools (<a href"https://code.google.com/p/mfcuk/">mfcuk</a> & <a href="https://code.google.com/p/mfoc/">mfoc</a>) have been released to practically demonstrate these issues. Using an over the counter RFID reader (such as the ACR122U) CRYPTO-1 can be cracked in 30 minutes or less.<br /><br />
+
+For the purposes of my research I used a proxmark which implements these same attacks but uses a Spartan-II FPGA to significantly speed up the decryption to 10 minutes or less.</p><br />
+          
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#990066;"><strong># Again, keep in mind that I have replaced the NUID with DE AD BE EF.</strong></span>
+
+<span style="color:#ff0000;">proxmark3></span> <span style='color:#2B8156;'>hf 14a read</span>
+ATQA : 04 00
+ UID : de ad be ef
+ SAK : 08 [2]
+TYPE : NXP MIFARE CLASSIC 1k | Plus 2k
+proprietary non iso14443a-4 card found, RATS not supported
+
+<span style="color:#990066;"><strong># We need to extract at least one valid sector key (A or B). Using the darkside attack on my proxmark,
+  extracting a valid key only takes about 10 seconds.</strong></span>
+
+<span style="color:#ff0000;">proxmark3></span> <span style='color:#2B8156;'>hf mf mifare</span>
+-------------------------------------------------------------------------
+Executing command. Expected execution time: 25sec on average  :-)
+Press the key on the proxmark3 device to abort both proxmark3 and client.
+-------------------------------------------------------------------------
+......................
+uid(26088897) nt(2d2e1271) par(6ae252fab2aabae2) ks(0f040501060e010e)
+|diff|{nr}    |ks3|ks3^5|parity         |
++----+--------+---+-----+---------------+
+| 00 |00000000| f |  a  |0,1,0,1,0,1,1,0|
+| 20 |00000020| 4 |  1  |0,1,0,0,0,1,1,1|
+| 40 |00000040| 5 |  0  |0,1,0,0,1,0,1,0|
+| 60 |00000060| 1 |  4  |0,1,0,1,1,1,1,1|
+| 80 |00000080| 6 |  3  |0,1,0,0,1,1,0,1|
+| a0 |000000a0| e |  b  |0,1,0,1,0,1,0,1|
+| c0 |000000c0| 1 |  4  |0,1,0,1,1,1,0,1|
+| e0 |000000e0| e |  b  |0,1,0,0,0,1,1,1|
+00a2742a|00b0f322
+------------------------------------------------------------------
+Key found:177d527a7320 
+Found valid key:177d527a7320
+
+<span style="color:#990066;"><strong># As we can see we recovered a valid key, 0x177d527a7320. Please take note that it is a fully randomised
+  key. Non of the EasyCards that I tested contained default keys and no two keys were identical. Using
+  this key we can run a nested attack to retrieve all 32 secret keys (A&amp;B).</strong></span>
+
+<span style="color:#ff0000;">proxmark3></span> <span style='color:#2B8156;'>hf mf nested 1 0 A 177d527a7320 d</span>
+--block no:00 key type:00 key:17 7d 52 7a 73 20  etrans:0          
+Block shift=0          
+Testing known keys. Sector count=16          
+nested...          
+..uid:26088897 len=1 trgbl=0 trgkey=0          
+.uid:26088897 len=2 trgbl=0 trgkey=0          
+.uid:26088897 len=2 trgbl=0 trgkey=0          
+.uid:26088897 len=3 trgbl=0 trgkey=0          
+.uid:26088897 len=3 trgbl=0 trgkey=0          
+.------------------------------------------------------------------
+Total keys count:672032          
+Found valid key:589a711ee390          
+..uid:26088897 len=2 trgbl=4 trgkey=0          
+.uid:26088897 len=2 trgbl=4 trgkey=0          
+.uid:26088897 len=2 trgbl=4 trgkey=0          
+.uid:26088897 len=2 trgbl=4 trgkey=0          
+.uid:26088897 len=2 trgbl=4 trgkey=0          
+.------------------------------------------------------------------
+Total keys count:775656          
+Found valid key:e3b3180cdfb3                   
+
+<span style='color:#2B8156;'>[...Snip...]</span>
+
+..uid:26088897 len=2 trgbl=60 trgkey=0          
+.uid:26088897 len=2 trgbl=60 trgkey=0          
+.uid:26088897 len=2 trgbl=60 trgkey=0          
+.uid:26088897 len=2 trgbl=60 trgkey=0          
+.uid:26088897 len=2 trgbl=60 trgkey=0          
+.------------------------------------------------------------------
+Total keys count:761980          
+Found valid key:34cbcd3cd740          
+..uid:26088897 len=1 trgbl=60 trgkey=0          
+.uid:26088897 len=2 trgbl=60 trgkey=0          
+.uid:26088897 len=2 trgbl=60 trgkey=0          
+.uid:26088897 len=1 trgbl=60 trgkey=0          
+.uid:26088897 len=2 trgbl=60 trgkey=0          
+.------------------------------------------------------------------
+Total keys count:504884          
+Found valid key:59e2ee92947b          
+Iterations count: 31          
+|---|----------------|---|----------------|---|          
+|sec|key A           |res|key B           |res|          
+|---|----------------|---|----------------|---|          
+|000|  177d527a7320  | 1 |  589a711ee390  | 1 |          
+|001|  e3b3180cdfb3  | 1 |  b3124f910108  | 1 |          
+|002|  6e83aedc298b  | 1 |  f2b11dbc4ba0  | 1 |          
+|003|  9eaf9a781d04  | 1 |  1e59fdc45765  | 1 |          
+|004|  68e59c6e6eb1  | 1 |  0c4bed4166f6  | 1 |          
+|005|  c9edc48fb206  | 1 |  6f17c208c707  | 1 |          
+|006|  44b5a96ebfd7  | 1 |  43a2e1567524  | 1 |          
+|007|  3336e79e1a29  | 1 |  8958b301e827  | 1 |          
+|008|  d890947bdf00  | 1 |  8e9a2e88b3d6  | 1 |          
+|009|  59029282beeb  | 1 |  8a60ff0dda5c  | 1 |          
+|010|  dd71fc0fa9ad  | 1 |  29fa03b69894  | 1 |          
+|011|  321e64fbae31  | 1 |  6932f8ab5fee  | 1 |          
+|012|  6e7ffccb05e8  | 1 |  5c1491003344  | 1 |          
+|013|  ddcccd391f47  | 1 |  57bd3dc0d7b0  | 1 |          
+|014|  96041dc04cbc  | 1 |  f09941259a3b  | 1 |          
+|015|  34cbcd3cd740  | 1 |  59e2ee92947b  | 1 |          
+|---|----------------|---|----------------|---|          
+Printing keys to binary file dumpkeys.bin...
+
+
+<span style="color:#990066;"><strong># The 32 sector keys are written to dumpkeys.bin. Once these key have been found we can freely read from
+  and write to the card. Using dumpkeys.bin we will now extract the entire card contents in to a binary
+  dump.</strong></span>
+
+<span style="color:#ff0000;">proxmark3></span> <span style='color:#2B8156;'>hf mf dump</span>
+|-----------------------------------------|          
+|------ Reading sector access bits...-----|          
+|-----------------------------------------|          
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+|-----------------------------------------|          
+|----- Dumping all blocks to file... -----|          
+|-----------------------------------------|          
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+<span style='color:#2B8156;'>[...Snip...]</span>
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED                 
+#db# READ BLOCK FINISHED</pre>
+</div><p>&nbsp;</p>
+
+<p>So far for the easy part. We have now extracted the card content which is basically a binary blob containing 1024-bytes. At this point we have almost zero knowledge about what the data means. The only few bits of data that we can immediately identify are: (1) The write protected manufacturer block (Sector 0 block0) and (2) we know that every fourth block will determine our access rights to the current sector (containing the secret keys we have already decrypted).<br /><br />
+
+To really have a chance at deciphering the data on the card we need to find a way to clearly visualize the card contents. This will become increasingly important as we will be comparing a lot (!) of binary dumps to understand the data format.<br /><br />
+
+To this end I created a Mifare 1k template for 010Editor that can highlight the known data on the card, this will allow us to distinguish the various sectors and visually filter out the irrelevant data. You can download the template <a href="../../scripts/10.html">here</a>.<br /><br />
+
+Below you can see a screenshot of the card that we have just dumped (filtered by my template). Again keep in mind that I have replaced the NUID and the LRC checksum.</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/EasyCard_1_big.png" rel="prettyPhoto[EasyCard]">
+          <img src="images/EasyCard_1_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Card Dump 010Editor</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<h2 class="title">What the HEX?<span class="line"></span></h2>
+<p>We have come to the point where we can start decoding the data on the card. To understand the data we need to make various transactions and compare the binary dumps before and after each transaction. Unfortunately I will not be able to take you through the entire discovery process (as that would take too much time). I will however show you a basic example of this process and then explain in detail how various parts of the card work.<br /><br />
+
+One of the first things I tried to figure out was how I could see the remaining balance on my EasyCard. I started off by dumping the card contents, I then recharged the card for 100NTD and dumped the contents again. 010Editor allows you to do a byte comparison between two different files, highlighting the bytes that are different. As it turned out, the only real difference in the dumps occurred in sector 2. Below you can see a screenshot of sector 2 before and after recharging (notice the highlighted bytes).</p><br />
+
+<img src="images/EasyCard_2_big.png" alt="" class="pic" /><p>&nbsp;</p>
+
+<p>Putting these changes together with the following picture I took of the recharge terminal helps us figure out a few things: (1) 0xF5 (245NTD) is the current balance on the card, (2) 0x0AFFFFFF is the bit inverted storage of the current balance on the card and (3) slightly less obvious 0x64 (100NTD) is the amount the card was recharged by.</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/EasyCard_3_big.png" rel="prettyPhoto[EasyCard]">
+          <img src="images/EasyCard_3_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Recharge Terminal</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>We have already been able to get a lot of information from one single comparison. This process was then repeated many times for different types of transactions over the course of a few days. Now you have an idea of the methodology that I used we can go over to a more detailed description of the various card sectors. Please note that not all sectors are covered because they are either unused, contain unknown data or have been intentionally skipped.<br /><br />
+
+<font color=#ffffff><strong>Sector0 - block0 Manufacturer Data:</strong></font><br /><br />
+
+Of main interest here is the NUID and manufacturing date.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>   _ NUID(0xdeadbeef)
+  |                       _ Inverted 32bit UNIX Timestamp - Manufacturing Date 0x47000488
+  |__________            |  |_ Sun Sep 30 2007 @ 21:18
+             |           |
+         ---------   ----------
+0000000: dead beef 2288 0400 4759 0499 4910 1608  Z.......GY..I...
+                   --
+                   |
+                   |_  LRC Checksum (0x22)
+</pre><br />
+</div><p>&nbsp;</p>
+
+<p><font color=#ffffff><strong>Sector2 - Card Value Sector:</strong></font><br /><br />
+
+As we were able to see in the screenshot above block0 and block1 of sector 2 are identical. A copy is stored for redundancy, to ensure that the card contents are not corrupted. For this reason I will only be showing block1 and block2.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>    _ Current Balance 0xf5 = 245NTD
+   |
+   |                    _ Bit Inverted Balance Storage (0xffffff0a) 
+   |_____              |  |_ 0xffffffff - 0xf5 = 0xffffff0a
+         |             |
+         --        ---------
+0000090: f500 0000 0aff ffff f500 0000 00ff 00ff  ................
+00000a0: a0bd 8bf3 5130 6400 f500 e12e 46c0 3100  ....Q0d.....F.1.
+           ----------   --          -- ---------
+            |           |           |      |_ RFID Reader ID 0x46c03100
+            |           |           |
+    ________|    _______|           |_ Recharge Location 0x2e = MRT Yongan Market
+   |            |
+   |            |_ Recharge Amount 0x64 = 100NTD
+   |
+   |_ Inverted 32bit UNIX Timestamp - Recharge Date (0x51f38bbd)
+      |_ Sat Jul 27 2013 @ 09:58</pre><br />
+</div><p>&nbsp;</p>
+
+<p><font color=#ffffff><strong>Sector3 to Sector5 - Transaction Log:</strong></font><br /><br />
+These three sectors contain logs of our past eight transactions. Three sectors -> 3x4 blocks = 12 blocks -> 12 blocks - 3 blocks (Sector trailers) - 1 block (block0 of Sector 3 is not used) = 8 recorded transactions. In addition, following some unknown rule-set, duplicates are sometimes stored of the same transaction. This means that we will have a maximum of eight unique transactions and a minimum of four. Each of these transaction blocks takes on the same structure so I will only show one example below.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>                    _ Remaining Balance 0x4a = 74NTD
+                   |
+                   |_________               _ RFID Reader ID 0xa4331200
+                             |             |
+                             --        ---------
+0000120: 610f cc6e 5200 0f00 4a00 1205 a433 1200  a..nR...J....3..
+           ----------   --          --
+            |           |           |
+            |           |           |
+    ________|    _______|           |_ Transaction Type 0x05 = Bus Fare
+   |            |
+   |            |_ Transaction Cost 0x0f = 15NTD
+   |
+   |_ Inverted 32bit UNIX Timestamp - Transaction Date (0x526ecc0f)
+      |_ Mon Oct 28 2013 @ 20:41</pre><br />
+</div><p>&nbsp;</p>
+
+<p><font color=#ffffff><strong>Sector 7 - Last MRT Station:</strong></font><br /><br />
+This sector contains the last MRT station that was entered (block2) and the last station that was exited (block1). It is assumed that this data is used to calculate the cost of the MRT fare.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>       _ MRT Station Code 0x2e = Yongan Market
+      |  |_ This station was last exited!
+      |
+      |____________                 _ Inverted 32bit UNIX Timestamp (0x526ed1c6)
+                   |               |  |_ Mon Oct 28 2013 @ 21:06
+                   |               |
+                   --          ----------
+00001d0: 0000 0000 2e00 0000 00c6 d16e 5200 0000  ...........nR...
+00001e0: 0000 0001 2500 0000 00a0 cc6e 5200 0000  ....%......nR...
+                   --          ----------
+                   |               |
+       ____________|               |_ Inverted 32bit UNIX Timestamp (0x526ecca0)
+      |                               |_ Mon Oct 28 2013 @ 20:44
+      |
+      |_ MRT Station Code 0x25 = Jingmei
+         |_ This station was last entered!</pre><br />
+</div><p>&nbsp;</p>
+
+<p><font color=#ffffff><strong>Sector 15 - Daily Spending Limit:</strong></font><br /><br />
+I think Harald made a mistake on this point, at least my results are different than his. My findings show that block2 of sector 15 contains the daily spending limit. There are three significant bytes, (1) a 1-byte hex counter which increments if a purchase is made on a subsequent day and (2) a 2-byte field which is used to calculate the amount of money that has been spent on a given day. Under normal circumstances only one byte will be used to calculate the amount of money spent, unless the amount is greater that 0xff (255NTD). Below we can see the spending limit counter change by comparing block2 on the same card on two subsequent days.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre> UNIX Timestamp     |  Cost  |  Balance  |  Transaction Type                        
+--------------------|--------|-----------|--------------------
+20:34 - 27/07/2013  | 124    | 121       | Store purchase
+18:10 - 28/07/2013  | 100    | 21        | Store purchase
+
+
+      Hex Counter 0xfb (27/07/2013)_
+                                    |
+                                    --
+00003e0: 0000 0000 0000 0000 0000 00fb 427c 0000  ............B|..
+                                         -----
+       Sum of the purchases 0x7c = 124NTD _|
+
+
+
+      Hex Counter 0xfc (28/07/2013)_
+                                    |
+                                    --
+00003e0: 0000 0000 0000 0000 0000 00fc 4264 0000  ............Bd..
+                                         -----
+       Sum of the purchases 0x64 = 100NTD _|</pre><br />
+</div><p>&nbsp;</p>
+
+<p><font color=#ffffff><strong>Final Remarks:</strong></font><br /><br />
+As I mentioned before not all sectors were covered. Some sectors contain static/unknown data, some were skipped intentionally and others are unused. The presence of unused sectors allows other institutions to piggyback the EasyCard and incorporate their own features. One such example is the NTNU (National Taiwan Normal University) student ID card which doubles as an EasyCard.<br /><br />
+
+Another point which could be of interest is the location data. Many parts of the card record location data, such as where you recharged your balance. This information is stored as a 1-byte value (e.g. 0x30 = Nanshijiao MRT Station). The great part is that the "Taipei Rapid Transit Corporation" was a big help in decoding this data! Much like Harald I visited their official website and noticed that if you mouse-over on their MRT map you can actually see the location codes in the href URL's. If you have a look at the screenshot below you can see that the location code for Guting is 0x41.</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/EasyCard_4_big.png" rel="prettyPhoto[EasyCard]">
+          <img src="images/EasyCard_4_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>TRTC MRT Map</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>If, even that, takes to much effort you can always whip out a bash kung-fu one liner hehe.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>root@Trident</span>:~# <span style='color:#2B8156;'>curl -s "http://web.trtc.com.tw/e/selectstation2010.asp" |grep "ID=" |cut
+-d'"' -f2,8 |cut -d"?" -f2 |tr '"' ' '</span>
+
+ID=071 Tamsui
+ID=070 Hongshulin
+ID=069 Zhuwei
+ID=068 Guandu
+ID=067 Zhongyi
+ID=065 Xinbeitou
+ID=064 Beitou
+ID=063 Qiyan
+ID=062 Qilian
+ID=061 Shipai
+ID=060 Mingde
+ID=059 Zhishan
+ID=058 Shilin
+ID=057 Jiantan
+ID=056 Yuanshan
+ID=055 Minquan W. Rd.
+ID=054 Shuanglian
+ID=053 Zhongshan
+ID=083 Xinpu
+ID=084 Jiangzicui
+ID=085 Longshan Temple
+<span style='color:#2B8156;'>[...Snip...]</span></pre><br />
+</div><p>&nbsp;</p>
+
+<h2 class="title">All Your Money Are Belong To Us!<span class="line"></span></h2>
+<p>At this point the data structure on the card is pretty well understood and we can manipulate the card contents freely. This is obviously pretty bad considering that the EasyCard is effectively a payment application. In this section I will outline several attack scenarios which will either make us rich or poor!<br /><br />
+
+I want to repeat again that no fraud was committed during the course of my research. Before anyone shouts fire please read carefully which steps I took to validate the potential for abuse by malicious attackers.<br /><br />
+
+<font color=#ffffff><strong>Scenarios:</strong></font><br /><br />
+
+(1) We can manipulate the values in sector 2 to decrease the balance on the card. We lose money!<br />
+(2) We can manipulate the values in sector 2 to increase the balance on the card. We gain money!<br />
+(3) We can manipulate the transaction log to increase the prices of the goods that we bought. We lose money!<br />
+(4) We can manipulate the transaction log to decrease the prices of the goods that we bought. We gain money!<br />
+(5) We can edit the maximum daily spending limit in sector 15. We can go on a shopping spree!<br /><br />
+
+The big big issue here is that the EasyCard does not implement any real-time integrity checks against a back-end database. In effect, when you make a transaction, the RFID reader blindly accepts the data that is stored on the card. It appears that all transactions are synced with the back-end every few hours, unfortunately this is not nearly good enough!<br /><br />
+
+Consider, the price of an empty EasyCard is 100NTD (can be purchased from a vending machine). As long as a malicious attacker can spend more than 100NTD before the fraudulent card is blocked he will profit and the EasyCard corporation will lose money.<br /><br />
+
+Lets put ourself in the mindset of the attacker for a moment. If an attacker has a 3 hour window before his card is detected it should be possible to spend 10000NTD (by resetting the daily limit) before there is any risk of getting into trouble. In this scenario the EasyCard corporation would make a 9900% loss on a single card. Even though cases like this are probably really rare and a loss of 9900NTD won't impact EasyCard's profit margin there is no sense in pretending like this is not a real/important issue.<br /><br />
+
+<font color=#ffffff><strong>Example 1 - I'm So Rich:</strong></font><br /><br />
+
+In this example I dumped the contents of an EasyCard to have a legitimate copy of the data. This legitimate card had a balance of 36NTD. You can see a copy of block1/Sector 2 below.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>    _ Current Balance 0x24 = 36NTD
+   |
+   |                    _ Bit Inverted Balance Storage (0xffffff0a) 
+   |_____              |  |_ 0xffffffff - 0x24 = 0xffffffdb
+         |             |
+         --        ---------
+0000090: 2400 0000 dbff ffff 2400 0000 00ff 00ff  ................</pre><br />
+</div><p>&nbsp;</p>
+
+<p>I then artificially increased the card balance to 1234NTD. To check that my modification was successfully placed the card on a recharge terminal in an MRT station. As you can see from the image below the terminal thinks I have 1234NTD on my EasyCard.</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/EasyCard_5_big.png" rel="prettyPhoto[EasyCard]">
+          <img src="images/EasyCard_5_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>$$$</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>No transactions were made with the card. I went straight back home and I restored the original card contents from the backup I had made earlier.<br /><br />
+
+<font color=#ffffff><strong>Example 2 - I'm So Poor:</strong></font><br /><br />
+For this example I took the same card, which had now been restored to it's original condition. Remember, this card had 36NTD on it. Below you can see the last transaction that was made on the card.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>                              _ Remaining Balance 0x24 = 36NTD
+                             |
+                             --
+0000150: 0d38 7916 5220 6d00 2400 4f01 24de 4f00  .8vES m...O.$.O.
+           ----------   --          --
+            |           |           |
+            |           |           |
+    ________|    _______|           |_ Transaction Type 0x01 = Store Purchase
+   |            |
+   |            |_ Purchase Cost 0x6d = 109NTD
+   |
+   |_ Inverted 32bit UNIX Timestamp - Transaction Date (0x52167938)
+      |_ Thu Aug 22 2013 @ 21:48</pre><br />
+</div><p>&nbsp;</p>
+
+<p>I carefully modified the last transaction and increased the cost by 16NTD.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>                              _ Remaining Balance 0x14 = 20NTD
+                             |
+                             --
+0000150: 0d38 7916 5220 7d00 1400 4f01 24de 4f00  .8vES m...O.$.O.
+                        --
+                        |_ Purchase Cost 0x7d = 125NTD</pre><br />
+</div><p>&nbsp;</p>
+
+<p>In addition to this I edited the daily maximum spending limit and the available balance in sector 2 to reflect the increased cost of the last transaction. I went to 7eleven and purchased a small drink for 15NTD. The card worked as expected and showed a balance of 20NTD (instead of 36NTD) with a remaining balance of 5NTD after the purchase. When I got back home I modified the same areas of the card and retroactively increased my balance by 16NTD.<br /><br />
+
+This example may seem strange but it proves that no real-time check is performed at the moment of purchase which means that the RFID reader blindly accepts the data on the EasyCard.<br /><br />
+
+<font color=#ffffff><strong>Example 3 - Hey, that Looks like my card!:</strong></font><br /><br />
+With the use of Mifare Classic comes the risk of cloning. Special Mifare Classic (1k/4k) cards exist that have a writeable block0 (Writeable NUID). I own such a card and I tested this theory by making a perfect copy of one of my EasyCards. From the image below you can see that the machine can not tell the difference with the legitimate card.</p><br /><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/EasyCard_6_big.png" rel="prettyPhoto[EasyCard]">
+          <img src="images/EasyCard_6_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>NUID Clone</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>This raises another issue. If the EasyCard corporation detects and blocks certain (fraudulent) cards in their system, a malicious attacker can simply modify block0 and keep using the same card over and over. Not to mention that it would only take about 10 minutes to make a perfect copy of someone's card, potentially implicating an innocent person in fraud or at the very least confusing the investigation process!<br /><br />
+
+It may be possible to mitigate this issue by composing a list of manufacturers that produce block0 writeable cards (is Infineon the only one?). When the RFID reader matches the card manufacturer to one on the blacklist it could then automatically reject the card.</p><br /><br />
+
+<p><font color=#ffffff><strong>Final Remarks:</strong></font><br /><br />
+
+I hope that is it clear that these test-cases in no way adversely affected the EasyCard corporation and that absolutely no fraud was committed! In addition, this was the only EasyCard that I ever modified, all other cards were solely used to collect transaction data.<br /><br />
+
+This card was subsequently destroyed to ensure that I had no modified cards in my possession. I took a picture of the destroyed card which you can see below.</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/EasyCard_8_big.png" rel="prettyPhoto[EasyCard]">
+          <img src="images/EasyCard_8_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Destroyed Card</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<h2 class="title">Data Extraction With EasyDump<span class="line"></span></h2>
+<p>This write-up would not be complete without a script! Using some arcane bash dark-arts I put together a script that will take a binary dump of an EasyCard and parse out all the most relevant data. I'm sure the script could be updated but keep in mind it is meant to serve as a proof-of-concept more than anything else. You can see some sample output below.</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/EasyCard_7_big.png" rel="prettyPhoto[EasyCard]">
+          <img src="images/EasyCard_7_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>EasyDump</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>The script is available for download <a href="../../scripts/15.html">here</a>. For the most part the script structure should be clear from the various sectors that we analysed on the EasyCard. However, if anyone has any questions don't hesitate to send me a mail or leave a comment below.</p><br /><br />
+
+<h2 class="title">Conclusion<span class="line"></span></h2>
+<p>I really love the EasyCard, I think it is a great system (in principle). The convenient combination of transportation and low-cost payments is really inspirational.<br /><br />
+
+That being said, the EasyCard is fundamentally broken (from the ground up). I don't think it makes any sense to deny that the problem exists as sooner or later it will lead to a larger issue which will be much more difficult to explain/solve.<br /><br />
+
+The way I see it, there are only two real solutions:<br />
+(1) The Mifare Classic cards need to be replaced by cards of a different type such as Mifare DESfire, which is considered to be "safe" by general consensus.<br />
+(2) In security we know that any information that is kept client-side should be considered compromised. That is no different in this case. Storing the actual monetary value on the EasyCard is a colossal design flaw!!! The EasyCard corporation urgently needs to fix this. When a transaction is made the card should be identified and a lookup should be initiated in a back-end database. The database information can then be used to securely process the transaction with a high level of integrity.<br /><br />
+
+Working in Information Security, I feel it is my task to "encourage" companies to follow best practises because I know exactly what the dark side of the force is capable of. As I mentioned in my introduction, I hope that my post can in some small way contribute to the enhanced security of the EasyCard though I fear that my please may fall on deaf ears like those who have come before me.</p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

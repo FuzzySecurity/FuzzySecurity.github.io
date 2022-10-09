@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Coding: Xor</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html">Tutorials</a>
+            </li>
+            <li><a href="../coding.html" class="active">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../coding.html">Scripting</a> <b>&#187;</b></li>
+          <li>Xor v1.0</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="sixteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Xor v1.0<span class="line"></span></h2>
+        <p> This  is a little script I wrote for fun and easy reference. The script generates a  small encoder loop which can be used when manually encoding a file on the fly  in the debugger. It selects a random XOR key from all possible  valid keys and then prints the ASM loop and  the binary dump of that loop (if you are connected in RDP to your debugging  machine you can paste that dump right in the debugger).<br /><br />
+        
+        Download: <a href="files/xor.rar">xor.sh</a></p>
+      </div>
+      
+    <div class="twelve columns bottom">
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>./xor.sh</span> 
+--------------------------------------------------------------------
+|                          XOR v1.0 ~ b33f                         |
+|                    -Generate XOR encoder loop-                   |
+--------------------------------------------------------------------
+| USAGE: ./xor.sh -s [Address] -e [Address]                        |
+|                                                                  |
+| REQUIRED                                                         |
+|         -s  Address where the encoder should start.              |
+|         -e  Address where the encoder should end.                |
+--------------------------------------------------------------------
+<span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>./xor.sh -s 11223344 -e AABBCCDD</span>
+[>] ASM Instructions:
+
+MOV EAX,<span style='color:#2B8156;'>11223344</span>
+XOR BYTE PTR DS:[EAX],<span style='color:#2B8156;'>4C</span>
+INC EAX
+CMP EAX,<span style='color:#2B8156;'>AABBCCDD</span>
+db 07eh,0f5h
+
+[>] Binary Dump:
+
+B8<span style='color:#2B8156;'>44332211</span>8030<span style='color:#2B8156;'>4C</span>403D<span style='color:#2B8156;'>DDCCBBAA</span>7EF5</pre>
+</div>
+    </div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

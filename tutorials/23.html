@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Game Over: FlareOn 2015 CTF > Challenge 5</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../css/shCoreEmacs.css"/>
+  
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../js/shCore.js"></script>
+	<script type="text/javascript" src="../js/shBrushPython.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Game Over: FlareOn 2015 CTF > Challenge 5</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Game Over: FlareOn 2015 CTF > Challenge 5<span class="line"></span></h2>
+
+      <div class="fourteen columns bottom">
+      <p>Hola everyone! I had some sleepless nights recently participating in this year's FireEye FLARE On CTF. Unfortunately I bombed on Challenge 9 due to a lack of free time, a lack of sleep and a lack of 0xc0ff33. All jokes aside, it was a great journey and I learned a ton of new stuff. A big thanks to the whole FLARE team for putting this together! This post will is a write-up of Challenge 5. I chose this challenge for a few reasons: (1) it is not very complicated, (2) it has a malware-ish component to it and (3) it was pretty enjoyable!<br /><br />
+      
+      Ok, strap-in and let's get to it!</p><br />
+
+<h2 class="title">Mmm Wizard Indeed..<span class="line"></span></h2>
+<p>So we get the following mail which gives some indication as to where the challenge is going.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big1.png"><p>&nbsp;</p>
+
+<p>I was kind of hoping that there would be JavaScript obfuscation involved but that was not the case. The attached archive contained two files: "challenge.pcap" and a 32bit PE called "sender".</p>
+
+<h2 class="title">challenge.pcap<span class="line"></span></h2>
+<p>First let's have a look at the traffic capture and rip out anything we may need so we can put the pcap aside. A closer inspection shows that the pcap contains 12 HTTP POST requests.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big2.png"><p>&nbsp;</p>
+
+<p>They all have the same size and they seem pretty small which is encouraging. The image below shows the request and response for the last POST request.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big3.png"><p>&nbsp;</p>
+
+<p>The format of each request is the same, the binary sends 4 characters to the listener which responds by sending "1". The reason I showed the last request is that we can see the 4 characters include two equal signs. Immediately, that screams base64. Additionally, since the equal signs are in the last request, that gives us a pretty good indication that the binary sent the data in the correct order.<br /><br />
+
+Extracting all transmitted characters gives us the following base64 string.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>UDYs1D7bNmdE1o3g5ms1V6RrYCVvODJF1DpxKTxAJ9xuZW==</pre>
+      <br />
+</div>
+
+<p>&nbsp;</p>
+<p>Of course this does not actually decode to anything sensible, that would be way to boring!</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big4.png"><p>&nbsp;</p>
+
+<h2 class="title">Why you so fail?<span class="line"></span></h2>
+
+<p>A quick look at the operands in IDA shows some strings that point at fail conditions.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big5.png"><p>&nbsp;</p>
+
+<p>From looking at these strings and using what we saw in the pcap we can easily figure out what the binary needs to function properly. At the very least it requires key.txt to exist (presumably it is reading the contents into a buffer) and a listener on the localhost to receive the HTTP POST requests. From the pcap we know that the server is supposed to return "1" for whatever it receives. Also notice the strange string "flarebearstare" (0x66 = f), we will come back to that later.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big6.png"><p>&nbsp;</p>
+
+<p>We can quickly put together a simple python listener, this will also be useful when debugging as we don't want to keep branching into fail conditions.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: py;gutter:false;auto-links: false;;">
+#!/usr/bin/python
+
+import SocketServer
+
+class EchoRequestHandler(SocketServer.BaseRequestHandler):
+
+	def handle(self):
+		while 1:
+			data = self.request.recv(1024)
+			print data + "\n"
+			self.request.send("1")
+			return
+
+SocketServer.TCPServer.allow_reuse_address = 1
+server = SocketServer.ThreadingTCPServer(("0.0.0.0", 80), EchoRequestHandler)
+server.serve_forever()</pre>
+</div><p>&nbsp;</p>
+
+<p>After creating key.txt with some sample text "AAAABBBB" we receive the following response.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big7.png"><p>&nbsp;</p>
+
+<p>Bingo, now let's see if we can figure out what is happening with the input buffer when it is processed by the binary.</p>
+
+<h2 class="title">Modifying The Input<span class="line"></span></h2>
+<p>Right after the binary reads in the text from key.txt it hits the following assembly instruction blocks.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big8.png"><p>&nbsp;</p>
+
+<p>The important parts here are the two function calls for which I set a breakpoint (FYI I renamed these functions). These two functions are responsible for modifying the input we pass to the program. We will look through both of them in turn.<br /><br />
+
+<span style="color: #ffffff;"><strong>Shift_ASCII_Input</strong></span><br /><br />
+The function is pretty small, you can see it in it's entirety below.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big9.png"><p>&nbsp;</p>
+
+<p>In the image above, I have paused execution on the most relevant part. EBX points at our test buffer ("AAAABBBB") and it seems like the first byte of our buffer 0x41 (A) is being incremented by 0x66 (f). Remember that strange operand we found we found earlier?<br /><br />
+
+Some quick investigation shows the following:</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>EBX: Points at the start of our buffer. We can also see it on the stack.
+      
+ESI: A counter, it increments each time the loop runs and it is used as an index for our input buffer.
+
+EDI: Contains the length of our buffer, it is compared to ESI to determine when to exit the loop.
+
+AL : Contains a single byte from the string "flarebearstare", each iteration of the loop this value is
+     shifted to the right.</pre>
+      <br />
+</div>
+
+<p>&nbsp;</p>
+<p>Essentially, what happens is that each character of our input buffer is incremented by a character from the string "flarebearstare". This effectively scrambles whatever input we give the binary. Notice that the length of the key is 14 characters, if we provide the program input which is longer than they key it will simple loop around and start from the first character again.<br /><br />
+
+The following example, using our sample input buffer, should hopefully illustrate this:</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>Input    : 0x41(A) 0x41(A) 0x41(A) 0x41(A) 0x42(B) 0x42(B) 0x42(B) 0x42(B)   <span style="color:#990066;"><strong># Sample input "AAAABBBB"</strong></span>
+Key      : 0x66(f) 0x6c(l) 0x61(a) 0x72(r) 0x65(e) 0x62(b) 0x65(e) 0x61(a) + <span style="color:#990066;"><strong># Key "flarebea"</strong></span>
+           ---------------------------------------------------------------
+Scrambled: 0xA7(?) 0xAD(?) 0xA2(?) 0xB3(?) 0xA7(?) 0xA4(?) 0xA7(?) 0xA3(?)   <span style="color:#990066;"><strong># Output</strong></span></pre>
+      <br />
+</div>
+
+<p>&nbsp;</p>
+<p>We can easily confirm this by following the EBX register while stepping through the loop. Our input buffer changes from this:</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big10.png"><p>&nbsp;</p>
+
+<p>To this:</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big11.png"><p>&nbsp;</p>
+
+<p>That's it for the first part, let's move on to the base64.<br /><br />
+
+<span style="color: #ffffff;"><strong>Base64_Encode</strong></span><br /><br />
+The second function that modifies our input "presumably" converts bytes directly to base64. What happens, in general terms, is that every three bytes (any kind of bytes) are converted into 4 ASCII printable bytes. When the input bytes are not divisible by three then padding is applied. The conversion process happens by turning every three bytes into binary, grouping the resulting bits into 6-bit groups and then using the decimal representation of those bytes look up the corresponding character in a base64 table. The standard base64 lookup table can be seen below.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big12.png"><p>&nbsp;</p>
+
+<p>I know I know, it sound like I just made that up but that's really how base64 works. Let's give that a try for the first three bytes of our modified input buffer:</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>
+Input        : A7       AD       A2
+8-bit binary : 10100111 10101101 10100010
+
+6-bit split  : 101001 111010 110110 100010
+Decimal      : 41     58     54     34
+base64 Lookup: p      6      2      i       ----> p62i</pre>
+      <br />
+</div>
+
+<p>&nbsp;</p>
+<p>The base64 function is a bit lengthy, to simplify things, the image below shows breakpoints on the last step in the conversion process (decimal --> base64 lookup table). There are, naturally, 4 breakpoints; one for each lookup.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big13.png"><p>&nbsp;</p>
+
+<p>We already know what should happen but let's have a look what the binary is doing.<br /><br />
+
+The first character:</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big14.png"><p>&nbsp;</p>
+
+<p>The second character:</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big15.png"><p>&nbsp;</p>
+
+<p>The third character:</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big16.png"><p>&nbsp;</p>
+
+<p>The forth character:</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big17.png"><p>&nbsp;</p>
+
+<p>There is obviously something sinister going on here, the base64 looks fine but ... the case is inverted ("p62i" vs "P62I"). Remember the base64 lookup table, the binary has one too, only the order of the upper and lower case characters is inverted. During the execution of the base64 function the lookup table can be seen on the stack.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big18.png"><p>&nbsp;</p>
+
+<p>Mystery solved, we have all the info that we need to solve the challenge. All the remainder of the binary does is split the base64 up into chunks and send it to the listener.</p>
+
+<h2 class="title">Solution<span class="line"></span></h2>
+<p>Obviously, I have been explaining this challenge is some detail but the truth is that it was all a bit more chaotic when I first solved it. So ... I could write a nice python script which converts the base64 back to the original input but I'll show you what a lazy person (ie: me) might do when trying to rush to the finish line hehe.<br /><br />
+
+First lets convert the base64 back into the correct bytes, keeping the modified lookup table in mind:</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big19.png"><p>&nbsp;</p>
+
+<p>We can let the binary do the rest of the hard work for us without having to put too much effort into it. Remember, the initial ASCII bytes are encoded using the following instruction <span style="color: #ffffff;">add [ESI+EBX], al</span>. If we supply the binary with the bytes we just decoded and patch that instruction to <span style="color: #ffffff;">sub [ESI+EBX], al</span> then it should just spit out the solution!<br /><br />
+
+First we restart the binary and continue execution until we reach the aforementioned instruction:</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big20.png"><p>&nbsp;</p>
+
+<p>We then patch the instruction and replace the bytes in memory with the bytes we decoded from the base64.</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big21.png"><p>&nbsp;</p>
+
+<p>All that remains is to run the loop and watch the solution decode in memory!</p>
+
+<p>&nbsp;</p><img src="images/FLARE5_big22.png"><p>&nbsp;</p>
+
+<p>Game Over!</p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tutorials: cURL support for Apache</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>cURL support for Apache</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">cURL support for Apache<span class="line"></span></h2>
+        <p>I guess allot of people know about cURL, it&rsquo;s a pretty cool  tool. For those who are unfamiliar with it, here is an extract from the Linux  MAN pages.</p><br />
+<p><em>&quot;Curl  is  a  tool to transfer data from or to a server, using one of the supported protocols (HTTP, HTTPS, FTP, FTPS, SCP,SFTP, TFTP, DICT, TELNET, LDAP or FILE). The command is designed to work without user interaction. Curl offers a busload of useful tricks like proxy support, user authentication, FTP upload, HTTP  post,  SSL  connections, cookies, file transfer resume and more. The number of features will make your head spin!&quot;</em></p>
+
+<br />
+<p>So here&rsquo;s the thing, in the past when I have used cURL I did  so by invoking it from the command line (or through some code like a python  program). However I happened to be auditing a legacy phpMyAdmin install for  which I found a &rdquo;Swekey&rdquo; exploit online <a href="http://ha.xxor.se/2011/07/phpmyadmin-3x-swekey-rci-exploit.html">here</a>. As you can see this is a  php-based exploit (which uses cURL). For some reason I had assumed that my  apache server would leverage the underlying OS functionality to make this  exploit work but that was not the case. Let&rsquo;s  have a quick look at this problem and propose a quick fix…</p><br />
+
+
+<h2 class="title">(1) Replicate The Issue<span class="line"></span></h2>
+<p>Let&rsquo;s download the php exploit from the link above and put it in our &rdquo;/var/www&rdquo; directory…</p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <p>(1) I&rsquo;ll be using a meterpreter reverse tcp payload….</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>ls -l /var/www/</span>
+total 36
+drwxr-xr-x 10 www-data www-data 4096 2011-06-04 17:28 beef
+-rw-r--r--  1 root     root     1286 2011-11-08 16:31 evil.php
+-rw-r--r--  1 root     root      177 2011-06-04 17:36 index.html
+-rw-r--r--  1 root     root       20 2011-11-16 18:34 info.php
+-rw-r--r--  1 root     root     5586 2011-11-16 18:13 <strong>phpmyadmin_swekey_rci_exploit.php</strong>
+-rwxrwxrwx  1 root     root     6435 2011-11-15 21:27 rds.c
+drwxr-xr-x  2 root     root     4096 2011-06-04 17:35 wstool
+
+<span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>/etc/init.d/apache2 start</span>
+ * Starting web server apache2</pre>
+<br />
+</div>
+    
+    <p>&nbsp;</p>
+    <p>Ok  so far so good. But  what happens when we open this php exploit in our web browser (sorry forgot  the screenshot). We are presented with the ASCII-art banner created by the  author but underneath it there is an error <strong>&ldquo;[!] Fatal error. Need cURL! [*]  Exiting... &quot;</strong>. So our apache server doesn&rsquo;t support cURL, bummer…</p><br />
+    
+    <h2 class="title">(2) Fix the issue<span class="line"></span></h2>
+    <p>Fixing  this problem isn&rsquo;t that difficult. It should take no more than 2 minutes :)).  (1) Install a few requirements, (2) edit a  configuration file and (3) restart apache…</p>
+    
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre><span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>apt-get install curl libcurl3 libcurl3-dev php5-curl php5-mcrypt</span>
+
+<span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>kwrite /etc/php5/apache2/php.ini</span>
+[Add this line to the configuration file: "<strong>extension=curl.so</strong>"]
+
+<span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>/etc/init.d/apache2 restart</span>
+ * Restarting web server apache2  
+... waiting</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>That&rsquo;s  it, after restarting the apache server we have cURL functionality. As we can  see in the screenshot below when we reload the php-exploit in our browser it  works perfectly. Time to pop a box ;))…</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/curl_big1.png" rel="prettyPhoto[cURL]">
+          <img src="images/curl_small1.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Swekey Exploit</p>
+      </div>
+
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

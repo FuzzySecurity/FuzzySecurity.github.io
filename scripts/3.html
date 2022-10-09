@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Coding: Fl@sh</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html">Tutorials</a>
+            </li>
+            <li><a href="../coding.html" class="active">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../coding.html">Scripting</a> <b>&#187;</b></li>
+          <li>Fl@sh v1.6</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="sixteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Fl@sh v1.6<span class="line"></span></h2>
+        <p>We all know port scanning is the bread and butter of the  enumeration faze. There is no denying that nmap sets the standard for port  scanning on both windows and UNIX systems. However full range UDP and TCP port  scans (65k ports) take a long time to finish. There is another scanner which excels  at speed; unicornscan is an asynchronous stateless port scanner that implements  its own TCP/IP stack. This script invokes unicornscan and passes the ports that  are found to nmap and/or amap for further fingerprinting. I have built in two  main port ranges into this script, unicornscan&rsquo;s default port range and the  full 65k port range. I would like to stress that the default packet speed for  unicornscan is 300pps and I wouldn&rsquo;t go higher than 400pps. After this is  finished you have the option to search some keywords in the locally cached version  of exploit-db on backtrack…</p>
+        
+        <br /><p><strong>EDIT</strong>:  Version update from v1.5 to v1.6 to avoid an issue brought to light by  <em><strong>scottm99</strong></em>. When you halt the script before it finishes some temporary files  created by the script will not be removed hence resulting in erroneous port-lists  (with duplicate entries or ports from a previous target). I added a cleanup  routine at the beginning of the script to avoid this issue…<br /><br />
+        
+        Download: <a href="files/flash_v16.rar">flash.sh</a></p>
+      </div>
+      
+    <div class="twelve columns bottom">
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>./flash.sh</span>
+--------------------------------------------------------------------
+|                          Fl@sh v1.6 ~ b33f                       |
+|                    -Scanned Before you know it-                  |
+--------------------------------------------------------------------
+| USAGE: ./flash.sh -s [pps] -e [N/A/B] -p [A/D] -x [Y/N] -t [IP]  |
+|                                                                  |
+| REQUIRED                                                         |
+|         -s  Packets per second [recommended less than 400].      |
+|         -e  Pipe output into N (nmap), A (amap), B (both).       |
+|         -p  A (full 65k), D (default port list).                 |
+|         -x  Parse keywords in searchsploit (Y/N).                |
+|         -t  Target IP.                                           |
+|                                                                  |
+| DETAILS                                                          |
+|         (1) When the open ports are passed to nmap or amap       |
+|         or both, the results will be saved to nmap-output.txt    |
+|         and/or amap-output.txt in the parent directory...        |
+|                                                                  |
+|         (2) When using the -x you should bear in mind that you   |
+|         you should update the the local version of exploit-db    |
+|         browse to '/pentest/exploits/exploitdb/platforms' and    |
+|         issue 'svn up'...                                        |
+--------------------------------------------------------------------
+
+<span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>./flash.sh -s 350 -e B -p D -x N -t 192.168.111.130</span>
+
+[*] Scanning Default TCP port range, be patient...
+[>] TCP Ports:
+TCP open                    http[   80]         from 192.168.111.130  ttl 128 
+TCP open                   epmap[  135]         from 192.168.111.130  ttl 128 
+TCP open             netbios-ssn[  139]         from 192.168.111.130  ttl 128 
+TCP open                   https[  443]         from 192.168.111.130  ttl 128 
+TCP open            microsoft-ds[  445]         from 192.168.111.130  ttl 128 
+TCP open               blackjack[ 1025]         from 192.168.111.130  ttl 128 
+TCP open                   mysql[ 3306]         from 192.168.111.130  ttl 128 
+
+[*] Scanning Default UDP port range, be patient...
+[>] UDP Ports:
+UDP open              netbios-ns[  137]         from 192.168.111.130  ttl 128 
+UDP open                  exosee[ 1027]         from 192.168.111.130  ttl 128 
+
+[*] Passing Ports to Nmap & Amap...
+
+[>] Done!! Check out nmap-output.txt and amap-output.txt...
+
+[>] Done!! No searchsploit parsing to do...</pre>
+</div>
+    </div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Application Introspection & Hooking With Frida</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../css/shCoreEmacs.css"/>
+  
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../js/shCore.js"></script>
+	<script type="text/javascript" src="../js/shBrushCSharp.js"></script>
+	<script type="text/javascript" src="../js/shBrushCpp.js"></script>
+	<script type="text/javascript" src="../js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Application Introspection & Hooking With Frida</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Application Introspection & Hooking With Frida<span class="line"></span></h2>
+
+      <div class="fourteen columns bottom">
+      <p>Hola! As a follow-up to my latest <a href="https://www.patreon.com/FuzzySec">Patreon</a> live session we will be doing a basic introduction to using <a href="https://www.frida.re/">Frida</a> for application introspection and hooking on Windows. Throughout the post we will be using frida-trace as it offers a convenient live stream where we can inspect the changes made to our function hooks in real time. Once you get your head around the JavaScript syntax you can layer that knowledge onto the various Frida bindings (Python/C/Node/Swift/.Net/QML).<br /><br />
+	  
+	  Why Frida? It gives a simple interface where you can rapidly develop complex hooking logic and make changes to it as your requirements/understanding evolves (compare that to the costly process of redeploying C++ function hooks). What to use Frida for? As our title suggests introspection (looking inside the app to analyze it's behavior) and hooking (changing the behavior of the app). From a security perspective Frida is a research tool, not suited for weaponized deployment. That being said, Frida can be used to prototype offensive hooks which can later be implemented in a different framework such as <a href="https://easyhook.github.io/">EasyHook</a> for deployment.<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+	  + Frida (<a href="https://twitter.com/fridadotre">@fridadotre</a>) - <a href="https://www.frida.re/">here</a><br />
+      + Peeking under the hood with Frida (Sam Rubenstein) - <a href="https://www.youtube.com/watch?v=RINNW4xOWL8">here</a></p><br />
+
+<h2 class="title">Registry Introspection<span class="line"></span></h2>
+
+<p>In this section we will look at passively monitoring registry activity within arbitrary Windows applications. To start of, we will have a look at <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms724897(v=vs.85).aspx">RegOpenKeyExW</a> which is most commonly used to open handles to registry keys. Below we can see the C++ function prototype.</a></p>
+
+    <div class="main_wrap_support">
+<pre class="brush: cpp;gutter:false;auto-links: false;;">
+LONG WINAPI RegOpenKeyEx(
+  _In_     HKEY    hKey,       // Handle to the open registry key (commonly the registry hive).
+  _In_opt_ LPCTSTR lpSubKey,   // The name of the registry subkey to be opened.
+  _In_     DWORD   ulOptions,  // REG_OPTION_OPEN_LINK/NULL.
+  _In_     REGSAM  samDesired, // A mask that specifies the desired access rights to the key to be opened.
+  _Out_    PHKEY   phkResult   // A pointer to a variable that receives a handle to the opened key.
+);</pre>
+</div>
+
+<p>One thing to keep in mind is that most API's will have an ANSI and a Unicode version. For our purposes we should assume that the Windows application we are hooking will be using the Unicode version. Let's briefly attach Frida to a process and define/print all of these arguments.</p>
+
+<p>&nbsp;</p><img src="images/Frida-Trace-01.png"><p>&nbsp;</p>
+
+<p>Frida makes this process exceedingly easy. When using trace, Frida creates a "__handlers__" folder in the current directory where it populates JS files with onEnter/onLeave prototypes for any function you have specified. Getting out function arguments is as easy as printing arguments in an array. The JS handler for the image above is shown below.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: js;gutter:false;auto-links: false;;">
+/*
+ * Auto-generated by Frida. Please modify to match the signature of RegOpenKeyExW.
+ * This stub is currently auto-generated from manpages when available.
+ *
+ * For full API reference, see: http://www.frida.re/docs/javascript-api/
+ */
+
+{
+  /**
+   * Called synchronously when about to call RegOpenKeyExW.
+   *
+   * @this {object} - Object allowing you to store state for use in onLeave.
+   * @param {function} log - Call this function with a string to be presented to the user.
+   * @param {array} args - Function arguments represented as an array of NativePointer objects.
+   * For example use Memory.readUtf8String(args[0]) if the first argument is a pointer to a C string encoded as UTF-8.
+   * It is also possible to modify arguments by assigning a NativePointer object to an element of this array.
+   * @param {object} state - Object allowing you to keep state across function calls.
+   * Only one JavaScript function will execute at a time, so do not worry about race-conditions.
+   * However, do not use this to store function arguments across onEnter/onLeave, but instead
+   * use "this" which is an object for keeping state local to an invocation.
+   */
+  onEnter: function (log, args, state) {
+	log("[+] RegOpenKeyExW");
+    log("¦- hKey: " + args[0]);
+	log("¦- lpSubKey: " + args[1]);
+	log("¦- ulOptions: " + args[2]);
+	log("¦- samDesired: " + args[3]);
+	log("¦- PHKEY: " + args[4] + "\n");
+  },
+
+  /**
+   * Called synchronously when about to return from RegOpenKeyExW.
+   *
+   * See onEnter for details.
+   *
+   * @this {object} - Object allowing you to access state stored in onEnter.
+   * @param {function} log - Call this function with a string to be presented to the user.
+   * @param {NativePointer} retval - Return value represented as a NativePointer object.
+   * @param {object} state - Object allowing you to keep state across function calls.
+   */
+  onLeave: function (log, retval, state) {
+  }
+}</pre>
+</div>
+
+<p>As we can see, we are able to pull out all of those function arguments, but for the purposes of quickly looking at registry activity the most telling argument is probably the lpSubKey. Of course the string pointer is not particularly useful but we can easily rewrite our onEnter function to pull out the unicode string as show below.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: js;gutter:false;auto-links: false;;">
+onEnter: function (log, args, state) {
+	log(Memory.readUtf16String(args[1]));
+}</pre>
+</div>
+
+<p>If we save our changes and perform some new activity in the app we see the full subkey registry paths being accessed by the application.</p>
+
+<p>&nbsp;</p><img src="images/Frida-Trace-02.png"><p>&nbsp;</p>
+
+<p>If you look closer at the output you will see that there is something missing. We don't actually get the registry hive, this is because the call is using a previously opened handle to whichever hive it is querying. We can tell what the hive is by doing lookup's on the used handles and tracking them across calls but that is outside the scope of this post. Notice also that the output is colorized based on thread context.<br /><br />
+
+If you have been following some of the malarkey with COM Hijacking for privilege escalation and persistence you can understand that there may be a use case for listing registry access to paths containing "CLSID\" where the result of the call is a failure (most likely because the subkey is being queried in HKEY_CURRENT_USER). We can quickly modify our POC as follows to capture those calls.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: js;gutter:false;auto-links: false;;">
+onEnter: function (log, args, state) {
+	this.SubKey = Memory.readUtf16String(args[1]); // @this is available in onLeave
+	if (this.SubKey) {                             // Make sure the value is not null
+		if (this.SubKey.indexOf("CLSID\\") >= 0) {
+			this.ContainsCLSID = 1;                // Bool -> contains substring
+		}
+	}
+},
+
+onLeave: function (log, retval, state) {
+	if (this.ContainsCLSID) {                      // Check Bool
+		if (retval != 0){                          // If return value is not ERROR_SUCCESS
+			log(this.SubKey);                      // Print subkey
+		}
+	}
+}</pre>
+</div>
+
+<p>Saving our POC returns only attempts to open CLSID subkeys where the result was not ERROR_SUCCESS.</p>
+
+<p>&nbsp;</p><img src="images/Frida-Trace-03.png"><p>&nbsp;</p>
+
+<p>Similarly we could track which queries were successful. What if we wanted to know which key values were being accessed after successfully opening a subkey handle? Typically this would happen by using <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms724911(v=vs.85).aspx">RegQueryValueEx</a>. If we now hook both these functions we can implement some naive logic where we store the handle returned by a successful call to RegOpenKeyEx and on calling RegQueryValueEx we compare the input handle with the one we saved, if they match we can print the value which is being queried. We can see the code to achieve this below.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: js;gutter:false;auto-links: false;;">
+// The contents of the RegOpenKeyExW.js
+//---------------------------------------------------------
+
+onEnter: function (log, args, state) {
+	this.SubKey = Memory.readUtf16String(args[1]); // @this is available in onLeave
+	if (this.SubKey) {                             // Make sure the value is not null
+		if (this.SubKey.indexOf("CLSID\\") >= 0) {
+			this.ContainsCLSID = 1;                // Bool -> contains substring
+			this.hSubKey = args[4];
+		}
+	}
+},
+
+onLeave: function (log, retval, state) {
+	if (this.ContainsCLSID) {                      // Check Bool
+		if (retval == 0){                          // If return value is ERROR_SUCCESS
+			state.HandleKey = new Array(Memory.readInt(this.hSubKey), this.SubKey);
+		}                                          // @state persists across API calls
+		                                           // We create an array with the handle & path
+	}
+}
+
+// The contents of the RegQueryValueExW.js
+//---------------------------------------------------------
+onEnter: function (log, args, state) {
+	if (state.HandleKey) {                         // Check our array exists
+		if (state.HandleKey[0] == args[0]) {       // Compare stored handle with the new handle
+			if (Memory.readUtf16String(args[1])) { // Make sure the value is not null
+				log("[+] hKey: " + state.HandleKey[0] + "; Path: " + state.HandleKey[1]);
+				log("¦- KeyValue: " + Memory.readUtf16String(args[1]) + "\n");
+				state.HandleKey = null;            // We null here to clear the array
+			}
+		}
+	}
+},
+
+onLeave: function (log, retval, state) {
+}</pre>
+</div>
+
+<p>Refreshing our POC now only returns those entries we are filtering on.</p>
+
+<p>&nbsp;</p><img src="images/Frida-Trace-04.png"><p>&nbsp;</p>
+
+<p>This is a simple example but you can see that Frida allows you to easily instrument functions and play around with them without a costly  Compile->Test->Compile cycle.</p>
+
+<h2 class="title">Hooking MessageBox<span class="line"></span></h2>
+<p>We have seen so far how we can do passive recon, in this section we will see how we can influence the behavior of an application. As a basic example I chose to use <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms645505(v=vs.85).aspx">MessageBox</a> as it is kind of the "Hello World" of the Windows API. To allow us to dynamically test our function hooks I wrote a small Windows forms test harness in C#, you can see the main functionality below.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: csharp;gutter:false;auto-links: false;;">
+using System;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
+namespace msgbox
+{
+    public partial class Form1 : Form
+    {
+        // Unmanaged MessageBoxA import
+        [DllImport("user32.dll")]
+        public static extern int MessageBox(
+            IntPtr hWnd,
+            String lpText,
+            String lpCaption,
+            UInt32 uType);
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Grab our textbox inputs
+            String lpText = textBox1.Text;
+            String lpCaption = textBox2.Text;
+            UInt32 uType = Convert.ToUInt32(textBox3.Text);
+
+            MessageBox(IntPtr.Zero, lpText,lpCaption,uType);
+        }
+    }
+}</pre>
+</div>
+
+<p>Using the same techniques we saw in the previous section with can quickly hook the application and write some basic JS to dump out the MessageBox parameters. Notice the use of readAnsiString to match MessageBoxA.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: js;gutter:false;auto-links: false;;">
+onEnter: function (log, args, state) {
+	log("[+] MessageBoxA");
+	log("¦- hWnd: " + args[0]);
+	log("¦- lpText: " + Memory.readAnsiString(args[1]));
+	log("¦- lpCaption: " + Memory.readAnsiString(args[2]));
+	log("¦- uType: " + args[3] + "\n");
+},
+
+onLeave: function (log, retval, state) {
+}</pre>
+</div>
+
+<p>&nbsp;</p><img src="images/Frida-Trace-05.png"><p>&nbsp;</p>
+
+<p>Frida has a number of functions to edit/allocate memory primitives, I suggest the reader has a look at the <a href="https://www.frida.re/docs/javascript-api/">API documentation</a>. For our simple demonstration I modified the JS to implement two types of hooks: (1) if lpText is "Bob" change it to "Alice" and (2) if the uType is 6 change it to 0.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: js;gutter:false;auto-links: false;;">
+onEnter: function (log, args, state) {
+	log("");
+	log("[+] MessageBoxA");
+	log("¦- hWnd: " + args[0]);
+	log("¦- lpText: " + Memory.readAnsiString(args[1]));
+	log("¦- lpCaption: " + Memory.readAnsiString(args[2]));
+	log("¦- uType: " + args[3] + "\n");
+	
+	// uType hook
+	if (args[3] == 6) {
+		log("[!] Hooking uType: 6 -> 0");
+		args[3] = ptr(0); // Overwrite uType with NativePointer(0)
+	}
+	
+	// lpText hook
+	if (Memory.readAnsiString(args[1]) == "Bob") {
+		log("[!] Hooking lpText: Bob -> Alice");
+		this.lpText = Memory.allocAnsiString("Alice"); // Allocate new heap ANSI string
+		args[1] = this.lpText; // Replace lpText pointer
+	}
+},
+
+onLeave: function (log, retval, state) {
+}</pre>
+</div>
+
+<p>We can observe the results in the image below. Notice that the parameters are checked individually so you could have a condition where both/none/one of the hooks is active.</p>
+
+<p>&nbsp;</p><img src="images/Frida-Trace-06.png"><p>&nbsp;</p>
+
+<h2 class="title">Userland Process Hiding -> SystemProcessInformation<span class="line"></span></h2>
+<p>For the final part of this post I want to briefly show a more complex hooking example. If you have worked with undocumented API's on Windows at all the chances are good you have used NtQuerySystemInformation and some of it's information classes. One of these classes is the SystemProcessInformation class (0x5). As it turns out SystemProcessInformation is the authoritative source for userland processes so any applications that get process listings through whichever API's will end up filtering down to NtQuerySystemInformation whether they know it or not (Task Manager/Process Explorer/Process Hacker/.....).<br /><br />
+
+I recently wrote a PowerShell wrapper for this function, <a href="https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Get-SystemProcessInformation.ps1">Get-SystemProcessInformation</a>, so I thought it would be a neat idea to try and hook this function with Frida to demonstrate userland process hiding.<br /><br />
+
+<span style="color: #ffffff;"><strong>SystemProcessInformation Memory Layout</strong></span><br />
+To understand how the hook works we need to know what NtQuerySystemInformation actually returns when the SystemProcessInformation class is used. Hopefully the layout below helps provide some clarity.
+</p>
+
+<p>&nbsp;</p>
+<div class="terminal_wrap" style="background:#CCC">
+<pre>
+NTSTATUS WINAPI NtQuerySystemInformation(
+  _In_      UINT   <span style="color: #872800;"><strong>SystemInformationClass</strong></span>,  // SYSTEM_INFORMATION_CLASS
+  _Inout_   PVOID  <span style="color: #006b18;"><strong>SystemInformation</strong></span>,       // A pointer to a buffer that receives the requested information
+  _In_      ULONG  SystemInformationLength, // Byte count allocated for the request
+  _Out_opt_ PULONG ReturnLength             // Pointer to the variable to receives the output size
+);
+
+<span style="color: #872800;"><strong>SystemInformationClass</strong></span> =&gt; SystemProcessInformation = <span style="color: #872800;"><strong>0x5</strong></span>
+<span style="color: #006b18;"><strong>SystemInformation</strong></span> =&gt; Pointer, eg <span style="color: #006b18;"><strong>0x11223344556</strong></span> -----------------------|
+                                                                      |
+                                                                      |
+                                                                      |
+                                           <strong><span style="background-color:#01DFD7;">[Points at an array of SYSTEM_PROCESS_INFORMATION Structs]</span></strong>
+                                                                      |
+                                                                      |
+                    |-------------------------------------------------|
+                    |
+ |--------------------------------------|
+ |<span style="background-color:#A9F5A9;"> [Int]NextEntryOffset (eg:0x1fb)      </span>|  --------------------&gt;
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |              .......                 |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#F5DA81;"> [UNICODE_STRING]ImageName            </span>|                      |      <span style="background-color:#FFFFFF;">[2nd Entry = 1st Entry + 0x1fb]</span>
+ |<span style="background-color:#F5DA81;">   |-> svchost.exe                    </span>|                      |
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |              .......                 |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#FF8000;"> SYSTEM_THREAD_INFORMATION structs    </span>|                      |
+ |--------------------------------------|                      |
+ |<span style="background-color:#A9F5A9;"> [Int]NextEntryOffset (eg:0x222)      </span>|  &lt;-------------------&gt;
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |              .......                 |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#F5DA81;"> [UNICODE_STRING]ImageName            </span>|                      |      <span style="background-color:#FFFFFF;">[3rd Entry = 2nd Entry + 0x222]</span>
+ |<span style="background-color:#F5DA81;">   |-> powershell.exe                 </span>|                      |
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |              .......                 |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#FF8000;"> SYSTEM_THREAD_INFORMATION structs    </span>|                      |
+ |--------------------------------------|                      |
+ |<span style="background-color:#A9F5A9;"> [Int]NextEntryOffset (eg:0x3a0)      </span>|  &lt;-------------------&gt;
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |              .......                 |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#F5DA81;"> [UNICODE_STRING]ImageName            </span>|                      |      <span style="background-color:#FFFFFF;">[4th Entry = 3rd Entry + 0x3a0]</span>
+ |<span style="background-color:#F5DA81;">   |-> notepad.exe                    </span>|                      |
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |              .......                 |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#FF8000;"> SYSTEM_THREAD_INFORMATION structs    </span>|                      |
+ |--------------------------------------|                      |
+                                           .....  &lt;------------&gt;
+ 
+</pre>
+<br>
+</div>
+<p>&nbsp;</p>
+
+<p>This representation is not totally accurate because there are some fixed processes at the start of the array but it's serviceable. The key point is that each blob varies in size depending on how many SYSTEM_THREAD_INFORMATION structs are appended to the SYSTEM_PROCESS_INFORMATION struct.<br /><br />
+
+
+<span style="color: #ffffff;"><strong>SystemProcessInformation Hooking</strong></span><br />
+Let's say we wanted to hide all PowerShell processes in that list, all we would need to do is traverse the list and rewrite the entry before PowerShell so the NextEntryOffset points to the next entry in the list.</p>
+
+<p>&nbsp;</p>
+<div class="terminal_wrap" style="background:#CCC">
+<pre>
+ |--------------------------------------|
+ |<span style="background-color:#A9F5A9;"> [Int]NextEntryOffset (eg:<del>0x1fb</del> 0x41d)</span>|  --------------------&gt;
+ |                               I      |                      |
+ |                               I      |                      |
+ |                               I      |                      |
+ |              .......          I==================================> <span style="background-color:#FFFFFF;">[3nd Entry = 1st Entry + 0x1fb + 0x222</span>
+ |                                      |                      |       <span style="background-color:#FFFFFF;">=> 1st Entry + 0x41d]</span>
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#F5DA81;"> [UNICODE_STRING]ImageName            </span>|                      |
+ |<span style="background-color:#F5DA81;">   |-> svchost.exe                    </span>|                      |
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |              .......                 |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#FF8000;"> SYSTEM_THREAD_INFORMATION structs    </span>|                      |
+ |--------------------------------------|                      |
+ |<span style="background-color:#F5A9A9;"> [Int]NextEntryOffset (eg:0x222)      </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;">              .......                 </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;"> [UNICODE_STRING]ImageName            </span>|                      |
+ |<span style="background-color:#F5A9A9;">   |-> powershell.exe                 </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;">              .......                 </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;">                                      </span>|                      |
+ |<span style="background-color:#F5A9A9;"> SYSTEM_THREAD_INFORMATION structs    </span>|                      |
+ |--------------------------------------|                      |
+ |<span style="background-color:#A9F5A9;"> [Int]NextEntryOffset (eg:0x3a0)      </span>|  &lt;-------------------&gt;
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |              .......                 |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#F5DA81;"> [UNICODE_STRING]ImageName            </span>|                      |      <span style="background-color:#FFFFFF;">[4th Entry = 3rd Entry + 0x3a0]</span>
+ |<span style="background-color:#F5DA81;">   |-> notepad.exe                    </span>|                      |
+ |                                      |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |              .......                 |                      |
+ |                                      |                      |
+ |                                      |                      |
+ |<span style="background-color:#FF8000;"> SYSTEM_THREAD_INFORMATION structs    </span>|                      |
+ |--------------------------------------|                      |
+                                           .....  &lt;------------&gt;
+ 
+</pre>
+<br>
+</div>
+<p>&nbsp;</p>
+
+<p>This may seem a bit complicated but all we need to do is intercept the API call as it is about to return, loop over the list by reading offsets/unicode strings and overwrite a single integer per identified PowerShell process. You can see my Frida implementation below. Please note that these offsets were only tested on x64 Win10 (though they should be valid for Win7-10 x64).</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: js;gutter:false;auto-links: false;;">
+onEnter: function (log, args, state) {
+	if (args[0] == 5) {
+		log("NtQuerySystemInformation:");
+		log("  --> Class : " + args[0] + " [SystemProcessInformation]");
+		log("  --> Addr  : " + args[1]);
+		log("  --> len   : " + args[2]);
+		log("  --> Retlen: " + Memory.readInt(args[3]) + "\n");
+		
+		this.IsProcInfo = 1;
+		this.Address = args[1];
+	}
+},
+
+onLeave: function (log, retval, state) {
+	if (this.IsProcInfo) {
+		while (true) {
+			// Get struct offsets
+			var ImageOffset = ptr(this.Address).add(64); // ImageName->UNICODE_STRING->Buffer
+			var ImageName = Memory.readPointer(ImageOffset); // Cast as ptr
+			var ProcID = ptr(this.Address).add(80); // PID
+			
+			// If PowerShell, rewrite the linked list
+			if (Memory.readUtf16String(ImageName) == "powershell.exe") {
+				log("[!] Hooking to hide PowerShell..");
+				log("  --> Rewriting linked list\n");
+				this.PreviousStruct = ptr(this.Address).sub(NextEntryOffset);
+				Memory.writeInt(this.PreviousStruct, (Memory.readInt(this.PreviousStruct)+Memory.readInt(this.Address)))
+			}
+	
+			// Move pointer to next struct
+			var NextEntryOffset = Memory.readInt(this.Address);
+			this.Address = ptr(this.Address).add(NextEntryOffset);
+			if (NextEntryOffset == 0) { // The last struct has a NextEntryOffset of 0
+				break
+			}
+		}
+		
+		// Null
+		this.IsProcInfo = 0;
+	}
+}</pre>
+</div>
+
+<p>I uploaded a short video demonstrating the SystemProcessInformation hook on YouTube. Btw, in theory there is an edge-case issue with the code (though I never triggered it) which I didn't fix, a free cookie for anyone that can tell me what it is.</p>
+
+<p>&nbsp;</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/hYbQjiZsrmw" frameborder="0" allowfullscreen></iframe>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tutorials: Sulley on Windows</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Installing Sulley on Windows</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Installing Sulley on Windows<span class="line"></span></h2>
+        <p>Hello to all concerned. I recently started to play/work with Sulley and it has some really nice features which make it stand out from other fuzzers like Spike. The main benefits to using sulley are that (1) it doesn't require a third party debugger (pydbg), (2) if the program crashes it will record the data in a capture file for later analysis and (3) it will automatically restart the program and continue fuzzing.<br />
+            <br />
+          The really big issue I had with Sulley was the lack of proper installation instructions. There are allot of guides out there and non of them seem to paint the complete picture. That's why I decided to write this guide based on three tutorials I pieced together to help anyone out who wants to give it a go. This install guide is currently fully functional on my &quot;Windows 7 32-bit&quot; VM.</p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <p><strong>Faze 1: Setting up your windows path</strong></p>
+      <p>We will first set up the windows path and include all the things we are going to install/need in this tutorial so we don't have to keep coming back to it later.</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>(1) click start -> right-click "computer" select properties -> select "Advanced system settings" -> select
+"Environment Variables"
+
+(2) Under "System variables" scroll down till you see "Path", select it and edit. Append the following to 
+the "Variable value" -> ";C:\Python27\;C:\Python27\scripts\;C:\MinGW\bin;C:\Program Files\sliksvn\bin"</pre>
+<br />
+</div>
+    
+    <p>&nbsp;</p>
+    <p><strong>Faze 2: Get SilkSVN</strong></p>
+          <p>Head over to the SilkSVN website <a href="http://www.sliksvn.com/en/download">here</a> and download/install..</p><br />
+          
+          <p><strong>Faze 3: Get MinGW</strong></p>
+          <p>Head over to the MinGW website <a href="http://www.mingw.org/">here</a> and download/install, make sure to check the box to install the c++ compiler.</p><br />
+          
+          <p><strong>Faze 4: Get WinPcap</strong></p>
+          <p>You need two packages. First head <a href="http://www.winpcap.org/install/default.htm">here</a> to the WinPcap Download page and install. Then go <a href="http://www.winpcap.org/devel.htm">here</a> to get the WinPcap Developers Pack and extract the archive somewhere with easy access (we will need this later to install pcapy).</p><br />
+          
+          <p><strong>Faze 5: Get Python</strong></p>
+          <p>Just head <a href="http://www.python.org/">here</a> to the Python website and download/install the 2.7.x version.</p><br />
+          
+          <p><strong>Faze 6: Fix Python to work with MinGW</strong></p>
+          <p>Later we will need to do some compilation which will throw up an error about gcc not having a module called "mno-cygwin". This module has been depreciated since 2010 (I think). Browse to C:\Python27\Lib\distutils and edit "cygwinccompiler.py" with your favorite text editor. Press Ctrl-f to search for "-mno-cygwin" (there should be 5 instances), delete them and then save the file.</p><br />
+          
+          <p><strong>Faze 7: Get Git for windows</strong></p>
+          <p>Head over to the Git website <a href="http://code.google.com/p/msysgit/downloads/list?q=full+installer+official+git">here</a> and download/install..</p><br />
+          
+          <p><strong>Faze 8: Get Pydbg</strong></p>
+          <p>Open a cmd prompt and and do the following:</p>
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre>(1) git clone https://Fitblip@github.com/Fitblip/pydbg.git
+(2) cd pydbg
+(3) python setup.py install</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p><p><strong>Faze 9: Get libdasm</strong></p>
+          <p>Open a cmd prompt and and do the following:</p></p>
+          
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>(1) svn checkout http://libdasm.googlecode.com/svn/trunk/ libdasm-read-only
+(2) cd libdasm-read-only/pydasm
+(3) python setup.py build_ext -c mingw32
+(4) python setup.py install</pre>
+<br /></div>
+
+<p>&nbsp;</p>
+<p><p><strong>Faze 10: Get Pcapy</strong></p>
+          <p>Download the Pcapy zip <a href="http://oss.coresecurity.com/repo/pcapy-0.10.5.zip">here</a>. When installing Pcapy we will need to use the WinPcap developers pack we downloaded earlier so take note of that directory (eg: C:\WpdPack412\....). Extract the archive browse to the folder in cmd and do the following:</p>
+          
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>(1) python setup.py build_ext -c mingw32 -I “C:\WpdPack412\WpdPack\Include” -L “C:\WpdPack412\WpdPack\Lib”
+(2) python setup.py install</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p><p><strong>Faze 11: Get Impacket</strong></p>
+          <p>Download the Impacket zip <a href="http://oss.coresecurity.com/repo/Impacket-0.9.6.0.zip">here</a> and extract the archive. Browse to the folder in cmd and do the following:</p>
+  
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>python setup.py install</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p><p><strong>Faze 12: Get The Sulley Framework</strong></p>
+          <p>Open a cmd prompt and and do the following:</p>
+  
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>svn checkout http://sulley.googlecode.com/svn/trunk/ sulley-read-only</pre>
+<br />
+</div><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/sulley_big.png" rel="prettyPhoto[sulley]">
+          <img src="images/sulley_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Sulley</p>
+      </div>
+
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

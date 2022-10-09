@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Linux ExploitDev: Part 2</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="../../js/shBrushVb.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Format String Exploitation</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 2: Linux Format String Exploitation<span class="line"></span></h2>
+        <p>Welcome to the first part in our Linux Exploitation Tutorial Series. Again I would like to thank kyuzo for taking the time to share his knowledge with us! In this part we will be looking at Format String Exploitation. Format string vulnerabilities usually occur when a programmer wants to print out a user controlled function but does not sanitize the user input allowing the malicious attacker to inject their own format specifiers. This in turn allows the malicious attacker to read and write arbitrary memory.</p><br />
+        
+          <p>In my own attempt to educate myself in the fundamentals of format string exploitation I read two most excellent resources: (1)  Exploiting Format String Vulnerabilities [scut / Team Teso – 2001] and (2) Advances in format string exploitation [gera & riq / Phrack – 2002]. I have included links to both resources below and I can highly recommend them for background reading.</p><br />
+
+<p>Before we get to the good stuff I just want to mention that by default gdb unassembles opcode in AT&T syntax, for those of us who have done allot of Windows exploit development this is a bit confusing. Fortunately you can easily change the disassembly flavor in gdb with the following commands..</p><br />
+
+<p><strong>set disassembly-flavor intel</strong><br />
+<strong>set disassembly-flavor att</strong></p><br />
+
+<p>Resources:<br />
+Exploiting Format String Vulnerabilities (by scut): <a href="http://crypto.stanford.edu/cs155old/cs155-spring08/papers/formatstring-1.2.pdf">Link</a><br />
+Advances in format string exploitation (by gera & riq): <a href="http://www.phrack.org/issues.html?issue=59&id=7">Link</a></p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <h2 class="title">Introduction<span class="line"></span></h2>
+      <p>A few months ago b33f and myself put together a workshop on software exploitation to be presented in a university environment. The workshop had two main ideas: (1) deal with non-buffer overflow exploitation vulnerabilities and (2) talk about both Windows and Linux. So I picked up a list of less glamorous and more esoteric(!) vulnerabilities; among these we decided to include format strings, as they have been quite important in the last few years as far as Linux is concerned. Just to mention one, at the beginning of 2012 sudo was released with a format string flaw in the sudo_debug function and that was shipped with main-stream distributions like Fedora and OpenSUSE.</p><br />
+
+<p>After the workshop, I had promised b33f I would contribute some material to FuzzySecurity and, a few months later, I finally made up my mind and decided to make a couple of videos about format string exploitation.</p>
+      <br />
+      
+<p><strong>Sample code used in the first part of the video tutorial</strong>:</p>
+      
+      <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+/* example.c
+ * 
+ * $ gcc -o example example.c
+ * $ execstack -s example # make stack executable
+ */
+#include &lt;stdio.h>
+
+int main() {
+	int a = -5;
+    float b = 5.5;
+    char *c = "My String";
+    
+	printf("A = %d, B = %f, C = %s\n", a, b, c);
+}</pre>
+</div>
+
+<p><strong>Sample code used in the first and second part of the video tutorial</strong>:</p>
+          
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+/* fmt.c - sample program vulnerable to format string exploitation
+ * 
+ * $ gcc -o fmt fmt.c
+ * $ execstack -s fmt # make stack executable
+ */
+#include &lt;stdio.h>
+#include &lt;string.h>
+
+int main(int argc, char *argv[]) {
+	char b[128];
+	strcpy(b, argv[1]);
+	printf(b);
+	printf("\n");
+}</pre>
+</div>
+
+<h2 class="title">Format String Tutorial<span class="line"></span></h2>
+<p>The first video offers an introduction to what format strings are and how they can lead to information leakages (some of the topics include: conversion specifiers usage and direct parameter access). The second part moves things a step forward and shows how to own a program leveraging arcane format string features like the evil %n conversion specifier!</p><p>&nbsp;</p>
+
+<h2>Part 1</h2><p>&nbsp;</p>
+<iframe width="640" height="460" src="http://www.youtube.com/embed/NwzmYSlETI8?rel=0&amp;vq=large" frameborder="0" allowfullscreen></iframe><p>&nbsp;</p>
+
+<h2>Part 2</h2><p>&nbsp;</p>
+<iframe width="640" height="460" src="http://www.youtube.com/embed/CHrs30g-3O0?rel=0&amp;vq=large" frameborder="0" allowfullscreen></iframe><p>&nbsp;</p>
+
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

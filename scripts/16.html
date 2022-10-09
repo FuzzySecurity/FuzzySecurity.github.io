@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Coding: php33r v0.2</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+	
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../js/shCore.js"></script>
+	<script type="text/javascript" src="../js/shBrushPhp.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html">Tutorials</a>
+            </li>
+            <li><a href="../coding.html" class="active">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../coding.html">Scripting</a> <b>&#187;</b></li>
+          <li>php33r v0.2</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="sixteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">php33r v0.2<span class="line"></span></h2>
+        <p>I was recently in a position where I could inject malicious PHP files on a web server. Generally there are really only two types of PHP shells that are useful: (1) bind/reverse shells and (2) inline non-interactive web shells. In this case, however, bind and reverse shells were not an option. For simplicity I used the following, very practical, PHP one-liner.</p>
+		
+    <div class="main_wrap_support">
+<pre class="brush: php;gutter:false;auto-links: false;;">
+&lt;?php echo system($_GET["cmd"]); ?></pre>
+</div>
+
+<p>After writing the PHP to a file on a web server, output for system commands can be retrieved using the following format.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>http://ServerAddress/outputfile.php?cmd=<span style='color:#2B8156;'>XXXXXX</span></pre>
+<br /></div><p>&nbsp;</p>
+
+<p>This gets the job done well enough. However it is not ideal, it lacks functionality and the output in the browser will not be displayed properly due to a lack of linebreaks (using curl is an option).<br /><br />
+
+There are publicly available PHP web shells, non of which I would ever trust enough to use. With that in mind I set out to write my own very basic PHP web shell.<p>&nbsp;</p>
+
+<strong><font color=#ffffff>//Requirements//</font></strong><br /><br />
+<pre>
+<font color=#ffffff><strong>Small</strong></font>       The code had to be small enough that anyone could audit it at a glance and determine that there was nothing
+                  malicious going on.<br />
+<font color=#ffffff><strong>Output</strong></font>     The system command output had to be readable, meaning proper linebreaks and an appropriate font size.<br />
+<font color=#ffffff><strong>Upload</strong></font>     I wanted to integrate a file upload feature because it is likely to be useful (eg: to facilitate privilege
+                  escalation).<br />
+<font color=#ffffff><strong>Security</strong></font>   Web shells form a security risk, anyone that discovers the shell could potentially access the underlying OS.
+                  To that end I wanted to implement a basic form of authentication.
+</pre><br /><br />
+
+Enter <strong>php33r</strong>! The php33r web shell fulfils all these requirements and has been tested using LAMP stacks on Windows and Linux.<p>&nbsp;</p>
+
+<strong><font color=#ffffff>//Results//</font></strong><br /><br />
+<pre>
+<font color=#ffffff><strong>Small</strong></font>       Only 93 lines, most of which is cosmetic.<br />
+<font color=#ffffff><strong>Output</strong></font>     I opted to use html pre tags instead of nl2br in order to take care of the output format. In addition span tags
+                  are used for font size and color attributes.<br />
+<font color=#ffffff><strong>Upload</strong></font>     PHP's "move_uploaded_file" function is used to move the file to the desired destination on the remote system.
+                  One important thing to note is that trailing slashes for the remote path are mandatory!!<br />
+<font color=#ffffff><strong>Security</strong></font>   Based on the password and the random padding in the source a cookie value is calculated. When a user visits the
+                  page he/she will be prompted for a login password. If the correct password is given the web shell will set the
+                  calculated cookie value with a time-out of 15 minutes. The page will then refresh and provide access to the locked
+                  content.
+</pre><br /><br />
+
+Keep in mind that the "session" implementation is not bulletproof. The cookie value will be static if the password and padding are kept static. In addition, if the cookie is transmitted over clear-text, anyone could sniff the value locally and concurrently authenticate to the web shell.</p><br /><br />
+
+<div class="description"><font color=#e64141 style="font-size:15px"><strong>This PHP shell was created for authorized use only. I take no responsibility if anyone decides to use it for illegitimate purposes.</strong></font></p></div>
+
+<p>&nbsp;</p>
+        
+        <p>Download: <a href="files/php33r.rar">php33r.php</a></p>
+      
+          <p>&nbsp;</p><p>&nbsp;</p>
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/php33r_big_1.png" rel="prettyPhoto[php33r]">
+          <img src="images/php33r_small_1.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Login</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/php33r_big_2.png" rel="prettyPhoto[php33r]">
+          <img src="images/php33r_small_2.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Command Execution</p>
+      </div>
+	  
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/php33r_big_3.png" rel="prettyPhoto[php33r]">
+          <img src="images/php33r_small_3.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>File Upload</p>
+      </div>
+	  
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/php33r_big_4.png" rel="prettyPhoto[php33r]">
+          <img src="images/php33r_small_4.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>ph33rCookie</p>
+      </div>
+
+      </div>
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

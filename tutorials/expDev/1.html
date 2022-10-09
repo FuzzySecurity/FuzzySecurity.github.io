@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | ExploitDev: Part 1</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Introduction to Exploit Development</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 1: Introduction to Exploit Development<span class="line"></span></h2>
+        <p>This  is the first part in a (modest) multi-part exploit development series. This part will just  cover some basic things like what we need to do our work, basic ideas behind exploits  and a couple of things to keep in mind if we want to get to and execute our  shellcode. These tutorials will not cover finding bugs, instead each part will  include a vulnerable program which needs a specific technique to be successfully  exploited. In the fullness of time I intend to cover everything from “Saved Return Pointer Overflows” to “ROP (Return Oriented Programming)” of course these tutorials won't write themselves so it will take some time to get there. It is worth mentioning that these tutorials wont cover all the small details and eventualities; this is done by design to (1) save me some time and (2) allow the diligent reader to learn by participating.</p><br />
+          <p><strong>I  would like to give special thanks to Offensive Security and Corelan, thanks for  giving me this amazing and painful addiction!!</strong></p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <h2 class="title">(1) What we need<span class="line"></span></h2>
+<p>Immunity Debugger - <a href="http://debugger.immunityinc.com/ID_register.py">Download</a><br />
+          Immunity Debugger is similar to Ollydbg but it has python support which we will need to run plugin’s to aid us with our exploit development. It’s free; on the link just fill in some bogus info and hit download.</p><br />
+          
+          <p>Mona.py - <a href="http://redmine.corelan.be/projects/mona/repository">Download</a><br />
+          Mona  is an amazing tool with tons of features which will help us to do rapid and  reliable exploit development. I won&rsquo;t be discussing all the options here, we&rsquo;ll  get to them during the following parts of the tutorial. Download it and put it  in Immunity&rsquo;s PyCommands folder.</p><br />
+          
+          <p>Pvefindaddr.py - <a href="http://redmine.corelan.be:8800/projects/pvefindaddr/repository">Download</a><br />
+          Pvefindaddr  is Mona&rsquo;s predecessor. I know it&rsquo;s a bit outdated but it&rsquo;s still useful since there  are some features that haven&rsquo;t been ported to Mona yet. Download it and put it  in Immunity&rsquo;s PyCommands folder.</p><br />
+          
+          <p>Metasploit Framework - <a href="http://www.metasploit.com/">Download</a><br />
+          We  are going to use the Metasploit Framework extensively. Most of all we are going  to be generating shellcode for our exploits but we are also going to need a  platform that can receive any connections we might get back from the programs  we are exploiting. I suggest you use <strong>Backtrack</strong> since it has everything we need  but feel free to set up metasploit in any way you see fit.</p><br />
+          
+          <p>Virtualization Software<br />
+          Basically there are two options here VirtualBox which is free and Vmware which isn't. If its possible I would suggest using Vmware; a clever person might not need to pay for it ;)). Coupled with this we will need several (32-bit) operating systems to develop our exploits on (you will get the most use out of WindowsXP PRO SP3 and any Windows7).</p>
+
+<h2 class="title">(2) Overflows<span class="line"></span></h2>
+<p>For  the purpose of these tutorials I think it&rsquo;s important to keep things as simple or  difficult as they need to be. In general when we write an exploit we need to  find an overflow in a program. Commonly these bugs will be either Buffer  Overflows (a memory location receives more data than it was meant to) or Stack  Overflows (usually a Buffer Overflow that writes beyond the end of the stack).  When such an overflow occurs there are two things we are looking for; (1) our buffer  needs to overwrite EIP (Current Instruction Pointer) and (2) one of the CPU  registers needs to contain our buffer. You can see a list of x86 CPU registers  below with their separate functions. All we need to remember is that any of these  registers can store our buffer (and shellcode).</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><strong>EAX</strong> - Main register used in arithmetic calculations. Also known as accumulator, as it holds results 
+      of arithmetic operations and function return values.
+<strong>EBX</strong> - The Base Register. Pointer to data in the DS segment.  Used to store the base address of the 
+      program.
+<strong>ECX</strong> - The Counter register is often used to hold a value representing the number of times a process 
+      is to be repeated. Used for loop and string operations.
+<strong>EDX</strong> - A general purpose registers. Also used for I/O operations. Helps extend EAX to 64-bits.
+<strong>ESI</strong> - Source Index register. Pointer to data in the segment pointed to by the DS register.  Used as 
+      an offset address in string and array operations. It holds the address from where to read data.
+<strong>EDI</strong> - Destination Index register. Pointer to data (or destination) in the segment pointed to by the 
+      ES register.  Used as an offset address in string and array operations. It holds the implied 
+      write address of all string operations.
+<strong>EBP</strong> - Base Pointer. Pointer to data on the stack (in the SS segment).  It points to the bottom of the 
+      current stack frame. It is used to reference local variables.
+<strong>ESP</strong> - Stack Pointer (in the SS segment). It points to the top of the current stack frame. It is used 
+      to reference local variables.
+<strong>EIP</strong> - Instruction Pointer (holds the address of the next instruction to be executed)</pre>
+<br /></div>
+
+<p>&nbsp;</p>
+<h2 class="title">(3) How does it work?<span class="line"></span></h2>
+<p>Basically (1) we get a program to store an overly long  string, (2) this string overwrites EIP and part of it is stored in a CPU  register, (3) we find a pointer that points to the register that contains our buffer,  (4) we put that pointer in the correct place in our buffer so it overwrites  EIP, (5) when the program reaches our pointer it executes the instruction and  jumps to the register that contains our buffer and finally (6) we place our  shellcode in the part of the buffer that is stored in the CPU register. In  essence we hijack the execution flow and point it to an area of memory that we  control. If we are able to do that we can have to remote machine execute any  instructions we place there. This is a bit simplistic but it should give you a  basic idea of how exploits work.</p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

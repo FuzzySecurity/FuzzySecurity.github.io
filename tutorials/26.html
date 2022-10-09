@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Game Over: CanYouPwnMe > Kevgir-1</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../css/shCoreEmacs.css"/>
+  
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../js/shCore.js"></script>
+	<script type="text/javascript" src="../js/shBrushPowerShell.js"></script>
+	<script type="text/javascript" src="../js/shBrushCSharp.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Game Over: CanYouPwnMe > Kevgir-1</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Game Over: CanYouPwnMe > Kevgir-1<span class="line"></span></h2>
+
+      <div class="fourteen columns bottom">
+      <p>Hola! I had some time over the weekend and had a quick look at the Kevgir boot2root VM posted on VulnHub. This is a bullet point style write-up of some of the external/internal vulnerabilities on the VM. I'm confident there are vectors that I wont have covered but => [Δt - work]*0xc0ff33 is all I the time I could invest hehe. Enjoy!<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+      + CanYouPwnMe - <a href="https://canyoupwn.me/">here</a><br />
+      + Kevgir VulnHub - <a href="https://www.vulnhub.com/entry/kevgir-1,137/">here</a></p><br />
+
+<h2 class="title">External<span class="line"></span></h2>
+<p><span style="color: #ffffff;"><strong>Nmap:</strong></span><br /></p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#990066;"><strong># I have highlighted some of the interesting ports for clarity</strong></span>
+
+<span style='color:#ff0000;'>b33f@CanHazShells</span> ~/CTF/Kevgir-vm# <span style='color:#2B8156;'>nmap -sSV -A -p- -T5 192.168.23.128</span>
+
+Starting Nmap 7.01 ( https://nmap.org ) at 2016-03-28 04:45 BST
+Stats: 0:02:13 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 99.96% done; ETC: 04:47 (0:00:00 remaining)
+Nmap scan report for 192.168.23.128
+Host is up (0.00031s latency).
+Not shown: 65517 closed ports
+PORT      STATE SERVICE     VERSION
+<span style="background-color:#A9F5A9;">25/tcp    open  ftp         vsftpd 3.0.2</span>
+|_smtp-commands: SMTP: EHLO 530 Please login with USER and PASS.
+80/tcp    open  http        Apache httpd 2.4.7 ((Ubuntu))
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: Kevgir VM
+<span style="background-color:#A9F5A9;">111/tcp   open  rpcbind     2-4 (RPC #100000)</span>
+| rpcinfo: 
+|   program version   port/proto  service
+|   100000  2,3,4        111/tcp  rpcbind
+|   100000  2,3,4        111/udp  rpcbind
+|   100003  2,3,4       2049/tcp  nfs
+|   100003  2,3,4       2049/udp  nfs
+|   100005  1,2,3      48513/tcp  mountd
+|   100005  1,2,3      51426/udp  mountd
+|   100021  1,3,4      44215/udp  nlockmgr
+|   100021  1,3,4      58401/tcp  nlockmgr
+|   100024  1          40917/udp  status
+|   100024  1          52978/tcp  status
+|   100227  2,3         2049/tcp  nfs_acl
+|_  100227  2,3         2049/udp  nfs_acl
+139/tcp   open  netbios-ssn Samba smbd 3.X (workgroup: CANYOUPWNME)
+445/tcp   open  netbios-ssn Samba smbd 3.X (workgroup: CANYOUPWNME)
+<span style="background-color:#A9F5A9;">1322/tcp  open  ssh         OpenSSH 6.6.1p1 Ubuntu 2ubuntu2 (Ubuntu Linux; protocol 2.0)</span>
+| ssh-hostkey: 
+|   1024 17:32:b4:85:06:20:b6:90:5b:75:1c:6e:fe:0f:f8:e2 (DSA)
+|   2048 53:49:03:32:86:0b:15:b8:a5:f1:2b:8e:75:1b:5a:06 (RSA)
+|_  256 3b:03:cd:29:7b:5e:9f:3b:62:79:ed:dc:82:c7:48:8a (ECDSA)
+<span style="background-color:#A9F5A9;">2049/tcp  open  nfs         2-4 (RPC #100003)</span>
+| rpcinfo: 
+|   program version   port/proto  service
+|   100000  2,3,4        111/tcp  rpcbind
+|   100000  2,3,4        111/udp  rpcbind
+|   100003  2,3,4       2049/tcp  nfs
+|   100003  2,3,4       2049/udp  nfs
+|   100005  1,2,3      48513/tcp  mountd
+|   100005  1,2,3      51426/udp  mountd
+|   100021  1,3,4      44215/udp  nlockmgr
+|   100021  1,3,4      58401/tcp  nlockmgr
+|   100024  1          40917/udp  status
+|   100024  1          52978/tcp  status
+|   100227  2,3         2049/tcp  nfs_acl
+|_  100227  2,3         2049/udp  nfs_acl
+<span style="background-color:#A9F5A9;">6379/tcp  open  redis       Redis key-value store</span>
+<span style="background-color:#A9F5A9;">8080/tcp  open  http        Apache Tomcat/Coyote JSP engine 1.1</span>
+| http-methods: 
+|_  Potentially risky methods: PUT DELETE
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-server-header: Apache-Coyote/1.1
+|_http-title: Apache Tomcat
+<span style="background-color:#A9F5A9;">8081/tcp  open  http        Apache httpd 2.4.7 ((Ubuntu))</span>
+| http-robots.txt: 14 disallowed entries 
+| /administrator/ /cache/ /components/ /images/ 
+| /includes/ /installation/ /language/ /libraries/ /media/ 
+|_/modules/ /plugins/ /templates/ /tmp/ /xmlrpc/
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+<span style="background-color:#A9F5A9;">9000/tcp  open  http        Jetty winstone-2.9</span>
+| http-robots.txt: 1 disallowed entry 
+|_/
+|_http-server-header: Jetty(winstone-2.9)
+|_http-title: Dashboard [Jenkins]
+38940/tcp open  mountd      1-3 (RPC #100005)
+45523/tcp open  unknown
+48513/tcp open  mountd      1-3 (RPC #100005)
+| rpcinfo: 
+|   program version   port/proto  service
+|   100000  2,3,4        111/tcp  rpcbind
+|   100000  2,3,4        111/udp  rpcbind
+|   100003  2,3,4       2049/tcp  nfs
+|   100003  2,3,4       2049/udp  nfs
+|   100005  1,2,3      48513/tcp  mountd
+|   100005  1,2,3      51426/udp  mountd
+|   100021  1,3,4      44215/udp  nlockmgr
+|   100021  1,3,4      58401/tcp  nlockmgr
+|   100024  1          40917/udp  status
+|   100024  1          52978/tcp  status
+|   100227  2,3         2049/tcp  nfs_acl
+|_  100227  2,3         2049/udp  nfs_acl
+52978/tcp open  status      1 (RPC #100024)
+| rpcinfo: 
+|   program version   port/proto  service
+|   100000  2,3,4        111/tcp  rpcbind
+|   100000  2,3,4        111/udp  rpcbind
+|   100003  2,3,4       2049/tcp  nfs
+|   100003  2,3,4       2049/udp  nfs
+|   100005  1,2,3      48513/tcp  mountd
+|   100005  1,2,3      51426/udp  mountd
+|   100021  1,3,4      44215/udp  nlockmgr
+|   100021  1,3,4      58401/tcp  nlockmgr
+|   100024  1          40917/udp  status
+|   100024  1          52978/tcp  status
+|   100227  2,3         2049/tcp  nfs_acl
+|_  100227  2,3         2049/udp  nfs_acl
+53937/tcp open  mountd      1-3 (RPC #100005)
+| rpcinfo: 
+|   program version   port/proto  service
+|   100000  2,3,4        111/tcp  rpcbind
+|   100000  2,3,4        111/udp  rpcbind
+|   100003  2,3,4       2049/tcp  nfs
+|   100003  2,3,4       2049/udp  nfs
+|   100005  1,2,3      48513/tcp  mountd
+|   100005  1,2,3      51426/udp  mountd
+|   100021  1,3,4      44215/udp  nlockmgr
+|   100021  1,3,4      58401/tcp  nlockmgr
+|   100024  1          40917/udp  status
+|   100024  1          52978/tcp  status
+|   100227  2,3         2049/tcp  nfs_acl
+|_  100227  2,3         2049/udp  nfs_acl
+58401/tcp open  nlockmgr    1-4 (RPC #100021)
+| rpcinfo: 
+|   program version   port/proto  service
+|   100000  2,3,4        111/tcp  rpcbind
+|   100000  2,3,4        111/udp  rpcbind
+|   100003  2,3,4       2049/tcp  nfs
+|   100003  2,3,4       2049/udp  nfs
+|   100005  1,2,3      48513/tcp  mountd
+|   100005  1,2,3      51426/udp  mountd
+|   100021  1,3,4      44215/udp  nlockmgr
+|   100021  1,3,4      58401/tcp  nlockmgr
+|   100024  1          40917/udp  status
+|   100024  1          52978/tcp  status
+|   100227  2,3         2049/tcp  nfs_acl
+|_  100227  2,3         2049/udp  nfs_acl
+<span style="background-color:#A9F5A9;">59894/tcp open  ssh         Apache Mina sshd 0.8.0 (protocol 2.0)</span>
+1 service unrecognized despite returning data. If you know the service/version, please submit the
+following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port45523-TCP:V=7.01%I=7%D=3/28%Time=56F8A8FB%P=i586-pc-linux-gnu%r(DNS
+SF:VersionBindReq,36,"Unrecognized\x20protocol:\x20\0\x06\x01\0\0\x01\0\0\
+SF:0\0\0\0\x07version\x04bind\0\0\x10\0\x03\n")%r(DNSStatusRequest,24,"Unr
+SF:ecognized\x20protocol:\x20\0\0\x10\0\0\0\0\0\0\0\0\0\n");
+MAC Address: 00:0C:29:EE:24:AA (VMware)
+Device type: general purpose
+Running: Linux 3.X|4.X
+OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4
+OS details: Linux 3.2 - 4.0
+Network Distance: 1 hop
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_nbstat: NetBIOS name: CANYOUPWNME, NetBIOS user: &lt;unknown>, NetBIOS MAC: &lt;unknown> (unknown)
+| smb-os-discovery: 
+|   OS: Unix (Samba 4.1.6-Ubuntu)
+|   Computer name: canyoupwnme
+|   NetBIOS computer name: CANYOUPWNME
+|   Domain name: 
+|   FQDN: canyoupwnme
+|_  System time: 2016-03-28T06:47:31+03:00
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+|_smbv2-enabled: Server supports SMBv2 protocol
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   0.31 ms 192.168.23.128
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+
+Nmap done: 1 IP address (1 host up) scanned in 148.68 seconds</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p><span style="color: #ffffff;"><strong>Tomcat - Port 8080:</strong></span><br />
+Call me cynical but any time there is the vaguest mention of Tomcat I immediately think; default creds => war file. Not to far of the mark in this case! Browsing to 8080 presents us with the default install frontpage for Tomcat.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-01-Big.png"><p>&nbsp;</p>
+
+<p>Browsing to the admin panel results in a authentication popup, the credentials in this case are tomcat/tomcat.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-02-Big.png"><p>&nbsp;</p>
+
+<p>Once authenticated we can upload a jsp shell by deploying a war file.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-03-Big.png"><p>&nbsp;</p>
+
+<p>Nothing special here, we can just generate a payload with msfvenom. Running "jar tf" we can actually see the jsp inside.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-04-Big.png"><p>&nbsp;</p>
+
+<p>All that remains is to deploy our payload to the Tomcat server.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-05-Big.png"><p>&nbsp;</p>
+
+<p>Once deployed we can simply curl the jsp to get a shell back!</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-06-Big.png"><p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Joomla - Port 8081:</strong></span><br />
+Searching the version of Joomla in Google immediately reveals that it is vulnerable to <a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-3681">CVE-2008-3681</a>. This is an input validation issue in the password reset token field.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-07-Big.png"><p>&nbsp;</p>
+
+<p>The token validation query looks something like this:</p>
+
+<div class="terminal_wrap" style="background:#CCC">
+<pre>$db->setQuery('SELECT id FROM #__users WHERE block = 0 AND activation = '.$db->Quote($token));</pre>
+      <br />
+</div>
+
+<p>&nbsp;</p>
+<p>As I understand, by putting a single quote in the token field there is some sort of confusion where Joomla matches it with the first enabled user in the database (most likely admin). As no further information is required we can immediately change the Admin's password for the Joomla instance.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-08-Big.png"><p>&nbsp;</p>
+
+<p>Once we have done that, we can log in to the Joomla admin panel.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-09-Big.png"><p>&nbsp;</p>
+
+<p>Getting access to a CMS pretty much = shell. Joomla runs on php so it's only a matter of finding a place to inject some php code. I chose to replace the "Milkyway" template through the template manager.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-10-Big.png"><p>&nbsp;</p>
+
+<p>For the payload I used "php-reverse-shell.php" which is in the webshells package on Kali but you can also generate something with msfvenom.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-11-Big.png"><p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>FTP - Port 25:</strong></span><br />
+Up next, FTP, no anonymous access so I ran hydra on it to check for weak credentials.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-12-Big.png"><p>&nbsp;</p>
+
+<p>The FTP folder for the admin user appears to be mapped to the user's home folder. Notice also that the server is poorly locked down allowing users to traverse the operating system essentially providing read/write access to any files the OS user account has access to.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-13-Big.png"><p>&nbsp;</p>
+
+<p>It occurred to me that the user is probably allowed to log in remotely and that the credentials are likely to be the same!</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>b33f@CanHazShells</span> ~/CTF/Kevgir-vm# <span style='color:#2B8156;'>ssh -p 1322 admin@192.168.23.128</span>
+                                                                  
+                                                                  
+  G:                ,;                                            
+  E#,    :        f#i                        .Gt  t    j.         
+  E#t  .GE      .E#t                        j#W:  Ej   EW,        
+  E#t j#K;     i#W,     t      .DD.       ;K#f    E#,  E##j       
+  E#GK#f      L#D.      EK:   ,WK.      .G#D.     E#t  E###D.     
+  E##D.     :K#Wfff;    E#t  i#D       j#K;       E#t  E#jG#W;    
+  E##Wi     i##WLLLLt   E#t j#f      ,K#f   ,GD;  E#t  E#t t##f   
+  E#jL#D:    .E#L       E#tL#i        j#Wi   E#t  E#t  E#t  :K#E: 
+  E#t ,K#j     f#E:     E#WW,          .G#D: E#t  E#t  E#KDDDD###i
+  E#t   jD      ,WW;    E#K:             ,K#fK#t  E#t  E#f,t#Wi,,,
+  j#t            .D#;   ED.                j###t  E#t  E#t  ;#W:  
+   ,;              tt   t                   .G#t  E#t  DWi   ,KK: 
+                                              ;;  ,;.             
+                                                                  
+                                                   by canyoupwn.me
+
+admin@192.168.23.128's password: 
+Welcome to Ubuntu 14.04.3 LTS (GNU/Linux 3.19.0-25-generic i686)
+
+ * Documentation:  https://help.ubuntu.com/
+
+  System information as of Sun Mar 27 22:34:24 EEST 2016
+
+  System load:  0.22              Processes:           113
+  Usage of /:   30.2% of 6.50GB   Users logged in:     0
+  Memory usage: 28%               IP address for eth0: 192.168.23.128
+  Swap usage:   0%
+
+  Graph this data and manage this system at:
+    https://landscape.canonical.com/
+
+167 packages can be updated.
+91 updates are security updates.
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+
+<span style='color:#ff0000;'>admin@canyoupwnme</span>:~$</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>This gives us a convenient, fully functional shell on the box.<br /><br />
+
+<span style="color: #ffffff;"><strong>NFS - Port 2049:</strong></span><br />
+Standard open NFS share. In this case an archive with a webroot backup.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-14-Big.png"><p>&nbsp;</p>
+
+<p>Turns out the zip archive is protected but we can easily brute force the password.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-15-Big.png"><p>&nbsp;</p>
+
+<p>Probably there is something pretty interesting to find in the webroot but ... no time to check it properly. A few quick recursive grep's did reveal the password below.</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-16-Big.png"><p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Redis - Port 6379:</strong></span><br />
+So redis, this was fairly interesting as I have never really looked at it before. Redis is an in-memory data store, it supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs and geospatial indexes with radius queries. It has built-in replication, Lua scripting, LRU eviction, transactions and different levels of on-disk persistence. You can see some example use cases <a href="http://highscalability.com/blog/2011/7/6/11-common-web-use-cases-solved-in-redis.html">here</a>. Clearly people seem to have a need for it but also looking around online you will find that it is terribly insecure by default!<br /><br />
+
+You can store a string in memory when connecting to the redis server and use some trickery to create/overwrite an arbitrary file with that string. Check out <a href="http://antirez.com/news/96">this</a> post to see how this is done in practise. Also, redis is running as root mmkay so at that point you own the box..</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-17-Big.png"><p>&nbsp;</p>
+
+<p>No authentication is in place so you can just connect to the server using the redis command line client.</p><br />
+
+<div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>b33f@CanHazShells</span>~/CTF/Kevgir-vm# <span style='color:#2B8156;'>redis-cli -h 192.168.23.128</span>
+
+<span style='color:#ff0000;'>192.168.23.128:6379</span>> <span style='color:#2B8156;'>info</span>
+# Server
+redis_version:3.0.7
+redis_git_sha1:00000000
+redis_git_dirty:0
+redis_build_id:aa70bcb321ba8313
+redis_mode:standalone
+os:Linux 3.19.0-25-generic i686
+arch_bits:32
+multiplexing_api:epoll
+gcc_version:4.8.4
+process_id:1108
+run_id:9cb3c4971d2483f4cd670ab35592ab3c141dc863
+tcp_port:6379
+uptime_in_seconds:32460
+uptime_in_days:0
+hz:10
+lru_clock:16298994
+config_file:/etc/redis/6379.conf
+
+# Clients
+connected_clients:1
+client_longest_output_list:0
+client_biggest_input_buf:0
+blocked_clients:0
+
+# Memory
+used_memory:637816
+used_memory_human:622.87K
+used_memory_rss:8335360
+used_memory_peak:637816
+used_memory_peak_human:622.87K
+used_memory_lua:24576
+mem_fragmentation_ratio:13.07
+mem_allocator:jemalloc-3.6.0
+
+# Persistence
+loading:0
+rdb_changes_since_last_save:0
+rdb_bgsave_in_progress:0
+rdb_last_save_time:1459139229
+rdb_last_bgsave_status:ok
+rdb_last_bgsave_time_sec:0
+rdb_current_bgsave_time_sec:-1
+aof_enabled:0
+aof_rewrite_in_progress:0
+aof_rewrite_scheduled:0
+aof_last_rewrite_time_sec:-1
+aof_current_rewrite_time_sec:-1
+aof_last_bgrewrite_status:ok
+aof_last_write_status:ok
+
+# Stats
+total_connections_received:6
+total_commands_processed:3
+instantaneous_ops_per_sec:0
+total_net_input_bytes:191
+total_net_output_bytes:3924
+instantaneous_input_kbps:0.00
+instantaneous_output_kbps:0.00
+rejected_connections:0
+sync_full:0
+sync_partial_ok:0
+sync_partial_err:0
+expired_keys:0
+evicted_keys:0
+keyspace_hits:0
+keyspace_misses:0
+pubsub_channels:0
+pubsub_patterns:0
+latest_fork_usec:58152
+migrate_cached_sockets:0
+
+# Replication
+role:master
+connected_slaves:0
+master_repl_offset:0
+repl_backlog_active:0
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:0
+repl_backlog_histlen:0
+
+# CPU
+used_cpu_sys:28.76
+used_cpu_user:12.86
+used_cpu_sys_children:0.03
+used_cpu_user_children:0.00
+
+# Cluster
+cluster_enabled:0
+
+# Keyspace
+
+db0:keys=1,expires=0,avg_ttl=0</pre>
+      <br />
+</div>
+
+<p>&nbsp;</p>
+<p>I did get a root shell from redis but I won't elaborate on it here as the method was almost identical to the local privesc described below. I leave it to the diligent reader to play around with this! One thing I will say is that it is not as simple as planting an SSH public key because of the sshd_config settings.<br /><br />
+
+<span style="color: #ffffff;"><strong>Jenkins - Port 9000:</strong></span><br />
+No shell here unfortunately. I'm not sure is this is a decoy or if I missed something in one of the places that I didn't inspect closely. The challenge here seems to be that you need to bypass the login or get valid credentials, once you do that you can easily get a system shell.<br /><br />
+
+The version of Jenkins is pretty up-to-date which is a shame because I really wanted to try the <a href="http://foxglovesecurity.com/2015/11/06/what-do-weblogic-websphere-jboss-jenkins-opennms-and-your-application-have-in-common-this-vulnerability/">Java RMI deserialization vulnerability</a> (one of the reasons I grabbed the VM). However, I think I did discover an undisclosed, limited impact, authorization bypass but I could not get it to work for me (note to self, verify later --> profit).<br /><br />
+
+<span style="color: #ffffff;"><strong>Apache Mina sshd - Port 59894:</strong></span><br />
+Another one without a shell. This is a Java based ssh server (Yikes!), a private key has to be used for authentication. One thing to note here, if you find out where the keys are stored you can use redis to add your public key and get a shell. Again an exercise to the diligent reader.</p></p>
+
+<h2 class="title">Low priv -> root<span class="line"></span></h2>
+<p>Probably more than one way to do this judging from the amount of stuff configured on this machine but no time to fully investigate.<br /><br />
+
+<span style="color: #ffffff;"><strong>SUID Copy:</strong></span><br />
+Looking at the list of the SUID binaries we find the copy command, pretty much a fail situation. This allows us to create and overwrite any file on the OS (as I mentioned, very similar to redis).</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-18-Big.png"><p>&nbsp;</p>
+
+<p>Few things to keep in mind: (1) at the destination, the file owner will be root but the group will be that of the current user and (2) notice the use of "--no-preserve" this is needed to read out protected files.<br /><br />
+
+A lot of ways we can abuse this, update the shadow file with a new account, modify sudoers, plant ssh key + modify sshd_config + reboot, etc.. In the end I chose the passive approach and took advantage of cron.hourly.<br /><br />
+
+<span style="color: #ffffff;"><strong>NetCat:</strong></span><br />
+As netcat is available on the box it is an obvious choice for our cron job. The one thing to be wary of here is that this is the rubbish BSD netcat without the "-e" flag, nothing we can't get round with mknod though (this cost me an hour waiting for the cron job to kick in again!).</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-19-Big.png"><p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>SUID to SUID:</strong></span><br />
+This is all good and well but not exactly convenient, what if we lose our shell? As a second example I created a very simple C program in /tmp which does setgid&setuid and launches /bin/sh. The cron job is then used to set the suid flag on this newly created binary. This is much more convenient and gives us a permanent root shell!</p>
+
+<p>&nbsp;</p><img src="images/Kevgir-20-Big.png"><p>&nbsp;</p>
+
+<p>One important detail to keep in mind is that "run-parts" will not execute anything with an extension (..yes syrysly..) so be smart when you put your script in cron.hourly.</p>
+
+<h2 class="title">Game Over<span class="line"></span></h2>
+<p>Gave over I think, though I reiterate, definitely not full coverage. A pretty interesting challenge with a good amount of shells. If I had one remark it would be that the box was a bit to well patched, I would have liked to try some techniques like the Java RMI and redis lua sandbox breakout but aside from that very entertaining!</p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

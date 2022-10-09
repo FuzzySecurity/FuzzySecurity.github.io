@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | RFID: Appendix A - Mifare Classic 101</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Appendix A: Mifare Classic 101</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Appendix A: Mifare Classic 101<span class="line"></span></h2>
+        <p>Since we will be looking at (read as molesting) Mifare Classic I thought it would be fruitful to write up a modest data-sheet type appendix. This way I won't have to keep explaining Mifare internals for each case study and if people have questions I can tell them to RTFM! <br /><br />
+
+        I should mention that <a href="http://www.nxp.com/">nxp.com</a> is the authoritative source for information about Mifare internals and if you have your thinking cap on you should read their design specifications. Most of what I will be reviewing here today comes from them and any images in this post have been shamelessly borrowed from their design manuals. I'm doing this with a fair use policy in mind but if anyone has an issue with this feel free to contact me. <br /><br />
+
+        This appendix specifically deals with Mifare Classic 1k cards but should generally apply to 4k as well. At the end of the appendix I will add a section that covers the differences between 1k and 4k.</p>
+        
+      <div class="fourteen columns bottom">
+      <h2 class="title">Physical Properties / High Level Overview<span class="line"></span></h2>
+
+          <p><strong>Antenna:</strong><br />
+            Below you can see the design of the antenna coil for the Mifare card. The antenna is hooked up the to Mifare chip. Any communication is initiated by the reader and controlled by the Digital Control Unite which powers the card's chip. The response will depend on the access conditions for the memory in the corresponding sector.</p><p>&nbsp;</p>
+
+          <img src="images/appendixA_1.png" alt="" class="pic" />
+
+          <p>&nbsp;</p>
+          <p><strong>Anti-Collision:</strong><br />
+            To avoid conflicts between cards the card UID is read. If multiple cards are in the operating field of the reader they can be told apart by their UID and one single card can be selected for further communication. The other cards will return to an idle state and wait for new commands to be sent. It is worth mentioning that the card UID which is 4-bytes long is non-unique, two Mifare cards can have the same UID (the possible UID's that can exist with 4-bytes have long since been exhausted).</p><p>&nbsp;</p>
+
+          <p><strong>Three Pass Authentication:</strong><br />
+            After a Power-On Reset (POR) has been sent by the reader the card will become operational. The reader will then specify which memory it wishes to access and initiate a three pass authentication using the appropriate sector keys. After successful authentication all further communication is encrypted. You can see a graphical representation of the authentication scheme below.</p><p>&nbsp;</p>
+
+          <img src="images/appendixA_2.png" alt="" class="pic" />
+
+          <p>&nbsp;</p>
+          <p><strong>Memory Layout:</strong><br />
+            The Mifare 1k memory layout is as follows. 1024 x 8 bit EEPROM memory organized into 16 sectors of 4 blocks each. The sectors start at 0 and go up to 15. You can see a graphical representation below. Any images I have found of this depict the sectors in reverse order, I’m not sure why as any dumps I have looked at have been in regular order.</p><p>&nbsp;</p>
+
+          <img src="images/appendixA_3.png" alt="" class="pic" />
+
+          <p>&nbsp;</p>
+          <p>From the image above we can see that the 4th block of each sector is reserved for the sector trailer and the first block of sector 0 is the manufacturer block.</p><p>&nbsp;</p>
+
+          <p><strong>Manufacturer Block:</strong><br />
+            The manufacturer block contains the Non Unique Identifier (NUID), the 4th byte is a LRC with a rolling XOR and the rest is manufacturer data. This block is write protected at the time of manufacturing.</p><p>&nbsp;</p>
+
+          <img src="images/appendixA_4.png" alt="" class="pic" />
+
+          <p>&nbsp;</p>
+          <p><strong>Sector Trailer:</strong><br />
+            As mentioned before the sector trailer is always the 4th block of each sector. The sector trailer contains both secret key A&B and access control bytes that dictate what kind of memory operations are allowed on a given sector (read, write, read|write). If key B is not needed the last 6-bytes of the sector trailer can be used as data. Per default blank cards are delivered with all keys set to 0xffffffffffff.</p><p>&nbsp;</p>
+
+          <img src="images/appendixA_5.png" alt="" class="pic" />
+
+          <p>&nbsp;</p>
+          <p><strong>Access Control Bytes:</strong><br />
+            The access control bytes are more than a bit confusing, that’s why half the search queries on google redirect you to a program that "calculates" the access conditions. That is not to say they aren't efficient hehe. As explained each sector is composed of 4 blocks. The first 3 blocks are used for data and the last block is the sector trailer. From the image above, bytes 6-8 are the access control bytes and byte 9 is a general purpose byte.<br /><br />
+
+            These three bytes define the access rights for all 4 blocks in the sector including the sector trailer. Each block has 3 bits associated with it. Below you can find 2 tables that define the three bits for respectively the data blocks and the sector trailer block.</p><p>&nbsp;</p>
+
+          <img src="images/appendixA_6.png" alt="" class="pic" />
+
+          <p>&nbsp;</p>
+          <p>As if that wasn't confusing enough the inverted bit values are also stored, this is done to make sure that the block memory hasn't been corrupted. If the values don't match up the card will assume the memory is corrupt or has been tampered with and will block all access to the whole sector. Below you can see another image that hopefully clears things up a little bit. At the bottom of this appendix I have included a link to a pdf which explains these access control bytes in more detail.</p><p>&nbsp;</p>
+
+          <img src="images/appendixA_7.png" alt="" class="pic" />
+
+          <p>&nbsp;</p>
+
+      <h2 class="title">Mifare 4k<span class="line"></span></h2>
+
+          <p>For the most part the Mifare 4k cards are organized in the same way. The only significant difference that will be of importance to us is the added memory and the way that is laid out. The Mifare 4k card has 4096 x 8 bit EEPROM memory that is organized in 32 sectors of 4 blocks and has an additional 8 sectors that contain 16 blocks each. I have included a link to nxp's 4k data-sheet at the bottom of the appendix where you can go over everything in detail. You can see a graphical representation of the Mifare 4k memory layout below.</p><p>&nbsp;</p>
+
+          <img src="images/appendixA_8.png" alt="" class="pic" />
+
+
+          <p>&nbsp;</p>
+
+      <h2 class="title">Reading Material<span class="line"></span></h2>
+
+          <p>* Nxp's Mifare classic 1k design specification document. - <a href="http://www.nxp.com/documents/data_sheet/MF1S503x.pdf">here</a><br />
+             * Nxp's Mifare classic 4k design specification document. - <a href="http://www.nxp.com/documents/data_sheet/MF1S703x.pdf">here</a><br />
+             * Document by Amal Graafstra describing how the Access Control Bytes work - <a href="http://amal.net/wp-content/uploads/2012/11/NFC-Access-Control-for-Mifare-S50.pdf">here</a><br />
+             * "Dismantling MIFARE Classic" vulnerability research done by the university of Nijmegen - <a href="http://proxmark.nl/files/Documents/13.56%20MHz%20-%20MIFARE%20Classic/Dismantling.MIFARE.Classic-ESORICS.2008.pdf">here</a><br />
+             * "Mifare Classic Analysis" vulnerability research done by Nethemba - <a href="http://www.nethemba.com/mifare-classic-slides.pdf">here</a></p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

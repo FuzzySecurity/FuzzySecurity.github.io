@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Python & Regex</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../js/shCore.js"></script>
+	<script type="text/javascript" src="../js/shBrushPython.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Python & Regex: A match made in heaven</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Python & Regex: A match made in heaven<span class="line"></span></h2>
+
+      <div class="fourteen columns bottom">
+      <p>Today will be a gentile introduction to using regular expressions. One of the most important things you want to do when your working with text files is pull out specific pieces of information and store them in a way that you can work with later on. Regular expressions will help you pick out the pieces of data that you need and python will provide you with a structure to use that information in a programmatic fashion.<br /><br />
+
+Many people will tell you regular expressions are ph33r. It is true that regular expressions can be really dense in terms of how much though is put into them on a per character basis. However I think by starting with basic cases and working our way up no one should feel intimidated by regex.<br /><br />
+
+A couple of caveats: This is not an exhaustive guide to regex or python but it will give you an idea of the constructs and tools you have in hand to build on.</p><br />
+
+<h2 class="title">Pattern Matching<span class="line"></span></h2>
+          <p>We will start off in the interpreter because it gives us an interface where we can quickly run test-cases and get basic help for modules and functions that we want to use.<br /><br />
+
+First things first lets have a look at the interpreter, import re (which is the python module that gives access to regex) and have a look at getting basic help.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>root@Trident</span>:~/Desktop# <span style='color:#2B8156;'>python</span>
+Python 2.7.3 (default, Jan  2 2013, 13:56:14) 
+[GCC 4.7.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+<span style="color:#990066;"><strong># We import "re" which is the python module that deals with regular expressions.</strong></span>
+>>> <span style='color:#2B8156;'>import re</span>
+>>>
+<span style="color:#990066;"><strong># "dir()" allows us to list what kind of functions we can call.</strong></span>
+>>> <span style='color:#2B8156;'>dir(re)</span>
+['DEBUG', 'DOTALL', 'I', 'IGNORECASE', 'L', 'LOCALE', 'M', 'MULTILINE', 'S', 'Scanner', 'T', 'TEMPLATE',
+'U', 'UNICODE', 'VERBOSE', 'X', '_MAXCACHE', '__all__', '__builtins__', '__doc__', '__file__', '__name__',
+'__package__', '__version__', '_alphanum', '_cache', '_cache_repl', '_compile', '_compile_repl',
+'_expand', '_pattern_type', '_pickle', '_subx', 'compile', 'copy_reg', 'error', 'escape', 'findall',
+'finditer', 'match', 'purge', 'search', 'split', 'sre_compile', 'sre_parse', 'sub', 'subn', 'sys', 
+'template']
+>>> 
+>>> <span style='color:#2B8156;'>dir(re.search)</span>
+['__call__', '__class__', '__closure__', '__code__', '__defaults__', '__delattr__', '__dict__', '__doc__',
+'__format__', '__get__', '__getattribute__', '__globals__', '__hash__', '__init__', '__module__',
+'__name__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__',
+'__subclasshook__', 'func_closure', 'func_code', 'func_defaults', 'func_dict', 'func_doc', 'func_globals',
+'func_name']
+>>>
+<span style="color:#990066;"><strong># "help()" will also give us a short help for a specific function.</strong></span>
+>>> <span style='color:#2B8156;'>help(re.search)</span>
+Help on function search in module re:
+
+search(pattern, string, flags=0)
+    Scan through string looking for a match to the pattern, returning
+    a match object, or None if no match was found.
+(END)</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Ok time to take our first steps with regular expressions. The first things we will look at are "." (dot) "\" and "r". To make our life more easy we will define a small function straight in the interpreter. At the end I will provide a python script which has all the test cases in it so you can review them.<br /><br />
+
+Definition:<br />
+<strong>. (dot)</strong> – Matches any character except newline.<br />
+<strong>\ (backslash)</strong> – Allows certain characters to be interpreted literally.<br />
+<strong>r' '</strong> - Prepending the pattern with "r" makes sure that it is interpreted literally. We don't really need to think about this to much, we will just add it to all our patterns.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>>>> 
+<span style="color:#990066;"><strong># This small "find" function takes two arguments "pat" = regex pattern and "text" = string we're
+  searching. The function returns the match or "Not Found!".</strong></span>
+>>> <span style='color:#2B8156;'>def find(pat, text):</span>
+... <span style='color:#2B8156;'>    match = re.search(pat, text)</span>
+... <span style='color:#2B8156;'>    if match:</span>
+... <span style='color:#2B8156;'>            print match.group()</span>
+... <span style='color:#2B8156;'>    else:</span>
+... <span style='color:#2B8156;'>            print 'Not Found!'</span>
+>>> 
+<span style="color:#990066;"><strong># In this case "...y" matches "eeey".</strong></span>
+>>> <span style='color:#2B8156;'>find(r'...y', 'Say heeey')</span>
+eeey
+>>> 
+<span style="color:#990066;"><strong># In this case "Not Found!" because the match needs to be exact.</strong></span>
+>>> <span style='color:#2B8156;'>find(r'...ys', 'Say heeey')</span>
+Not Found!
+>>> 
+<span style="color:#990066;"><strong># This matches "eeey" and "vwxy" but only returns the first match.</strong></span>
+>>> <span style='color:#2B8156;'>find(r'...y', 'Say heeey or even better vwxy')</span>
+eeey
+>>> 
+<span style="color:#990066;"><strong># This matches "vwxy".</strong></span>
+>>> <span style='color:#2B8156;'>find(r'v..y', 'Say heeey or even better vwxy')</span>
+vwxy
+>>>
+<span style="color:#990066;"><strong># If we actually want to match "." (dot) we need to escape it with a "\" (backslash).</strong></span>
+>>> <span style='color:#2B8156;'>find(r'.\..y', 'Say hee.ey')</span>
+e.ey</pre><br />
+</div><p>&nbsp;</p>
+
+<p>So far so good, time to throw some more regex into the mix. The next thing we will look at are "\w", "\d", "\s" and the "+" operator.<br /><br />
+
+Definition:<br />
+<strong>\w</strong> – Matches any "word" character which is a bit misleading but it includes alphanumeric and underscore.<br />
+<strong>\d</strong> – Matches any digit.<br />
+<strong>\s & \S</strong> – \s matches white-space and \S matches any non whitespace character.<br />
+<strong>+ Operator</strong> - Appending "+" to a regex operator indicates one or more of that operator type (eg: \w+ will match word characters until it hits a non-word character).</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>>>> 
+<span style="color:#990066;"><strong># Matches ":" and three word characters.</strong></span>
+>>> <span style='color:#2B8156;'>find(r':\w\w\w', 'list :cat dog fish!')</span>
+:cat
+>>> 
+<span style="color:#990066;"><strong># Matches ":" and three digits.</strong></span>
+>>> <span style='color:#2B8156;'>find(r':\d\d\d', 'bla :123xxx')</span>
+:123
+>>> 
+<span style="color:#990066;"><strong># This matches "bob baker" starting from the first "b" + \w\w\w, this example is total overkill but serves
+  it's purpose.</strong></span>
+>>> <span style='color:#2B8156;'>find(r'b\w\w\s\w\w\w\w\w', 'this is bob baker')</span>
+bob baker
+>>> 
+<span style="color:#990066;"><strong># Here the "+" operator matches an arbitrary amount of whitespaces.</strong></span>
+>>> <span style='color:#2B8156;'>find(r'\d\s+\d\s+\d', '1   2     3')</span>
+1   2     3
+>>> 
+<span style="color:#990066;"><strong># Similarly the "+" operator helps simplify our previous pattern by matching an arbitrary amount of "word"
+  characters.</strong></span>
+>>> <span style='color:#2B8156;'>find(r'b\w+\s\w+', 'this is bob baker')</span>
+bob baker
+>>> 
+<span style="color:#990066;"><strong># As a final example the pattern matches ":" and an arbitrary amount of "word" characters.</strong></span>
+>>> <span style='color:#2B8156;'>find(r':\w+', 'bla bla :sweet ow snap')</span>
+:sweet</pre>
+<br />
+</div><p>&nbsp;</p>
+
+<p>Ok we can now pick out simple patterns, next we will be looking at [ ] and ( ).<br /><br />
+
+Definition:<br />
+<strong>[ ]</strong> – [ ] will allow us to specify a set of characters which we can match without having to know the order.<br />
+<strong>( )</strong> - Putting ( ) in our pattern allows us to pick out a piece or pieces of the pattern that we are interested in.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>>>> 
+<span style="color:#990066;"><strong># In this case we're matching "http" plus an arbitrary amount of colon's, forward slashes, "word"
+  characters and dot's. The main thing to take notice of here is that the characters can be matched in
+  any order and that the "." (dot) in this case is interpreted literally as a dot.</strong></span>
+>>> <span style='color:#2B8156;'>find(r'http[:/\w.]+', '&#60;a href="http://sample_url.here">Click here!&#60;/a>')</span>
+http://sample_url.here
+>>> 
+<span style="color:#990066;"><strong># Using similar techniques as before this pattern picks out email addresses.</strong></span>
+>>> <span style='color:#2B8156;'>find(r'[\w.]+@[\w.]+', 'junk total.ph33r@offsec.com snap @ ')</span>
+total.ph33r@offsec.com
+>>> 
+<span style="color:#990066;"><strong># On the back of our previous example we are using the ( ) braces to pick out the first and second part of
+  the email address.</strong></span>
+>>> <span style='color:#2B8156;'>x = re.search(r'([\w.]+)@([\w.]+)', 'junk total.ph33r@offsec.com snap @ ')</span>
+>>> 
+<span style="color:#990066;"><strong># We can print the entire match or the individual parts we picked out.</strong></span>
+>>> <span style='color:#2B8156;'>print x.group()</span>
+total.ph33r@offsec.com
+>>> <span style='color:#2B8156;'>print x.group(1)</span>
+total.ph33r
+>>> <span style='color:#2B8156;'>print x.group(2)</span>
+offsec.com
+>>> 
+<span style="color:#990066;"><strong># So far we have been using re.search which returns only the first match but we can also use re.findall
+  which will return all the matches.</strong></span>
+>>> <span style='color:#2B8156;'>x = re.findall(r'[\w.]+@[\w.]+', 'bla total.ph33r@offsec.com snap @ foo@bar.com ')</span>
+>>> 
+<span style="color:#990066;"><strong># Printing "x" returns a list of matches.</strong></span>
+>>> <span style='color:#2B8156;'>print x</span>
+['total.ph33r@offsec.com', 'foo@bar.com']
+>>> 
+<span style="color:#990066;"><strong># We are now picking out parts of the pattern over multiple matches.</strong></span>
+>>> <span style='color:#2B8156;'>x = re.findall(r'([\w.]+)@([\w.]+)', 'bla total.ph33r@offsec.com snap @ foo@bar.com ')</span>
+>>> 
+<span style="color:#990066;"><strong># This returns a list of tuples.</strong></span>
+>>> <span style='color:#2B8156;'>print x</span>
+[('total.ph33r', 'offsec.com'), ('foo', 'bar.com')]</pre>
+<br />
+</div><p>&nbsp;</p>
+
+<p>We can do some decent pattern matching now. There is one last thing I want to introduce, regex assertions.<br /><br />
+
+Definition:<br />
+<strong>Positive lookahead a(?=b)</strong> – Check is "a" is followed by "b".<br />
+<strong>Negative lookahead a(?!b)</strong> – Check is "a" is not followed by "b".<br />
+<strong>Positive lookbehind (?&#60;=a)b</strong> – Check if "b" is preceded by "a".<br />
+<strong>Negative lookbehind (?&#60;!a)b</strong> – Check if "b" is not preceded by "a".<br />
+<strong>Lookaround (?=.*a)</strong> - Check if "a" exists inside the match.<br /><br />
+
+The regex assertion test-cases each have a separate if statement so it wouldn't be practical to do them in the interpreter. I have created a python script below that contains all the test-cases we have seen so far and includes the regex assertions.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: py;gutter:false;auto-links: false;;">
+#!/usr/bin/python
+
+##############################################
+# . (dot) finds any character except newline
+# \w any word character (letters, digits, underscore)
+# \d any digit
+# \s whitespace
+# \S all non-whitespace
+# + one or more of that
+# * zero or more of that
+# r'pat' send pattern in raw format (no formatting)
+# [] define set of allowed characters (inside [] . == raw dot)
+# () pick out the parts that we care about
+# (?= string) Positive lookahead
+# (?! string) Negative lookahead
+# (?&#60;= string) Positive lookbehind
+# (?&#60;! string) Negative lookbehind
+# (?=.* string) Is the string present
+##############################################
+
+import re
+
+def find(pat, text):
+	match = re.search(pat, text)
+	if match:
+		print match.group()
+	else:
+		print 'Not found!'
+
+
+def main():
+
+	print "Using our find function:"
+	print "--------------------------------------------------"
+	find('...y', 'Say heeey') #finds 'eeey'
+	find('...ys', 'Say heeey') #finds 'Not Found!'
+	find('...y', 'Say heeey or even better vwxy') #finds 'eeey'
+	find('v..y', 'Say heeey or even better vwxy') #finds 'vwxy'
+	find('..yz', 'Say heeey or even better vwxyz') #finds 'wxyz'
+	find(r'.\..y', 'Say hee.ey') #finds 'e.ey'
+	find(r':\w\w\w', 'list :cat dog fish!') #finds ':cat'
+	find(r':\d\d\d', 'bla :123xxx')	#finds ':123'
+	find(r'b\w\w\s\w\w\w\w\w', 'this is bob baker')	#finds 'bob baker'
+	find(r'\d\s+\d\s+\d', '1   2     3') #finds '1   2     3'
+	find(r'b\w+\s\w+', 'this is bob baker') #finds 'bob baker'
+	find(r':\w+', 'bla bla :sweet ow snap')	#finds ':sweet'
+	find(r':\S+', 'bla bla :kitten&a=123&test hello') #finds ':kitten&a=123&test'
+	find(r'http[:/\w.]+', '&#60;a href="http://sample_url.here">Click here!&#60;/a>') #finds 'http://sample_url.here'
+	find(r'[\w.]+@[\w.]+', 'junk total.ph33r@offsec.com snap @ ') #finds 'total.ph33r@offsec.com'
+
+
+	print ""
+	print "Using re.search:"
+	print "--------------------------------------------------"
+	x = re.search(r'([\w.]+)@([\w.]+)', 'junk total.ph33r@offsec.com snap @ ') # 'total.ph33r' and 'offsec.com'
+	print x.group()  #returns 'total.ph33r@offsec.com'
+	print x.group(1) #returns 'total.ph33r'
+	print x.group(2) #returns 'offsec.com'
+
+
+	print ""
+	print "Using re.findall:"
+	print "--------------------------------------------------"
+	x = re.findall(r'[\w.]+@[\w.]+', 'bla total.ph33r@offsec.com snap @ foo@bar.com ') #returns list
+	print x  # returns ['total.ph33r@offsec.com', 'foo@bar.com']
+	x = re.findall(r'([\w.]+)@([\w.]+)', 'bla total.ph33r@offsec.com snap @ foo@bar.com ') #returns list of tuples
+	print x  # returns [('total.ph33r', 'offsec.com'), ('foo', 'bar.com')]
+
+
+	print ""
+	print "Regex Assertions:"
+	print "--------------------------------------------------"
+
+	week_d = 'monday tuesday wednesday thursday friday saturday sunday'
+
+	# Monday is followed by Tuesday
+	expression = re.compile(r'monday\s(?=tuesday)')
+	if expression.search(week_d):
+		print 'Positive lookahead!'
+
+	# Monday is not followed by Friday
+	expression = re.compile(r'monday\s(?!friday)')
+	if expression.search(week_d):
+		print 'Negative lookahead!'
+
+	# Thursday is preceded by Wednesday
+	expression = re.compile(r'(?&#60;=wednesday)\sthursday')
+	if expression.search(week_d):
+		print 'Positive lookbehind!'
+
+	# Thursday is not preceded by Tuesday
+	expression = re.compile(r'(?&#60;!tuesday)\sthursday')
+	if expression.search(week_d):
+		print 'Negative lookbehind!'
+
+	# String contains Sunday
+	expression = re.compile(r'(?=.*sunday)')
+	if expression.search(week_d):
+		print 'There is a Sunday!'
+
+
+	print ""
+	print "Extended options dir(re):"
+	print "--------------------------------------------------"
+	print dir(re)
+	# eg => re.findall(r'h\w+', 'Hey hola Hello', re.IGNORECASE) # ['Hey', 'hola', 'Hello']
+
+main()</pre>
+</div><p>&nbsp;</p>
+
+<p>If you have text files or strings that adhere to specific patterns regular expressions are great tools to sift through that data and quickly pull out bits that you need. With python on the back-end you can easily use that data in a programmatic fashion to accomplish your goals.<br /><br />
+
+Just keep the following quote by Jamie Zawinski in mind:<br />
+<strong>Some people, when confronted with a problem, think<br />
+"I know, I'll use regular expressions."   Now they have two problems.</strong><br /><br />
+
+Regex are powerful but don't shoot yourself in the foot, use it when it suits your needs!!</p>
+
+<h2 class="title">Usage / Practice<span class="line"></span></h2>
+<p>I want to finish off this tutorial by presenting you with a very simple usage case that is non the less quite useful and will allow you to practice regex (what more can you ask for).<br /><br />
+
+If you have ever done any (serious) Return Oriented Programming (ROP) you will know that there usually aren’t any "canned" solutions out there. You will most likely end up spending a lot of time sifting through gadgets to find what you are looking for.<br /><br />
+
+In my experience the most useful tool out there to get a basic raw list of ROP gadgets is <a href="http://redmine.corelan.be/projects/mona">mona</a> (a debugger plug-in by Corelan). Even so, if you are building custom ROP chains and need to find very specific instructions in a 20k list there will definitely be moments that you think the world is ending hehe. ROP gadgets follow specific patterns but more often than not they can't efficiently be matched with simple searches. This results in tons of useless results and migraines. Fortunately for us regex allows us to do much better pattern matching.<br /><br />
+
+The following 17 lines of python are guaranteed to save you allot of time and aspirin tablets. The script takes two command line arguments, a text file and a regex pattern. A couple of things to take note of (1) I've per-formated this to work with mona output files and (2) since gadgets are usually less complex the shorter they are sorting the matches by length works wonders.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: py;gutter:false;auto-links: false;;">
+#!/usr/bin/python
+
+import sys, re
+
+def regex(rop):
+
+	gadget = open(rop, 'rU')
+	text = re.findall(r'.+' + sys.argv[2] + '.+RETN' , gadget.read())
+
+	for x in sorted(text, key=len):
+		print x
+
+def main():
+
+	regex(sys.argv[1])
+
+main()</pre>
+</div><p>&nbsp;</p>
+
+<p>I have included a sample ROP-list below for testing purposes and a couple of searches so you can get an idea of how the script works.<br /><br />
+MSVCR71.dll - <a href="files/raw_rop.txt">raw_rop.txt</a><br /><br />
+
+Keep in mind that these are just simple searches but you can use the full range of regular expressions to find even the most rare instructions. I have also limited the output below to just a few results but most searches return tons of matches.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style='color:#ff0000;'>root@Trident</span>:~/Desktop# <span style='color:#2B8156;'>./regROP.py raw_rop.txt 'PUSH ESP.+POP'</span>
+0x7c372f4f :  # PUSH ESP # AND AL,10 # MOV DWORD PTR DS:[EDX],ECX # POP ESI # RETN
+0x7c34969e :  # PUSH ESP # MOV AL,BYTE PTR DS:[C68B7C37] # POP ESI # POP EBX # RETN
+0x7c37591f :  # PUSH ESP # ADD CH,BL # INC EBP # OR AL,59 # POP ECX # POP EBP # RETN
+<span style='color:#2B8156;'>[...Snip...]</span>
+
+<span style='color:#ff0000;'>root@Trident</span>:~/Desktop# <span style='color:#2B8156;'>./regROP.py raw_rop.txt 'ADD ESP,..\s#'</span>
+0x7c352007 :  # ADD ESP,0C # RETN
+0x7c352041 :  # ADD ESP,0C # RETN
+0x7c35f9a0 :  # ADD ESP,2C # RETN
+0x7c35207e :  # ADD ESP,0C # RETN
+0x7c3520bd :  # ADD ESP,0C # RETN
+0x7c3440be :  # ADD ESP,14 # RETN
+<span style='color:#2B8156;'>[...Snip...]</span>
+
+<span style='color:#ff0000;'>root@Trident</span>:~/Desktop# <span style='color:#2B8156;'>./regROP.py raw_rop.txt 'MOV\s\w+,DWORD PTR DS:\[EAX\]'</span>
+0x7c3530ea :  # MOV EAX,DWORD PTR DS:[EAX] # RETN
+0x7c3413aa :  # MOV EAX,DWORD PTR DS:[EAX] # PUSH EAX # RETN
+0x7c35a000 :  # MOV EAX,DWORD PTR DS:[EAX] # ADD EAX,ECX # RETN
+0x7c359fff :  # POP ESI # MOV EAX,DWORD PTR DS:[EAX] # ADD EAX,ECX # RETN
+<span style='color:#2B8156;'>[...Snip...]</span>
+
+<span style='color:#ff0000;'>root@Trident</span>:~/Desktop# <span style='color:#2B8156;'>./regROP.py raw_rop.txt 'XCHG'</span>
+0x7c348b05 :  # XCHG EAX,ESP # RETN
+0x7c36c652 :  # XCHG EAX,EDI # PUSH ESP # STD # DEC ECX # RETN
+0x7c341cae :  # XCHG EAX,ESP # PUSH ES # ADD BYTE PTR DS:[EAX],AL # RETN
+0x7c3413a9 :  # XCHG EAX,ESP # MOV EAX,DWORD PTR DS:[EAX] # PUSH EAX # RETN
+0x7c342643 :  # XCHG EAX,ESP # POP EDI # ADD BYTE PTR DS:[EAX],AL # POP ECX # RETN
+<span style='color:#2B8156;'>[...Snip...]</span>
+
+<span style='color:#ff0000;'>root@Trident</span>:~/Desktop# <span style='color:#2B8156;'>./regROP.py raw_rop.txt 'KERNEL'</span>
+0x7c355c63 :  # ADC EAX,&#60;&KERNEL32.Beep> # RETN
+0x7c355c54 :  # ADC EAX,&#60;&KERNEL32.Sleep> # RETN
+0x7c341a0f :  # ADC EAX,&#60;&KERNEL32.TlsAlloc> # RETN
+0x7c35f575 :  # ADC EAX,&#60;&KERNEL32.LoadLibraryA> # RETN
+0x7c355c61 :  # OR BH,BH # ADC EAX,&#60;&KERNEL32.Beep> # RETN
+0x7c34ade7 :  # ADC EAX,&#60;&KERNEL32.HeapFree> # POP ESI # RETN
+0x7c341a0d :  # ADD BH,BH # ADC EAX,&#60;&KERNEL32.TlsAlloc> # RETN
+<span style='color:#2B8156;'>[...Snip...]</span>
+
+<span style='color:#ff0000;'>root@Trident</span>:~/Desktop# <span style='color:#2B8156;'>./regROP.py raw_rop.txt 'POP.+POP.+POP'</span>
+0x7c374011 :  # POP ECX # POP ESI # POP EBP # RETN
+0x7c37606c :  # POP EDI # POP ESI # POP EBX # RETN
+0x7c3660e2 :  # POP EDI # POP ESI # POP EBX # RETN
+0x7c3761a5 :  # POP EDI # POP ESI # POP EBX # RETN
+0x7c342301 :  # POP EDI # POP ESI # POP EBP # RETN
+0x7c35437b :  # POP EDI # POP ESI # POP EBP # RETN
+0x7c350389 :  # POP ESI # POP EBX # POP EBP # RETN
+<span style='color:#2B8156;'>[...Snip...]</span>
+
+<span style='color:#ff0000;'>root@Trident</span>:~/Desktop# <span style='color:#2B8156;'>./regROP.py raw_rop.txt 'XOR\sEAX,EAX.+INC\sEAX'</span>
+0x7c364045 :  # XOR EAX,EAX # INC EAX # RETN
+0x7c364071 :  # XOR EAX,EAX # INC EAX # RETN
+0x7c358077 :  # XOR EAX,EAX # INC EAX # RETN
+0x7c36409d :  # XOR EAX,EAX # INC EAX # RETN
+0x7c3480c1 :  # XOR EAX,EAX # INC EAX # RETN
+0x7c3640e7 :  # XOR EAX,EAX # INC EAX # RETN
+0x7c34810b :  # XOR EAX,EAX # INC EAX # RETN
+0x7c354146 :  # XOR EAX,EAX # INC EAX # RETN
+<span style='color:#2B8156;'>[...Snip...]</span></pre>
+<br />
+</div><p>&nbsp;</p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

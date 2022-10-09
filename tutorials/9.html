@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tutorials: HackFu 2012</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../coding.html">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>HackFu 2012</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">HackFu 2012: A novel approach to stenography<span class="line"></span></h2>
+        <p>Hello everyone. I recently discovered “HackFu 2012”, a contest organized by MWR InfoSecurity. The registration period is long finished but I was interested in trying my hand at the challenge files. I don't have allot of time right now since I’m enrolled in a security certificate and I'll be starting a job soon but I wanted to do a write-up about the initial stenography challenge.</p><br />
+          <p>To qualify for HackFu you have to complete a number of challenges that are included in a zip file but to get access to them you need to tackle your first brainteaser. The zip file is encoded using an encryption process described in a pdf I have included below.</p><br />
+          <p>For the purpose of this write-up I have generated my own custom “crypto.txt” which is an encoded version of “crypto.zip” for you to play with so you don't need to work with the HackFu challenge file. I have also included a small program I made called &quot;GlueGun.py&quot; which can decode and encode files based on the stenography algorithm.</p><br />
+          
+          <p><strong>MWR HackFu 2012: <a href="http://labs.mwrinfosecurity.com/blog/2012/04/20/hackfu-challenge-2012/">here</a></strong><br />
+            <strong>Stenography pdf: <a href="files/novel-approaches-in-steganography.pdf">download</a></strong><br />
+            <strong>crypto.txt + crypto.zip: <a href="files/custom.rar">download</a></strong><br />
+            <strong>GlueGun.py: <a href="files/GlueGun.rar">download</a></strong></p><br />
+        
+      <div class="fourteen columns bottom">
+      <h2 class="title">(1) Overview<span class="line"></span></h2>
+      <p>So I'll make a quick break-down of the stenographic encryption. A file (any kind of file) is converted to binary bits (1's and 0's) and then sequences of these bits are converted to upper case letters based on a certain rule-set. The pdf describes different conversion schemes, for your convenience I have included a screenshot of the scheme that was used in the HackFu challenge.</p><p>&nbsp;</p>
+
+          <img src="images/Steno_big01.png" alt="" class="pic" />
+
+<p>&nbsp;</p>
+<p>Lets have a quick look at the simple &quot;crypto.txt&quot; file I generated.</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>cat crypto.txt</span>
+
+APQSFDKMUSCMOCEGDCLKGCQQDQOCSCCSGGSOOSOQZNPTBIOKVPTZASGCNKTOPNUXXMMKEJCWUQNQQSQQQCQCUOODUQNCCDUCOGCGCUSGDU
+JLSOSGGHNSCGCQRDONEZOLANTHFVQCENEUHIZVOYXLAXRUHZTOPXPSAHRBERBSSOYRUDQGDQOXVUZMTSIIVYYIAOXWVDMVKOIJMJYLEQNV
+AVERANLDCSTWGSGQGGQPUDROUOOOUOUQCQCGSOSSUOFGOCODUCUDOCSSUDGDPUKFBMACDIQSPMPXHYNWPZUTELIVBMGVDTQOSXKXDJLACY
+IHFEGSEOKMOQDFDSSLOPVTCQSNSQTLODOCOSQDUCSQDGQCUCUDVMHYPJGLVEJMBUUOMYKQRMONMMZIRIGVQGNQUQQSGSQQDDSSCOMCDGQD
+UODGCCUCQQTKCUOOGBTUQQDGDSUUOSSCUSSSDODCQOUEUSDDOGQSGQDGJTFGTUCRUDSOGUGSDODQQODQPQGZAZQJEVTEHZUGPMHUAIVVCK
+WLBMADRZLGRVRQARAPABAUCQAHDOUUQDQNNOWXLQITWTTTEOXMHXPFAZYCOQKXOCDGCUGPODRQDUCUOUSGSSSCUOCDQOBOGUUOOQUSGGDO
+COUGPBOUHQIVGOBAQGETDCDQUCUOCOOODCCSUUQEGDUCQDDEQCQDHBCQCSCDCGCGDCCOEHSUCUOSSUQQDQCQUDSQGQGO</pre>
+<br />
+</div>
+    
+    <p>&nbsp;</p>
+    <p>Based on the proposed  conversion scheme in the screenshot you can convert the ASCII to binary bits, for example A=01, P=01, Q=00 and so on.. If you do this the file size will be doubled, you can see the result below.</p>
+    <div class="terminal_wrap" style="background:#CCC">
+      <pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>cat BinBits.txt</span>
+
+0101000001001011000000110000010000001010000000000000000000000000000000000000000011110110011000101101101101
+0000001110100001110011111111100110001100001100000000000000000000000000000011000000000000000000000000000000
+1010000000000001110000000000010000110111001001111001011100000111010001101111001011100111010001111000011101
+0001010101010101000000100100000000000000111100111110001010111010100100111111001111100010101110101001001111
+0111010101111000000010110000000000000001000001000000000000000000000000000000000000000100000000000000000000
+0000000000000001001001011101000010000001110111011011110111001001101011011100110010000000111011001010010010
+1001010100000100101100000001000000100001111000000011000010100000000000000000000000000000000000000000111101
+1001100010110110110100000011101000011100111111111001100011000011000000000000000000000000000000110000000000
+0000000000000000000010100000000000011000000000000000000000000000000000000000000000000001000000000000000000
+0000001010010010000001000000000000000000000000000000000100001101110010011110010111000001110100011011110010
+1110011101000111100001110100010101010101010000000101000000000000001111001111100010101110101001001111011101
+0101111000000010110000000000000001000001000000000000000000000000000000000000000100000000000000000000000000
+0000000001010000010010110000010100000110000000000000000000000000000000000000000100000000000000010000000001
+010000000000000000000000000000010100000000000000000000000000000000000000000000</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>So far it seems pretty straight forward, now we need to find a way to convert these binary bits to raw binary. I'm not sure if this is the best way but I first converted these bits to hex, you can see the result below. Notice that the file size is greatly reduced.</p>
+
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>cat HexBits.txt</span>
+
+504b03040a0000000000f662db40e873fe630c0000000c0000000a001c0043727970746f2e7478745554090003cf8aea4fcf8aea4f
+75780b000104000000000400000000497420776f726b73203b2929504b01021e030a0000000000f662db40e873fe630c0000000c00
+00000a0018000000000001000000a4810000000043727970746f2e7478745554050003cf8aea4f75780b0001040000000004000000
+00504b0506000000000100010050000000500000000000</pre>
+<br /></div>
+
+<p>&nbsp;</p>
+<p>In the final faze I converted the hex to raw binary, renamed “crypto.txt” to “crypto.zip” and like magic the original zip file appears intact. My zip just includes a text file which contains the string “It works ;))”.</p><p>&nbsp;</p>
+
+          <img src="images/Steno_big02.png" alt="" class="pic" />
+
+<p>&nbsp;</p>
+      <h2 class="title">(1) GlueGun<span class="line"></span></h2>
+      
+<p>Before we get to it perhaps I should explain that I chose the name GlueGun because I did some quick prototyping and it feels like the code is glued together but I’ll leave that to the readers own discretion.</p><br />
+  <p>When I first did this challenge I rushed it a bit and used various code snippets I found online to do the decryption. However I enjoyed the challenge and thought to myself why not write some custom code to do the decryption and even more have it encrypt files to.</p><br />
+  <p>For full details I suggest you check out the source code. I will just mention that decryption was fairly easy. I used dictionary key pairs to exchange the uppercase ASCII with the relevant bits and then various built in python functions to do the other conversions. Encryption was a bit more tricky. The main drawback to encryption is that large files take a considerable amount of time to encrypt. The reason for the slow conversion is that the binary bits need to be read two bytes at a time and then randomly converted according to the character group.</p><br />
+  <p>The program is just a crude prototype and could me much improved (perhaps with encryption assigned to workers in a queue) but it works well enough to encrypt and decrypt files. If anyone has any suggestions please feel free to leave a comment.</p>
+      
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>./GlueGun.py</span>
+
+--------------------------------------------------------------------
+|                        GlueGun v1.0 ~ b33f                       |
+|              -HackFu 2012 Stenograpy Encoder/Decoder-            |
+--------------------------------------------------------------------
+Usage: GlueGun.py -t (e/d) -i (input file) -o (output file)
+
+GlueGun.py: error: Invalid input, check -h/--help for an extended usage menu...
+
+<span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>./GlueGun.py --help</span>
+
+Usage: GlueGun.py -t (e/d) -i (input file) -o (output file)
+
+Options:
+  -h, --help            show this help message and exit
+  -t TYPE, --type=TYPE  Encode or Decode (e/d)
+  -i IF, --in=IF        Set input file (eg: crypt.txt, output.zip,...)
+  -o OF, --out=OF       Set output file (eg: crypt.txt, output.zip,...)
+  
+<span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>./GlueGun.py -t d -i crypto.txt -o crypto.zip</span></pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>
+<p>This final command should reproduce all the steps shown above and generate the intact zip file. You can also encrypt files and you can test this by re-encrypting the &quot;crypto.zip&quot; the new text file should be different but follow the same encryption rules. You can see a sample re-encryption of &quot;crypto.zip&quot; below.</p>
+</p>
+  
+    <div class="terminal_wrap" style="background:#CCC">
+<pre><span style="color:#ff0000;">root@bt</span>:~/Desktop# <span style='color:#2B8156;'>./GlueGun.py -t e -i crypto.zip -o new.txt</span></pre>
+<br />
+</div><p>&nbsp;</p>
+
+          <img src="images/Steno_big03.png" width="601" height="252" alt="image1" />
+
+<br />
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

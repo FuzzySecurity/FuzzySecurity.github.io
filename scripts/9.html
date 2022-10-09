@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Tools Of The Trade: ForwardHQ</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../index.html">Home</a>
+            </li>
+            <li><a href="../tutorials.html">Tutorials</a>
+            </li>
+            <li><a href="../coding.html" class="active">Scripting</a>
+            </li>
+            <li><a href="../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../links.html">Links</a>
+            </li>
+            <li><a href="../patreon.html">Patreon</a></li><li><a href="../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../coding.html">Scripting</a> <b>&#187;</b></li>
+          <li>ForwardHQ</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="sixteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">ForwardHQ - Network Pentesting Toolkit<span class="line"></span></h2>
+        <p> Let's face it, we all love pentesting infrastructure!! There is nothing more exiting than being routed into a corporate network and pop shells left, right and center. These networks often have complicated structures and restrictions which require serious network gymnastics to achieve what we want and get where we’re going. As time progresses I have come to develop my own post-exploitation/network migration methodology (as most pentesters do I guess). I want to share with you a tool-kit which is really useful to have on hand. For easy deployment these tools can be dropped in you local ftp server or webserver (many other ways exist of course).</p><br />
+
+<p>These tools are collected below in an archive and are up-to-date as of this post but I have included links to the various sources if you want to grab the latest versions.<br /><br />
+        
+        Download: <a href="files/ForwardHQ.rar">ForwardHQ.rar</a></p>
+        
+        
+        <h2 class="title">Overview<span class="line"></span></h2>
+        <p> 
+        <ul class="plus-list">
+          <li><a href="http://nmap.org/ncat/">Ncat</a></li><br />
+          <p>Ncat is nmap's version of NetCat, it comes packaged with newer versions of nmap. The archive includes a standalone pre-compiled version of Ncat. Ncat is much improved over the original NetCat, it supports TCP, UDP, SSL and it can proxy connections via SOCKS4 and HTTP proxies. It also bears mentioning that Ncat has not made it into the virus signature databases unlike NetCat. </p><br />
+          
+          <li><a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">Plink</a></li><br />
+          <p>This is a portable command line version of PUTTY for all your Windows SSH-Tunneling needs (totally irreplaceable). Traverse the network in seemingly impossible ways and surprise even yourself on occasion!! </p><br />
+          
+          <li><a href="http://technet.microsoft.com/en-us/sysinternals/bb842062.aspx">Microsoft Sysinternals Suite</a></li><br />
+          <p>Do not underestimate Microsoft-Fu there are allot of tools included in the Sysinternals Suite (way to many to sum up here). These tools offer you powerful leverage on the localhost and network. I highly suggest you take time to investigate their various uses (I plan to dedicate a whole tutorial to Microsoft's psexec combined with WCE as I believe they are often poorly understood). Again we have the added bonus here that these tools are signed Microsoft binaries w00t! </p><br />
+          
+          <li><a href="http://www.ampliasecurity.com/research/wcefaq.html">Windows Credential Editor</a></li><br />
+          <p>The archive includes the 32-bit version but 64-bit is also available. Windows Credential Editor is basically a post-exploitation tool to "steal" and reuse NTLM hashes, Kerberos tickets and plaintext passwords which can then be used to compromise other machines. Under certain circumstances, WCE can allow you to compromise the whole Windows domain after compromising only one server or workstation. WCE will get detected by AV but I have obfuscated it and so can you! </p><br />
+          
+          <li><a href="http://blog.gentilkiwi.com/mimikatz">Mimikatz</a></li><br />
+          <p>Mimikatz is an epic tool to leverage pwnd hosts and extract their plain-text passwords. Yes yes I know hashes are all-powerful but I guarantee you will come across cases where you will be happy to have plain-text credentials. Consider (1) host A with a SYSTEM-level compromise and user accounts for John and Jane and (2) host B no access at all but John has an account on that box. If John is not and administrator on B then passing the hash won't work but using the plain-text credentials over RDP probably will. I recommend you read up on the advanced functionality of Mimikatz <a href="http://blog.gentilkiwi.com/presentations">here</a>. This probably will get detected by AV but with some effort I managed to obfuscate it and so can you!! </p><br />
+          
+          <li><a href="https://github.com/mattifestation/PowerSploit">PowerSploit</a></li><br />
+          <p>PowerShell for the win!! PowerShell is awesome guys, it is basically Microsoft's attempt to provide a command line environment for system administrators. PowerShell has been integrated into Windows since Server 2008 and Windows 7 and upwards, it has full access to the .NET Framework which means that you can do pretty much anything with it (not to mention that Microsoft's restrictions on PowerShell are a joke)! PowerSploit is essentially a set of scripts developed by Matt Graeber to automate all kinds of cool and indispensable tasks you will be doing regularly during network penetration and post-exploitation. For more arcane PowerShell Magic I suggest you take a look at  Matt Graeber's website <a href="http://www.exploit-monday.com/">here</a>. </p><br />
+          
+          <li><a href="https://github.com/inquisb/shellcodeexec">Shellcodeexec</a></li><br />
+          <p>Shellcodeexec is essentially a payload stager. It can be dropped on the remote host and can be called through the commandline, when giving it a pure ASCII shellcode text string as input it will directly inject the shellcode into memory and execute it. There are also some interesting posts online about embedding it in word macros for social engineering attacks. It will be detected by AV but shellcodeexec includes source-code which can modified to make it undetectable. </p><br />
+          
+          <li><a href="http://ha.cked.net/">IKAT - Binaries That Bypass Group Policy</a></li><br />
+          <p>These are 32-bit binaries (64-bit also available) that bypass Group Policy. When compromising locked down Windows boxes (such as in Citrix environments) you will often have to deal with enhanced restrictions that try to hinder your progress. In my experience these locked down environments are fundamentally flawed and are almost impossible to protect if they want to provide the end-user with any kind of functionality. In these cases one of the more useful things to have in your bag of tricks are binaries which ignore Group Policy and provide you with an efficient way to set up your forward HQ. </p><br />
+          
+        </ul><!-- End star-list -->
+        
+        
+        
+        
+        </p>
+        
+      </div>
+      
+
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../index.html">Home</a> |
+          <a href="../tutorials.html">Tutorials</a> |
+          <a href="../coding.html">Scripting</a> |
+          <a href="../exploits.html">Exploits</a> |
+          <a href="../links.html">Links</a> |
+          <a href="../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

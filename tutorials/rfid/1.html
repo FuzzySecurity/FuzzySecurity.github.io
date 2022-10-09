@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+  <!-- Basic Page Needs -->
+  <meta charset="utf-8">
+  <title>FuzzySecurity | RFID Kit</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- CSS Style -->
+  <link rel="stylesheet" href="../../css/style.css"> 
+  
+  <!-- Color Skins -->
+  <link rel="stylesheet" href="../../css/skins/red.css" name="skins"> 
+  
+  <!-- Layout Style -->
+  <link rel="stylesheet" href="../../css/layout/wide.css" name="layout"> 
+  
+  <!-- Small Icons -->
+  <link rel="stylesheet" href="../../css/icons.css">  
+  
+  <!-- Start JavaScript -->
+  
+    <script src="../../js/jquery-1.7.2.min.js"></script> <!-- jQuery library -->
+    <script src="../../js/jquery.easing.1.3.min.js"></script> <!-- jQuery Easing --> 
+    <script src="../../js/jquery-ui.min.js"></script> <!-- jQuery Ui --> 
+    <script src="../../js/jquery.cookie.js"></script> <!-- jQuery cookie --> 
+    <script src="../../js/jquery.uniform.min.js"></script> <!-- jQuery Uniform -->
+    <script src="../../js/ddsmoothmenu.js"></script> <!-- Nav Menu ddsmoothmenu -->
+    <script src="../../js/jquery.flexslider.js"></script> <!-- Flex Slider  -->
+    <script src="../../js/jquery.eislideshow.js"></script> <!-- Elastic Slider  -->
+    <script src="../../js/jquery.iconmenu.js"></script> <!-- Sliding Text and Icon Menu Style  -->
+    <script src="../../js/colortip.js"></script> <!-- Colortip Tooltip Plugin  -->
+    <script src="../../js/tytabs.js"></script> <!-- jQuery Plugin tytabs  -->
+    <script src="../../js/carousel.js"></script> <!-- jQuery Carousel  -->
+    <script src="../../js/jquery.prettyPhoto.js"></script> <!-- jQuery Prettyphoto  -->
+    <script src="../../js/jquery.isotope.min.js"></script> <!-- Isotope Filtering  -->
+    <script src="../../js/selectnav.js"></script> <!-- Responsive Navigation Menu by SelectNav -->
+    <script src="../../js/jquery.ui.totop.js"></script> <!-- UItoTop plugin  -->
+    <script src="../../js/custom.js"></script> <!-- Custom Js file for javascript in html -->
+  
+  <!-- End JavaScript -->
+
+  <!--[if lt IE 9]>
+      <script src="js/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="../../images/favicon/favicon.ico">
+  <link rel="apple-touch-icon" href="../../images/favicon/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="../../images/favicon/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="../../images/favicon/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+  <div id="wrap" class="boxed">
+
+  <header>
+    <div class="container clearfix">
+    
+      <div class="five columns">
+        <div class="logo">
+        <a href="index.html">
+          <img src="../../images/logo.png" alt="FuzzySec" />
+        </a>
+        </div>
+      </div><!-- End Logo -->
+      
+      <div class="eleven columns">
+        <nav id="menu" class="navigation">
+          <ul id="nav">
+            <li><a href="../../index.html">Home</a>
+            </li>
+            <li><a href="../../tutorials.html" class="active">Tutorials</a>
+            </li>
+            <li><a href="../../coding.html">Scripting</a>
+            </li>
+            <li><a href="../../exploits.html">Exploits</a>
+            </li>
+            <li><a href="../../links.html">Links</a>
+            </li>
+            <li><a href="../../patreon.html">Patreon</a></li><li><a href="../../contact.html">Contact</a></li>
+          </ul> 
+        </nav>
+      </div><!-- End Menu -->
+      
+      
+      <div class="sixteen columns"><hr /></div>
+      
+    </div><!-- End Container -->
+  </header><!-- <<< End Header >>> -->
+  
+  <div class="container clearfix">
+  
+    <div class="page-columns">
+    
+    <ul class="breadcrumbs">
+      <li><a href="index.html"><span class="icon home gray"></span></a></li>
+          <li><a href="../../index.html">Home</a> <b>&#187;</b></li>
+          <li><a href="../../tutorials.html">Tutorials</a> <b>&#187;</b></li>
+          <li>Part 1: RFID Kit</li>
+      </ul>
+      
+      <!-- section 16 Columns -->
+      
+      <div class="recent-work gallery clearfix">
+      <div class="eighteen columns bottom">
+	<div style="height:20px;" align="right">
+		<link type="text/css" rel="stylesheet" href="https://www.fuzzysecurity.com/css/patreon.css"/>
+		<button class="btn btn-2 btn-2g"><a href="https://www.patreon.com/FuzzySec" target="_blank"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" style="border-radius: 10px;height:40px;"></a></button>
+	</div>
+        <h2 class="title">Part 1: RFID Kit<span class="line"></span></h2>
+        <p>RFID is something I have wanted to get into for a while but never had the time to focus my attention on. There are a couple of reasons for my interest in RFID: (1) It makes me reminisce of the good old days of wireless hacking (poorly encrypted data transmitted over the air), (2) there is something really old-school about trying to figure out and modify hex-dumps and (3) in a lot of cases these RFID cards interact with physical devices you would not otherwise me able to test/interact with.</p><br />
+          <p>The following tutorial parts will mostly be case studies of specific cards/systems. I'm no expert in this subject matter by any measure so this will be journey of discovery for all of us. From my experience the best way to get a grasp on any topic is to dive in head first, <strong>do or do not there is no try</strong>!</p><br />
+          <p>For this introductory part I just want to cover the hardware that I am using for my research, other options are certainly possible.</p>
+        
+        <br />
+      <div class="fourteen columns bottom">
+      <h2 class="title">Equipment<span class="line"></span></h2>
+      
+          <div class="four columns item element-4 Web Logo Animation" data-categories="Web Logo Animation">
+          <div class="caption">
+          <a href="images/kit.png" rel="prettyPhoto[RFID_intro]">
+          <img src="images/kit_small.png" alt="" class="pic" />
+          <span class="hover-effect zoom"></span></a>
+          </div><!-- hover effect -->
+          <p>Equipment</p>
+      </div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p><strong>ACR122U_A9 Card Reader/Writer</strong> - <a href="http://www.acs.com.hk/index.php?pid=product&id=ACR122U">Link</a><br />
+          The ACR122U is an accomplished NFC card reader/writer which operates at 13.56 MHz. It supports ISO14443 Type A/B cards, Mifare, FeliCa and ISO/IEC18092 tags. It operates at a maximum distance of 5cm with a maximum read/write speed of 424 kbps.</p><br />
+          
+          <p><strong>Proxmark3</strong> - <a href="https://code.google.com/p/proxmark3/wiki/HomePage?tm=6">Link</a><br />
+          The proxmark3 is simply awesome, I will let you discover all the details for yourself on the wiki as there is to much to go through. As a high level overview the proxmark3 can operate as a card reader/writer, it can eavesdrop on RFID communication and can even emulate various card types. With the use of HF (13.56 MHz) and LF (125/134 Khz) antennas it has support for a very large variety of card types. If you have ph33r level VHDL and verilog skills (or are a bit crazy) you can even reprogram the FPGA. The only issue I had with the proxmark3 was flashing it, I will add an appendix about this at some later point because the official documentation is totally fu%#!d (read as totally wrong and no longer working with the current firmware!).</p><br />
+          
+          <p><strong>Magic Chinese Mifare 1k&4k Cards</strong> - 1k <a href="http://www.xfpga.com/html_products/sp-mf-1k-bd-27.html">here</a> 4k <a href="http://www.xfpga.com/html_products/UID-changeable-mifare-4K-card-S70-card-51.html">here</a><br />
+          If you are somewhat familiar with Mifare you will know that block0 contains the card UID and is write protected at the time of manufacturing. This is done for security reasons so cards cannot just be copied fully and in many cases RFID systems use this UID to identify the "user" of the card. There is however a manufacturer in china that produces and sells cards that give you write access on block0.</p>
+
+      <h2 class="title">Tools Of The Trade<span class="line"></span></h2>
+
+          <p><strong>(1) ACR122U_A9</strong><br />
+          To use the ACR122 or other generic devices such as tikitag you will need to get some programs installed and running. Getting all the right libraries configured can be tricky but the default build of Kali-Linux comes pre-configured with everything that you need!!</p><br />
+
+          <p><em><a href="https://code.google.com/p/mfcuk/">mfcuk</a></em> - Mfcuk implements the mifare "DarkSide" attack developed by Andre Costin. It uses libnfc and crapto1 to exploit a vulnerability in the mifare architecture. Mfcuk can recover a valid key from mifare calssic 1k&4k cards even if all sector keys are unknown/non-default.</p><br />
+
+          <p><em><a href="https://code.google.com/p/mfoc/">mfoc</a></em> - Mfoc in an implementation of the nested mifare classic attack by Nethemba. Mfoc also uses libnfc and crapto1 and is able to swiftly recover all keys if at least one valid key is specified. By default it will look through a list of default keys but the user can also specify a known key manually.</p><br />
+
+          <p><em><a href="http://nfc-tools.org/index.php?title=Libnfc:nfc-mfclassic">nfc-mfclassic</a></em> - NFC-mfclassic is a very useful tool which allows you to overwrite a mifare card with a dump file (*.mdf) for easy cloning convenience, it even has support for our Chinese magic mifare cards and allows you to overwrite block0.</p><br />
+
+          <p><strong>(2) Proxmark3</strong><br />
+          The proxmark3 comes packaged with accompanying software. With new firmware come new features and updated binaries. To get a proper understanding of the firmware and the available features you should have a look at the forums <a href="http://www.proxmark.org/forum/index.php">here</a> and grab the latest packages <a href="https://code.google.com/p/proxmark3/downloads/list">here</a>.</p><br />
+
+          <p><strong>(3) 010 Editor (Hex Editor)</strong><br />
+          Decrypting the mifare cards keys and getting into a position where you can modify the data is the easy part. The challenging part is figuring out the data format, once we accomplish this we can interpret the data and modify it in a meaningful way. To do that we will be looking at and comparing (allot of) hex dumps. The moral of the story is to get a good hex editor. My personal favorite is <a href="http://www.sweetscape.com/010editor/">010 editor</a> which comes in Windows/MAC/Unix flavors. 010 Editor has powerful scripting/template capabilities and will allow you to do byte comparisons between files. For my own convenience I have created a 010 editor mifare 1k template which you can find <a href="../../coding.html">here</a>.</p>
+
+</div>
+    </div>
+</div>
+      
+      <!-- End  -->
+    	</div>    
+    </div><!-- End page-columns -->
+     
+         <div align="center"><script>
+           var idcomments_acct = '77033bd2b8799fdea5c0f689f55f6e1e';
+           var idcomments_post_id;
+           var idcomments_post_url;
+           </script>
+             <span id="IDCommentsPostTitle" style="display:none"></span>
+           <script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+         </div>
+     
+  </div><!-- <<< End Container >>> -->
+  
+  <footer>
+    <div class="container">
+    
+      
+      <div class="six columns"><span class="copyright">
+      © Copyright <a href="../../index.html">FuzzySecurity</a></span></div>
+      
+      <div class="six columns">
+        
+          <p><a href="../../index.html">Home</a> |
+          <a href="../../tutorials.html">Tutorials</a> |
+          <a href="../../coding.html">Scripting</a> |
+          <a href="../../exploits.html">Exploits</a> |
+          <a href="../../links.html">Links</a> |
+          <a href="../../contact.html">Contact</a></p>
+        
+      </div>
+    
+    </div><!-- End container -->
+  </footer><!-- <<< End Footer >>> -->
+  
+  </div><!-- End wrap -->
+  
+  <!-- Start Style Switcher -->
+  <div class="switcher"></div>
+  <!-- End Style Switcher -->
+    
+</body>
+</html>
